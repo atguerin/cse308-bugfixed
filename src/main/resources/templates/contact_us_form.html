@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="css/my_style.css">
+    <link rel="stylesheet" href="fonts/ionicons.min.css">
+    <link rel="stylesheet" href="css/Footer-Clean.css">
+
+    <link rel="stylesheet" href="css/Simple-Contact-Form.css">
+
+    <title>Contact Us</title>
+</head>
+
+
+<body>
+<!-- Contact us form -->
+<div id="navbar"></div>
+    <div class="container">
+        <section class="td-form">
+            <div class="row td-form-wrapper">
+                <div class="col td-glass">
+                    <form class="td-form-wrapper">
+                        <h1 class="text-center">Contact Us</h1>
+                        <div class="form-group">
+                            <div class="col-md-12"><label for="name">Your Name *</label>
+                                <div class="d-flex"><i class="icon ion-person align-self-center"></i><input class="form-control d-flex" type="text" name="name" required="" placeholder="Your Name" autocomplete="off"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12"><label for="email">Email Address *</label>
+                                <div class="d-flex"><i class="icon ion-ios-email align-self-center"></i><input class="form-control" type="text" name="phone" required="" placeholder="services@contactus.com" autocomplete="off" inputmode="email"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12"><label for="phone">Phone (optional)</label>
+                                <div class="d-flex td-input-container"><i class="icon ion-ios-telephone align-self-center"></i><input class="form-control" type="text" name="phone" autocomplete="off" inputmode="tel" placeholder="123-456-7890"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12"><label for="subject">Subject: * </label>
+                                <div class="d-flex td-input-container"><i class="icon ion-ios-information align-self-center"></i><input class="form-control" type="text" name="subject" required="" autocomplete="off" placeholder="Subject"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12"><label for="message">Message Details *</label>
+                                <div class="d-flex td-input-container"><i class="icon ion-android-create align-self-center"></i><textarea class="form-control" rows="6" cols="50" name="message" placeholder="Add message here"></textarea></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12"><button class="btn btn-dark float-right" type="submit">Send us your message!</button></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+<!-- footer -->
+<div id="footer"></div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+
+<script>
+    $(function(){
+        $("#navbar").load("navbar.html");
+        $("#footer").load("footer.html");
+    });
+</script>
+
+</body>
+</html>

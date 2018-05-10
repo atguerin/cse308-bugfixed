@@ -1,0 +1,251 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="Content-Type" content="text/html"/>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="../../css/my_style.css" th:href="@{/css/my_style.css}"/>
+    <link rel="stylesheet" href="../../fonts/ionicons.min.css" th:href="@{/fonts/ionicons.min.css}"/>
+    <link rel="stylesheet" href="../../css/Footer-Clean.css" th:href="@{/css/Footer-Clean.css}"/>
+
+    <title>Manage Account</title>
+</head>
+
+
+<body>
+    <!-- Navbar -->
+    <div sec:authorize="isAnonymous()"><div th:replace="fragments/navbar">>Navbar</div></div>
+    <div sec:authorize="hasRole('ROLE_USER')"><div th:replace="fragments/user_navbar">>Navbar</div></div>
+    <div sec:authorize="hasRole('ROLE_ADMIN')"><div th:replace="fragments/admin_navbar">>Navbar</div></div>
+
+    <!-- account settings -->
+    <div class="container">
+        <div class="d-flex border-top-bottom mt-4">
+            <strong>ACCOUNT SETTINGS</strong>
+        </div>
+        <div class="details-jumbotron mt-4 mb-4">
+            <div class="account-settings-block">
+                <strong class="mr-2">Hometown</strong>
+                <a href="#" data-toggle="modal" data-target="#hometownSetting">Edit</a>
+                <p>Edit your hometown</p>
+            </div>
+            <div class="account-settings-block">
+                <strong class="mr-2">Biography</strong>
+                <a href="#" data-toggle="modal" data-target="#bioSetting">Edit</a>
+                <p>Edit your biographical information.</p>
+            </div>
+            <div class="account-settings-block">
+                <strong class="mr-2">Password</strong>
+                <a href="#" data-toggle="modal" data-target="#passwordSetting">Edit</a>
+                <p>Change the password for your Rotten Tomatoes account.</p>
+            </div>
+            <div class="account-settings-block">
+                <strong class="mr-2">Privacy Settings</strong>
+                <a href="#" data-toggle="modal" data-target="#privacySetting">Edit</a>
+                <p>Manage your profile visibility settings.</p>
+            </div>
+            <div class="account-settings-block">
+                <strong class="mr-2">Change Country</strong>
+                <a href="#" data-toggle="modal" data-target="#changeCountry">Edit</a>
+                <p>Manage your localization setting.</p>
+            </div>
+            <div class="account-settings-block">
+                <strong class="mr-2">Delete Account</strong>
+                <a href="#" data-toggle="modal" data-target="#deleteAccount">Delete Account</a>
+                <p>Terminate your Rotten Tomatoes account.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hometown Setting Modal -->
+    <div class="modal fade" id="hometownSetting" tabindex="-1" role="dialog" aria-labelledby="hometownModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content dark-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">Hometown Setting</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form th:action="@{/changeHomeTown}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Hometown</label>
+                            <input type="text" name="hometown" class="form-control" id="hometown"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="bioSetting" tabindex="-1" role="dialog" aria-labelledby="bioModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content dark-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Biography Setting</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form th:action="@{/changeBio}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Bio</label>
+                            <textarea class="form-control" name="bio" id="bio" rows="5" style="resize:none;"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div class="modal fade" id="passwordSetting" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content dark-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">Password Setting</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form th:action="@{/changePassword}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="oldPassword">Old Password</label>
+                            <input type="password" name="oldPassword" class="form-control" id="oldPassword"
+                                   placeholder="Old Password"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword1">New Password</label>
+                            <input type="password" name="newPassword" class="form-control" id="newPassword1"
+                                   placeholder="New Password"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy setting Modal -->
+    <div class="modal fade" id="privacySetting" tabindex="-1" role="dialog" aria-labelledby="privacyModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content dark-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">Privacy Settings</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label>Visibility</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
+                               value="option1" checked="true"/>
+                        <label class="form-check-label" for="exampleRadios1">
+                            Hide my profile. Only I can see my profile.
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2"
+                               value="option2"/>
+                        <label class="form-check-label" for="exampleRadios2">
+                            Show to all. Everybody (including anonymous users) can see my profile.
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Country Modal -->
+    <div class="modal fade" id="changeCountry" tabindex="-1" role="dialog" aria-labelledby="countryModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content dark-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">Change Country</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form th:action="@{/changeCountry}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Change Country</label>
+                            <input type="text" name="country" class="form-control" id="country"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div class="modal fade" id="deleteAccount" tabindex="-1" role="dialog" aria-labelledby="deleteAccountModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content dark-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Account</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form th:action="@{/deleteAccount}" method="post">
+                    <div class="modal-body">
+                        <label>Do you want to delete your account?</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <div th:replace="fragments/footer">Footer</div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../../js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script src="../../js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
+    <script src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+</html>
