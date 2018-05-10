@@ -39,6 +39,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private MovieReviewUserRepository movieReviewUserRepository;
 
+    @Autowired TvReviewUserRepository tvReviewUserRepository;
+
     @Autowired
     private RoleRepository roleRepository;
 
@@ -130,9 +132,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser() {
         User user = getCurrentUser();
-        Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
-        for (MovieReviewUser movieReviewUser : movieReviewUsers) {
-            movieReviewUserRepository.delete(movieReviewUser);
+
+        if(confirmCurrentRole("ROLE_USER")){
+            Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
+            for (MovieReviewUser movieReviewUser : movieReviewUsers) {
+                movieReviewUserRepository.delete(movieReviewUser);
+            }
+      /*  Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
+        for (TvReviewUser tvReviewUser : tvReviewUsers) {
+            tvReviewUserRepository.delete(tvReviewUser);
+        }*/
+        }else if(confirmCurrentRole("ROLE_CRITIC")){
+           /* Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
+            for (MovieReviewUser movieReviewUser : movieReviewUsers) {
+                movieReviewUserRepository.delete(movieReviewUser);
+            }*/
+      /*  Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
+        for (TvReviewUser tvReviewUser : tvReviewUsers) {
+            tvReviewUserRepository.delete(tvReviewUser);
+        }*/
         }
         userRepository.delete(user);
     }
@@ -145,6 +163,10 @@ public class UserServiceImpl implements UserService {
             for (MovieReviewUser movieReviewUser : movieReviewUsers) {
                 movieReviewUserRepository.delete(movieReviewUser);
             }
+           /* Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
+            for (TvReviewUser tvReviewUser : tvReviewUsers) {
+                tvReviewUserRepository.delete(tvReviewUser);
+            }*/
             userRepository.delete(user);
         } else {
             throw new Exception("Error: User doesn't exist");
