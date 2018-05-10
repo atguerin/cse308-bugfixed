@@ -209,4 +209,16 @@ public class MovieServiceImpl implements MovieService {
         return list;
     }
 
+    @Override
+    public float getAverageUserRating(int movieId){
+        float divisor = 0;
+        float value = 0;
+        HashSet<MovieReviewUser> movieSet = movieReviewUserRepository.findAllByMovieId(movieId);
+        for (MovieReviewUser movieReviewUser : movieSet) {
+            divisor++;
+            value = value + movieReviewUser.getRating();
+        }
+        value = value/divisor;
+        return value;
+    }
 }
