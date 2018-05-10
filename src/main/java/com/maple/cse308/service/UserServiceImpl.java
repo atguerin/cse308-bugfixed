@@ -37,6 +37,9 @@ public class UserServiceImpl implements UserService {
     private CriticRepository criticRepository;
 
     @Autowired
+    private MovieReviewUserRepository movieReviewUserRepository;
+
+    @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
@@ -127,6 +130,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser() {
         User user = getCurrentUser();
+        Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
+        for (MovieReviewUser movieReviewUser : movieReviewUsers) {
+            movieReviewUserRepository.delete(movieReviewUser);
+        }
         userRepository.delete(user);
     }
 
@@ -134,6 +141,10 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(String username) throws Exception {
         if (userRepository.existsByUsername(username)) {
             User user = findByUsername(username);
+            Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
+            for (MovieReviewUser movieReviewUser : movieReviewUsers) {
+                movieReviewUserRepository.delete(movieReviewUser);
+            }
             userRepository.delete(user);
         } else {
             throw new Exception("Error: User doesn't exist");
