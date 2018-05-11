@@ -1,8 +1,13 @@
 package com.maple.cse308.controller;
 
-import com.maple.cse308.entity.*;
-import com.maple.cse308.repository.*;
-import com.maple.cse308.service.*;
+import com.maple.cse308.entity.Actor;
+import com.maple.cse308.entity.Critic;
+import com.maple.cse308.entity.Movie;
+import com.maple.cse308.entity.User;
+import com.maple.cse308.service.ActorServiceImpl;
+import com.maple.cse308.service.CriticServiceImpl;
+import com.maple.cse308.service.MovieServiceImpl;
+import com.maple.cse308.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,8 +51,8 @@ public class StaticController {
         model.addAttribute("outNowList", movieService.getMoviesOutNow());
         model.addAttribute("topBoxOfficeList", movieService.getTopBoxOffice());
         model.addAttribute("movie", movieService.getMovieDetails(id));
-        model.addAttribute("criticReviews", movieService.getMovieReviewCritics(id));
-        model.addAttribute("userReviews", movieService.getMovieReviewUsers(id));
+        model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(id));
+        model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(id));
         model.addAttribute("screenshots", movieService.getMovieScreenShots(id));
         model.addAttribute("trailers", movieService.getMovieTrailers(id));
         model.addAttribute("actors", movieService.getMovieActors(id));
@@ -182,8 +187,8 @@ public class StaticController {
 
     @GetMapping("/movie/reviews")
     public String updateMovieReviews(@RequestParam(value = "movieId") int movieId, Model model) {
-        model.addAttribute("criticReviews", movieService.getMovieReviewCritics(movieId));
-        model.addAttribute("userReviews", movieService.getMovieReviewUsers(movieId));
+        model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(movieId));
+        model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(movieId));
         return "movie_details :: reviews";
     }
 

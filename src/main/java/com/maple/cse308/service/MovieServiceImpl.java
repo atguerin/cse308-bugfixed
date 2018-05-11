@@ -6,8 +6,8 @@ import com.maple.cse308.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
 import java.sql.Date;
+import java.util.*;
 
 
 @Service
@@ -34,52 +34,35 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieReviewCritic> getCriticMovieReviewsByMovie(int movieId) throws Exception {
+    public List<MovieReviewCritic> getCriticMovieReviewsByMovie(int movieId) {
         HashSet<MovieReviewCritic> set = movieReviewCriticRepository.findAllByMovieId(movieId);
         List<MovieReviewCritic> movieReviewCritics = new LinkedList();
         movieReviewCritics.addAll(set);
-        if (movieReviewCritics.isEmpty()) {
-            throw new Exception("Error: There are no reviews for this movie");
-        } else {
             return movieReviewCritics;
         }
-    }
 
     @Override
-    public List<MovieReviewCritic> getCriticMovieReviewsByCritic(int criticId) throws Exception {
+    public List<MovieReviewCritic> getCriticMovieReviewsByCritic(int criticId) {
         HashSet<MovieReviewCritic> set = movieReviewCriticRepository.findAllByCriticId(criticId);
         List<MovieReviewCritic> movieReviewCritics = new LinkedList();
         movieReviewCritics.addAll(set);
-        if (movieReviewCritics.isEmpty()) {
-            throw new Exception("Error: There are no reviews for this movie");
-        } else {
-            return movieReviewCritics;
-        }
-
+        return movieReviewCritics;
     }
 
     @Override
-    public List<MovieReviewUser> getUserMovieReviewsByMovie(int movieId) throws Exception {
+    public List<MovieReviewUser> getUserMovieReviewsByMovie(int movieId) {
         HashSet<MovieReviewUser> set = movieReviewUserRepository.findAllByMovieId(movieId);
         List<MovieReviewUser> movieReviewUsers = new LinkedList();
         movieReviewUsers.addAll(set);
-        if (movieReviewUsers.isEmpty()) {
-            throw new Exception("Error: There are no reviews for this moive");
-        } else {
             return movieReviewUsers;
-        }
     }
 
     @Override
-    public List<MovieReviewUser> getUserMovieReviewsByUser(int userId) throws Exception {
+    public List<MovieReviewUser> getUserMovieReviewsByUser(int userId) {
         HashSet<MovieReviewUser> set = movieReviewUserRepository.findAllByUserId(userId);
         List<MovieReviewUser> movieReviewUsers = new LinkedList();
         movieReviewUsers.addAll(set);
-        if (movieReviewUsers.isEmpty()) {
-            throw new Exception("Error: There are no reviews for this movie");
-        } else {
-            return movieReviewUsers;
-        }
+        return movieReviewUsers;
     }
 
     @Override
@@ -193,20 +176,6 @@ public class MovieServiceImpl implements MovieService {
 
     public List<MovieActor> getMovieActors(int movieId){
         return movieActorRepository.findAllByMovieId(movieId);
-    }
-
-    public List<MovieReviewCritic> getMovieReviewCritics(int movieId){
-        HashSet<MovieReviewCritic> set = movieReviewCriticRepository.findAllByMovieId(movieId);
-        List<MovieReviewCritic> list = new LinkedList();
-        list.addAll(set);
-        return list;
-    }
-
-    public List<MovieReviewUser> getMovieReviewUsers(int movieId){
-        HashSet<MovieReviewUser> set = movieReviewUserRepository.findAllByMovieId(movieId);
-        List<MovieReviewUser> list = new LinkedList();
-        list.addAll(set);
-        return list;
     }
 
     @Override
