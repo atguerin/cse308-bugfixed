@@ -12,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -40,6 +42,8 @@ public class UserServiceImpl implements UserService {
     private MovieReviewUserRepository movieReviewUserRepository;
     @Autowired
     private MovieReviewCriticRepository movieReviewCriticRepository;
+    @Autowired
+    private EmailServiceImpl emailService;
 
    /* @Autowired
     private TvReviewUserRepository tvReviewUserRepository;
@@ -532,5 +536,27 @@ public class UserServiceImpl implements UserService {
     }
     */
 
+     public void resetPassword(String email, HttpServletRequest request) throws Exception{
+         User user = userRepository.findByEmail(email);
+         if(user == null){
+            throw new Exception("Error: This user does not exist");
+         }else{
+             String token = UUID.randomUUID().toString();
+             user.setResetToken(token);
+             userRepository.save(user);
+
+             String resetUrl = request.getScheme() + "://" + request.getServerName();
+             emailService.sendSimpleMessage(user.getEmail(),"Rotten Tomatoes: Passsword Reset Request","To reset your password, click the link below:\n" + resetUrl
+                     + "/reset?token=" + user.getResetToken());
+         }
+
+
+
+
+
+
+
+
+     }
 
 }
