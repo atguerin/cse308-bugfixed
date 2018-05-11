@@ -26,25 +26,18 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-
     @Autowired
     private MovieRepository movieRepository;
-
     @Autowired
     private TvShowRepository tvShowRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private CriticRepository criticRepository;
-
     @Autowired
     private MovieReviewUserRepository movieReviewUserRepository;
-
     @Autowired
     private MovieReviewCriticRepository movieReviewCriticRepository;
 

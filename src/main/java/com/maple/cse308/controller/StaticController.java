@@ -4,10 +4,7 @@ import com.maple.cse308.entity.Actor;
 import com.maple.cse308.entity.Critic;
 import com.maple.cse308.entity.Movie;
 import com.maple.cse308.entity.User;
-import com.maple.cse308.service.ActorServiceImpl;
-import com.maple.cse308.service.CriticServiceImpl;
-import com.maple.cse308.service.MovieServiceImpl;
-import com.maple.cse308.service.UserServiceImpl;
+import com.maple.cse308.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +27,8 @@ public class StaticController {
     private UserServiceImpl userService;
     @Autowired
     private CriticServiceImpl criticService;
+    @Autowired
+    private EmailServiceImpl emailService;
 
 
     @RequestMapping("/index")
@@ -198,9 +197,16 @@ public class StaticController {
         return "user_info";
     }
 
-    @RequestMapping("/contactUs")
+    @GetMapping("/contactUs")
     public String contactUs(Model model) {
         return "contact_us_form";
     }
 
+    @PostMapping("/contactUs")
+    public String contactUs(@RequestParam(value = "name") String name, @RequestParam(value = "email") String email, @RequestParam(value = "subject") String subject, @RequestParam(value = "message") String message) {
+        emailService.sendSimpleMessage("cse308teammaple@gmail.com", "Contact Form Submission: "+ subject, "Name: " + name + "\nEmail: " + email + "\n\nMessage: " + message);
+        return "index";
+    }
+
 }
+

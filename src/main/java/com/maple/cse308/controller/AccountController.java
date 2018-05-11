@@ -1,6 +1,7 @@
 package com.maple.cse308.controller;
 
 import com.maple.cse308.entity.User;
+import com.maple.cse308.service.EmailServiceImpl;
 import com.maple.cse308.service.MovieServiceImpl;
 import com.maple.cse308.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ public class AccountController {
 
     @Autowired
     private UserServiceImpl userService;
-
     @Autowired
     private MovieServiceImpl movieService;
 

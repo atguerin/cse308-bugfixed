@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.util.*;
 
-
 @Service
 public class MovieServiceImpl implements MovieService {
 
@@ -19,7 +18,6 @@ public class MovieServiceImpl implements MovieService {
     MovieReviewUserRepository movieReviewUserRepository;
     @Autowired
     MovieRepository movieRepository;
-
     @Autowired
     MovieScreenshotRepository movieScreenshotRepository;
     @Autowired
