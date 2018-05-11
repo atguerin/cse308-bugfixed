@@ -192,4 +192,10 @@ public class StaticController {
         model.addAttribute("user", userService.findByUsername(userName));
         return "user_info";
     }
+
+    @RequestMapping("/contactUs")
+    public String contactUs(Model model) {
+        return "contact_us_form";
+    }
+
 }
