@@ -1,15 +1,16 @@
 package com.maple.cse308.controller;
 
+import com.maple.cse308.entity.Movie;
 import com.maple.cse308.entity.MovieReviewUser;
+import com.maple.cse308.entity.User;
 import com.maple.cse308.service.MovieServiceImpl;
 import com.maple.cse308.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/")
@@ -57,6 +58,80 @@ public class MovieController {
         model.addAttribute("body", "Successfully posted your review!");
         return "movie_details :: serverResponseModalContent";
     }
+
+    @GetMapping("/movie/reviews")
+    public String updateMovieReviews(@RequestParam(value = "movieId") int movieId, Model model) {
+        model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(movieId));
+        model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(movieId));
+        return "movie_details :: reviews";
+    }
+
+
+    @PostMapping("/movie/addToWantToSeeList")
+    public String addToWantToSeeList(@RequestParam(value = "movieId") int movieId, Model model) throws Exception {
+        Movie movie = movieService.getMovieDetails(movieId);
+        userService.addToWantToSeeList(movie);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully added to your Want To See List!");
+        return "movie_details :: serverResponseModalContent";
+    }
+
+    @PostMapping("/movie/addToDontWantToSeeList")
+    public String addToDontWantToSeeList(@RequestParam(value = "movieId") int movieId, Model model) throws Exception {
+        Movie movie = movieService.getMovieDetails(movieId);
+        userService.addToDontWantToSeeList(movie);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully added to your Not Interested List!");
+        return "movie_details :: serverResponseModalContent";
+    }
+
+    @PostMapping("/movie/deleteFromWantToSeeList")
+    public String deleteFromWantToSeeList(@RequestParam(value = "id") int movieId, Model model) throws Exception {
+        Movie movie = movieService.getMovieDetails(movieId);
+        userService.removeFromWantToSeeList(movie);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully deleted from your Want To See List!");
+        return "profile :: serverResponseModalContent";
+    }
+
+    @PostMapping("/movie/deleteFromNotInterestedList")
+    public String deleteFromNotInterestList(@RequestParam(value = "id") int movieId, Model model) throws Exception {
+        Movie movie = movieService.getMovieDetails(movieId);
+        userService.removeFromDontWantToSeeList(movie);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully deleted from your Not Interest List!");
+        return "profile :: serverResponseModalContent";
+    }
+
+    @PostMapping("/movie/deleteMovieUserReview")
+    public String deleteMovieUserReview(@RequestParam(value = "id") int reviewId, Model model) throws Exception {
+        movieService.deleteUserMovieReview(reviewId);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully deleted your review!");
+        return "profile :: serverResponseModalContent";
+    }
+
+    @GetMapping("/movie/wantToSeeMovieList")
+    public String getWantToSeeMovie(Model model) {
+        model.addAttribute("user", userService.getCurrentUser());
+        return "profile :: wantToSeeMovie";
+    }
+
+    @GetMapping("/movie/notInterestedList")
+    public String getNotInterestMovie(Model model) {
+        model.addAttribute("user", userService.getCurrentUser());
+        return "profile :: notInterestedMovie";
+    }
+
+    @GetMapping("/movie/userMovieReviews")
+    public String getUserMovieReviews(Model model) {
+        User user = userService.getCurrentUser();
+        List<MovieReviewUser> movieReviews = movieService.getUserMovieReviewsByUser(user.getUserId());
+        model.addAttribute("movieReviews", movieReviews);
+        return "profile :: movieReviews";
+    }
+
+
 
 
 }

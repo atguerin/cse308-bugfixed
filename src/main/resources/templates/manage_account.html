@@ -61,6 +61,11 @@
                 <a href="#" data-toggle="modal" data-target="#deleteAccount">Delete Account</a>
                 <p>Terminate your Rotten Tomatoes account.</p>
             </div>
+            <div class="account-settings-block">
+                <strong class="mr-2">Apply for Critic</strong>
+                <a href="#" data-toggle="modal" data-target="#applyCritic">Apply</a>
+                <p>Apply to become a Critic.</p>
+            </div>
         </div>
     </div>
 
@@ -233,6 +238,30 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Apply Critic Modal -->
+    <div class="modal fade" id="applyCritic" tabindex="-1" role="dialog" aria-labelledby="applyCriticModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content dark-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">Apply</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form th:action="@{/applyCritic}" method="post">
+                    <div class="modal-body">
+                        <label>Do you want to submit your application?</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Apply</button>
                     </div>
                 </form>
             </div>

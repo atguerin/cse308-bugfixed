@@ -159,6 +159,45 @@
 
             </div>
 
+            <!-- movie info -->
+            <div class="jumbotron details-jumbotron">
+                <h6 class="border-bottom border-gray pb-2 mb-0">MOVIE INFO</h6>
+                <dl class="row mt-4">
+                    <dt class="col-sm-3">Rating:</dt>
+                    <dd class="col-sm-9" th:text="${movie.mpaaRating}">N/A</dd>
+
+                    <dt class="col-sm-3">Genre:</dt>
+                    <dd class="col-sm-9" th:if="${movie.genre.isEmpty()}">N/A</dd>
+                    <dd class="col-sm-9" th:unless="${movie.genre.isEmpty()}">
+                        <th:block th:each="genre,iterStat : ${movie.genre}" th:if="${iterStat.index<5}">
+                            <span th:text="${genre.genre}"></span>
+                            <span th:if="${iterStat.index < movie.genre.size()-1 and iterStat.index < 4}" class="mr-1">,</span>
+                        </th:block>
+                    </dd>
+
+                    <dt class="col-sm-3">Directed by:</dt>
+                    <dd class="col-sm-9" th:text="${movie.director}">N/A</dd>
+
+                    <dt class="col-sm-3">Written by:</dt>
+                    <dd class="col-sm-9" th:if="${movie.writers.isEmpty()}">N/A</dd>
+                    <dd class="col-sm-9" th:unless="${movie.writers.isEmpty()}">
+                        <th:block th:each="writer,iterStat : ${movie.writers}" th:if="${iterStat.index<5}">
+                            <span th:text="${writer.writer}"></span>
+                            <span th:if="${iterStat.index < movie.writers.size()-1 and iterStat.index < 4}" class="mr-1">,</span>
+                        </th:block>
+                    </dd>
+
+                    <dt class="col-sm-3">In theaters:</dt>
+                    <dd class="col-sm-9" th:text="${movie.getReleaseDate()}">N/A</dd>
+
+                    <dt class="col-sm-3">Run time:</dt>
+                    <dd class="col-sm-9" th:text="${movie.runtime}">N/A</dd>
+                </dl>
+                <p class="text-justify" th:text="${movie.overview}">
+                    N/A
+                </p>
+            </div>
+
             <!-- Trailer -->
             <div th:if="${trailers.size()>0}" class="details-jumbotron mt-1 mb-4">
                 <h6 class="border-bottom border-gray pb-2 mb-0">VIDEOS</h6>
@@ -187,37 +226,37 @@
             </div>
 
             <!-- Movie photos -->
-            <div id="detail-photo-carousel">
-            <!-- <h6 class="pl-4 pb-2 mb-0">PHOTOS</h6> -->
-            <div id="carousel-details-photo" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-                    <div th:each="photo,iterStat : ${screenshots}" th:class="${iterStat.index==0}?'carousel-item active':'carousel-item'">
-                    <img class="d-block w-100" th:src="@{${photo.screenshot}}" alt="..."/>
+            <div th:if="${screenshots.size()>0}" id="detail-photo-carousel">
+                <!-- <h6 class="pl-4 pb-2 mb-0">PHOTOS</h6> -->
+                <div id="carousel-details-photo" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div th:each="photo,iterStat : ${screenshots}" th:class="${iterStat.index==0}?'carousel-item active':'carousel-item'">
+                        <img class="d-block w-100" th:src="@{${photo.screenshot}}" alt="..."/>
+                        </div>
+
+                        <!-- buttons -->
+                        <a class="carousel-control-prev" href="#carousel-details-photo" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-details-photo" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                        </a>
                     </div>
 
-                    <!-- buttons -->
-                    <a class="carousel-control-prev" href="#carousel-details-photo" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carousel-details-photo" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                    </a>
+                    <!-- Indicators -->
+                    <ol class='carousel-indicators'>
+                        <li th:each="photo,iterStat : ${screenshots}" data-target='#carousel-details-photo' th:attr="data-slide-to=${iterStat.index}" th:class="${iterStat.index==0}?'active'">
+                            <img th:src="@{${photo.screenshot}}" alt='' />
+                        </li>
+                    </ol>
                 </div>
-                
-                <!-- Indicators -->
-                <ol class='carousel-indicators'>
-                    <li th:each="photo,iterStat : ${screenshots}" data-target='#carousel-details-photo' th:attr="data-slide-to=${iterStat.index}" th:class="${iterStat.index==0}?'active'">
-                        <img th:src="@{${photo.screenshot}}" alt='' />
-                    </li>
-                </ol>                
-            </div>
             </div>     
 
 
             <!-- Cast Info -->           
-            <div class="jumbotron details-jumbotron">
+            <div th:if="${actors.size()>0}" class="jumbotron details-jumbotron">
                 <h6 class="border-bottom border-gray pb-2 mb-0">CAST INFO</h6>
                 <div id="cast-card-deck" class="card-deck mt-5">
                     <div class="col-sm-4 col-md-3 col-lg-3 mb-3" th:each="actor,iterStat : ${actors}" th:unless="${iterStat.index>7}">
@@ -255,9 +294,10 @@
                                     <span th:text="|${criticReview.critic.firstName} ${criticReview.critic.lastName}|">@User Name</span>
                                 </div>
                                 <div class="ml-auto mr-1">Critic score:</div>
-                                <div>
+                                <div class="mr-2">
                                     <span th:text="${criticReview.rating==''?'no score':criticReview.rating}">score</span>
                                 </div>
+                                <a href="#" th:attr="data-id=${criticReview.reviewId}" class="report critic-review ion-alert-circled"></a>
                             </div>
                             <p class="media-body pb-3 mb-0 small lh-125 border-bottom w-100" th:text="${criticReview.review}">
                                 Review
@@ -281,10 +321,11 @@
                                         <span th:text="${userReview.user.username}">User Name</span>
                                     </a>
                                 </div>
-                                <div class="ml-auto mr-1 pt-1">Score:</div>
+                                <div class="ml-auto mr-1">Score:</div>
                                 <div class="d-flex">
-                                    <input class="rating rating-loading score p-0" th:value="${userReview.rating}" data-stars="5" data-min="0" data-max="5" data-size="xxs" disabled=true data-show-clear="false" data-show-caption="false"/>
-                                    <span th:text="${userReview.rating==''?'score':userReview.rating}" class="pt-1" style="font-size: 20px;">score</span>
+                                    <input class="rating rating-loading score p-0" th:value="${userReview.rating}" data-stars="5" data-min="0" data-max="5" data-size="xxxs" disabled=true data-show-clear="false" data-show-caption="false"/>
+                                    <span th:text="${userReview.rating==''?'score':userReview.rating}" class="mr-2">score</span>
+                                    <a href="#" th:attr="data-id=${userReview.reviewId}" class="report user-review ion-alert-circled"></a>
                                 </div>
                             </div>
                             <p class="media-body pb-3 mb-0 small lh-125 border-bottom w-100" th:text="${userReview.review}" style="min-height: 3rem;">

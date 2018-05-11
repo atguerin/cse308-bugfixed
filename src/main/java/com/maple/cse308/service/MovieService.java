@@ -34,7 +34,7 @@ public interface MovieService {
 
     void editUserMovieReview(MovieReviewUser movieReviewUser);
 
-    void deleteUserMovieReview(MovieReviewUser movieReviewUser);
+    void deleteUserMovieReview(int reviewId);
 
     List<Movie> movieSearch(String search);
 

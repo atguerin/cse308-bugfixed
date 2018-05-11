@@ -32,7 +32,10 @@
         <!-- Side bar -->
         <div class="col-sm-12 col-md-7 col-lg-4 mb-3">
             <div class="jumbotron-side">
-                <h5 class="mb-4"><strong>User Information</strong></h5>
+                <div class="d-flex">
+                    <h5 class="mb-4"><strong>User Information</strong></h5>
+                    <a href="#" th:attr="data-id=${user.userId}" class="report user ion-alert-circled ml-auto"></a>
+                </div>
                 <div class="nav flex-column justify-content-center">
                     <div class="profile-thumbnail-container">
                         <img class="profile-thumbnail-img" src="img/photo/titanic.jpg" alt="Profile img"/>

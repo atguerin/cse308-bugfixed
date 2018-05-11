@@ -11,4 +11,6 @@ public interface MovieReviewUserRepository extends CrudRepository<MovieReviewUse
     HashSet<MovieReviewUser> findAllByMovieId(int movieId);
 
     HashSet<MovieReviewUser> findAllByUserId(int userId);
+
+    MovieReviewUser findByReviewId(int reviewId);
 }

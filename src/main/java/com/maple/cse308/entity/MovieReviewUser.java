@@ -31,6 +31,10 @@ public class MovieReviewUser implements Serializable {
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
 
+    @OneToOne
+    @JoinColumn(name = "movieId", insertable = false, updatable = false)
+    private Movie movie;
+
     public int getUserId() {
         return userId;
     }
@@ -83,4 +87,12 @@ public class MovieReviewUser implements Serializable {
     public int getReviewId() {return reviewId;}
 
     public void setReviewId(int reviewId) {this.reviewId = reviewId; }
+
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
+    }
 }

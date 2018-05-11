@@ -1,9 +1,6 @@
 package com.maple.cse308.controller;
 
-import com.maple.cse308.entity.Actor;
-import com.maple.cse308.entity.Critic;
-import com.maple.cse308.entity.Movie;
-import com.maple.cse308.entity.User;
+import com.maple.cse308.entity.*;
 import com.maple.cse308.service.ActorServiceImpl;
 import com.maple.cse308.service.CriticServiceImpl;
 import com.maple.cse308.service.MovieServiceImpl;
@@ -79,6 +76,8 @@ public class StaticController {
     public String profile(Model model) {
         User user = userService.getCurrentUser();
         model.addAttribute("user", user);
+        List<MovieReviewUser> movieReviews = movieService.getUserMovieReviewsByUser(user.getUserId());
+        model.addAttribute("movieReviews", movieReviews);
         //model.addAttribute("blockList", userService.getBlockList(user.getUserId()));
         return "profile";
     }
@@ -137,61 +136,6 @@ public class StaticController {
         return "search :: criticList";
     }
 
-    @PostMapping("/movie/addToWantToSeeList")
-    public String addToWantToSeeList(@RequestParam(value = "movieId") int movieId, Model model) throws Exception {
-        Movie movie = movieService.getMovieDetails(movieId);
-        userService.addToWantToSeeList(movie);
-        model.addAttribute("title", "Success");
-        model.addAttribute("body", "Successfully added to your Want To See List!");
-        return "movie_details :: serverResponseModalContent";
-    }
-
-    @PostMapping("/movie/addToDontWantToSeeList")
-    public String addToDontWantToSeeList(@RequestParam(value = "movieId") int movieId, Model model) throws Exception {
-        Movie movie = movieService.getMovieDetails(movieId);
-        userService.addToDontWantToSeeList(movie);
-        model.addAttribute("title", "Success");
-        model.addAttribute("body", "Successfully added to your Not Interested List!");
-        return "movie_details :: serverResponseModalContent";
-    }
-
-    @PostMapping("/movie/deleteFromWantToSeeList")
-    public String deleteFromWantToSeeList(@RequestParam(value = "id") int movieId, Model model) throws Exception {
-        Movie movie = movieService.getMovieDetails(movieId);
-        userService.removeFromWantToSeeList(movie);
-        model.addAttribute("title", "Success");
-        model.addAttribute("body", "Successfully deleted from your Want To See List!");
-        return "profile :: serverResponseModalContent";
-    }
-
-    @PostMapping("/movie/deleteFromNotInterestedList")
-    public String deleteFromNotInterestList(@RequestParam(value = "id") int movieId, Model model) throws Exception {
-        Movie movie = movieService.getMovieDetails(movieId);
-        userService.removeFromDontWantToSeeList(movie);
-        model.addAttribute("title", "Success");
-        model.addAttribute("body", "Successfully deleted from your Not Interest List!");
-        return "profile :: serverResponseModalContent";
-    }
-
-    @GetMapping("/movie/wantToSeeMovieList")
-    public String getWantToSeeMovie(Model model) {
-        model.addAttribute("user", userService.getCurrentUser());
-        return "profile :: wantToSeeMovie";
-    }
-
-    @GetMapping("/movie/notInterestedList")
-    public String getNotInterestMovie(Model model) {
-        model.addAttribute("user", userService.getCurrentUser());
-        return "profile :: notInterestedMovie";
-    }
-
-    @GetMapping("/movie/reviews")
-    public String updateMovieReviews(@RequestParam(value = "movieId") int movieId, Model model) {
-        model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(movieId));
-        model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(movieId));
-        return "movie_details :: reviews";
-    }
-
     @GetMapping("/userInformation")
     public String profile(@RequestParam(value = "userName") String userName, Model model) {
         model.addAttribute("user", userService.findByUsername(userName));
@@ -201,6 +145,11 @@ public class StaticController {
     @RequestMapping("/contactUs")
     public String contactUs(Model model) {
         return "contact_us_form";
+    }
+
+    @RequestMapping("/about")
+    public String about(Model model) {
+        return "about";
     }
 
 }
