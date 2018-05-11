@@ -44,7 +44,7 @@
                             <a th:text="${movie.title}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Title</a>
                         </td>
                         <td>
-                            <a th:text="${movie.getReleaseDate()}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Date</a>
+                            <a th:text="${movie.getDateForList()}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Date</a>
                         </td>
                     </tr>
                     </tbody>
@@ -78,7 +78,7 @@
                                 <a th:text="${movie.title}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Title</a>
                             </td>
                             <td>
-                                <a th:text="${movie.getReleaseDate()}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Date</a>
+                                <a th:text="${movie.getDateForList()}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Date</a>
                             </td>
                         </tr>
                     </tbody>
@@ -188,7 +188,7 @@
                     </dd>
 
                     <dt class="col-sm-3">In theaters:</dt>
-                    <dd class="col-sm-9" th:text="${movie.getReleaseDate()}">N/A</dd>
+                    <dd class="col-sm-9" th:text="${movie.getDateString()}">N/A</dd>
 
                     <dt class="col-sm-3">Run time:</dt>
                     <dd class="col-sm-9" th:text="${movie.runtime}">N/A</dd>

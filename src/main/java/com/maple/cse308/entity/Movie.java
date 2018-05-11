@@ -143,7 +143,13 @@ public class Movie {
 
     //use this for frontend
     public String getDateString() {
-        SimpleDateFormat dataFormat = new SimpleDateFormat("MM/dd/yy");
+        SimpleDateFormat dataFormat = new SimpleDateFormat("MMM dd, yyyy");
+        String date = dataFormat.format(releaseDate);
+        return date;
+    }
+
+    public String getDateForList() {
+        SimpleDateFormat dataFormat = new SimpleDateFormat("MMM dd");
         String date = dataFormat.format(releaseDate);
         return date;
     }
