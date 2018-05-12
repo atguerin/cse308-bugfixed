@@ -404,7 +404,7 @@
                 success: function(data){
                     $("#serverResponseModalContent").replaceWith(data);
                     $("#serverResponseModal").modal('show');
-                    url = /*[[@{/movie/reviews(movieId=${movie.movieId})}]]*/;
+                    url = /*[[@{/movie/reviews(movieId=${movie.movieId})}]]*/ '';
                     $("#reviews").load(url);
                 }
             });

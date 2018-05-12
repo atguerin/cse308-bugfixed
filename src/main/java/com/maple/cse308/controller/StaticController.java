@@ -1,10 +1,7 @@
 package com.maple.cse308.controller;
 
 import com.maple.cse308.entity.*;
-import com.maple.cse308.service.ActorServiceImpl;
-import com.maple.cse308.service.CriticServiceImpl;
-import com.maple.cse308.service.MovieServiceImpl;
-import com.maple.cse308.service.UserServiceImpl;
+import com.maple.cse308.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +18,8 @@ public class StaticController {
 
     @Autowired
     private MovieServiceImpl movieService;
+    @Autowired
+    private TvServiceImpl tvService;
     @Autowired
     private ActorServiceImpl actorService;
     @Autowired
@@ -57,7 +56,8 @@ public class StaticController {
     }
 
     @RequestMapping("/tv_details")
-    public String tvDetails(Model model) {
+    public String tvDetails(@RequestParam(value = "id", required = false) int id, Model model) {
+        model.addAttribute("tvShow", tvService.getTvShowDetails(id));
         return "tv_details";
     }
 
@@ -80,11 +80,6 @@ public class StaticController {
         model.addAttribute("movieReviews", movieReviews);
         //model.addAttribute("blockList", userService.getBlockList(user.getUserId()));
         return "profile";
-    }
-
-    @RequestMapping("/manage_account")
-    public String manageAccount(Model model) {
-        return "manage_account";
     }
 
     @RequestMapping("/rating-test")
