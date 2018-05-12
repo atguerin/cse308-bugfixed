@@ -25,6 +25,9 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "resetToken")
+    private String resetToken;
+
     @Column(name = "firstName")
     private String firstName;
 
@@ -111,6 +114,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
     }
 
     public String getFirstName() {

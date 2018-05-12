@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,6 @@ public class StaticController {
     private CriticServiceImpl criticService;
     @Autowired
     private EmailServiceImpl emailService;
-
 
     @RequestMapping("/index")
     public String index(Model model) {
@@ -207,6 +207,39 @@ public class StaticController {
         emailService.sendSimpleMessage("cse308teammaple@gmail.com", "Contact Form Submission: "+ subject, "Name: " + name + "\nEmail: " + email + "\n\nMessage: " + message);
         return "index";
     }
+
+    @GetMapping("/forgotPassword")
+    public String forgotPassword(Model model) {
+        return "forgot_password";
+    }
+
+    @PostMapping("/forgotPassword")
+    public String forgotPassword(Model model, @RequestParam("email") String email, HttpServletRequest request) {
+        try {
+            userService.resetPasswordToken(email,request);
+        } catch (Exception e) {
+
+        }
+        return "forgot_password";
+    }
+
+    @GetMapping("/resetPassword")
+    public String resetPassword(Model model, @RequestParam("token") String token) {
+        model.addAttribute("token", token);
+        return "reset_password";
+    }
+
+    @PostMapping("/resetPassword")
+    public String resetPassword(Model model, @RequestParam("token") String token, @RequestParam("password") String password) {
+        System.out.println(token);
+        try {
+            userService.resetPassword(token,password);
+        } catch (Exception e) {
+
+        }
+        return "index";
+    }
+
 
 }
 

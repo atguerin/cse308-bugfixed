@@ -12,10 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -536,7 +535,7 @@ public class UserServiceImpl implements UserService {
     }
     */
 
-     public void resetPassword(String email, HttpServletRequest request) throws Exception{
+     public void resetPasswordToken(String email, HttpServletRequest request) throws Exception{
          User user = userRepository.findByEmail(email);
          if(user == null){
             throw new Exception("Error: This user does not exist");
@@ -547,16 +546,20 @@ public class UserServiceImpl implements UserService {
 
              String resetUrl = request.getScheme() + "://" + request.getServerName();
              emailService.sendSimpleMessage(user.getEmail(),"Rotten Tomatoes: Passsword Reset Request","To reset your password, click the link below:\n" + resetUrl
-                     + "/reset?token=" + user.getResetToken());
+                     + ":8080/resetPassword?token=" + user.getResetToken());
          }
-
-
-
-
-
-
-
-
      }
+
+    public void resetPassword(String token, String newPass) throws Exception {
+            User user = userRepository.findByResetToken(token);
+        if(user == null){
+            throw new Exception("Error: This user does not exist");
+        }else{
+            System.out.println("\n" + user.getUsername()+ "\n");
+            user.setPassword(passwordEncoder.encode(newPass));
+            user.setResetToken("null");
+            userRepository.save(user);
+        }
+    }
 
 }
