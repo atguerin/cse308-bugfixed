@@ -19,8 +19,6 @@ public class StaticController {
     @Autowired
     private MovieServiceImpl movieService;
     @Autowired
-    private TvServiceImpl tvService;
-    @Autowired
     private ActorServiceImpl actorService;
     @Autowired
     private UserServiceImpl userService;
@@ -56,8 +54,7 @@ public class StaticController {
     }
 
     @RequestMapping("/tv_details")
-    public String tvDetails(@RequestParam(value = "id", required = false) int id, Model model) {
-        model.addAttribute("tvShow", tvService.getTvShowDetails(id));
+    public String tvDetails(Model model) {
         return "tv_details";
     }
 
