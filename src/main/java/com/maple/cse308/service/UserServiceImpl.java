@@ -402,7 +402,7 @@ public class UserServiceImpl implements UserService {
         User user = getCurrentUser();
         Movie m = new Movie();
         for (Movie mv : user.getWatchList()){
-            if(mv.getMovieId() == movie.getMovieId()){
+            if(mv.getMovieId().intValue() == movie.getMovieId().intValue()){
                 m = mv;
                 break;
             }
@@ -444,7 +444,7 @@ public class UserServiceImpl implements UserService {
         User user = getCurrentUser();
         Movie m = new Movie();
         for (Movie mv : user.getDontWatchList()){
-            if(mv.getMovieId() == movie.getMovieId()){
+            if(mv.getMovieId().intValue() == movie.getMovieId().intValue()){
                 m = mv;
                 break;
             }
