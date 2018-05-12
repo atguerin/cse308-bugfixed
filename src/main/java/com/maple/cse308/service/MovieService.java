@@ -42,6 +42,5 @@ public interface MovieService {
 
     List<Movie> getAllTimeHighestRated();
 
-    float getAverageUserRating(int movieId);
 }
 

@@ -1,15 +1,10 @@
 package com.maple.cse308.service;
 
-import com.maple.cse308.entity.TvReviewCritic;
-import com.maple.cse308.entity.TvReviewUser;
-import com.maple.cse308.entity.TvShow;
-import com.maple.cse308.repository.TvReviewCriticRepository;
-import com.maple.cse308.repository.TvReviewUserRepository;
-import com.maple.cse308.repository.TvShowRepository;
+import com.maple.cse308.entity.*;
+import com.maple.cse308.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,6 +17,12 @@ public class TvServiceImpl implements TvService {
     TvReviewUserRepository tvReviewUserRepository;
     @Autowired
     private TvShowRepository tvShowRepository;
+    @Autowired
+    private TvScreenshotRepository tvScreenshotRepository;
+    @Autowired
+    private TvActorRepository tvActorRepository;
+    @Autowired
+    private CreatorRepository creatorRepository;
 
     @Override
     public TvShow getTvShowDetails(int tvId) {
@@ -51,6 +52,7 @@ public class TvServiceImpl implements TvService {
     @Override
     public void editUserTvReview(TvReviewUser tvReviewUser) {
         tvReviewUserRepository.save(tvReviewUser);
+
     }
 
     @Override
@@ -59,51 +61,28 @@ public class TvServiceImpl implements TvService {
     }
 
     @Override
-    public List<TvReviewCritic> getCriticTvReviewsByTvShow(int tvId) throws Exception {
-        HashSet<TvReviewCritic> set = tvReviewCriticRepository.findAllByTvId(tvId);
-        if (set.isEmpty()) {
-            throw new Exception("Error: There are no reviews for this tv show");
-        } else {
-            List<TvReviewCritic> list = new LinkedList();
-            list.addAll(set);
-            return list;
-        }
+    public List<TvReviewCritic> getCriticTvReviewsByTvShow(int tvId)  {
+        List<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByTvId(tvId);
+        return tvReviewCritics;
+
     }
 
     @Override
-    public List<TvReviewCritic> getCriticTvReviewsByCritic(int criticId) throws Exception {
-        HashSet<TvReviewCritic> set = tvReviewCriticRepository.findAllByCriticId(criticId);
-        if (set.isEmpty()) {
-            throw new Exception("Error: There are no reviews for this tv show");
-        } else {
-            List<TvReviewCritic> list = new LinkedList();
-            list.addAll(set);
-            return list;
-        }
+    public List<TvReviewCritic> getCriticTvReviewsByCritic(int criticId) {
+        List<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByTvId(criticId);
+        return tvReviewCritics;
     }
 
     @Override
-    public List<TvReviewUser> getUserTvReviewsByTvShow(int tvId) throws Exception {
-        HashSet<TvReviewUser> set = tvReviewUserRepository.findAllByTvId(tvId);
-        if (set.isEmpty()) {
-            throw new Exception("Error: There are no reviews for this tv show");
-        } else {
-            List<TvReviewUser> list = new LinkedList();
-            list.addAll(set);
-            return list;
-        }
+    public List<TvReviewUser> getUserTvReviewsByTvShow(int tvId)  {
+        List<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByTvId(tvId);
+        return tvReviewUsers;
     }
 
     @Override
-    public List<TvReviewUser> getUserTvReviewsByUser(int userId) throws Exception {
-        HashSet<TvReviewUser> set = tvReviewUserRepository.findAllByUserId(userId);
-        if (set.isEmpty()) {
-            throw new Exception("Error: There are no reviews for this tv show");
-        } else {
-            List<TvReviewUser> list = new LinkedList();
-            list.addAll(set);
-            return list;
-        }
+    public List<TvReviewUser> getUserTvReviewsByUser(int userId) {
+        List<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByTvId(userId);
+        return tvReviewUsers;
     }
 
     @Override
@@ -113,7 +92,6 @@ public class TvServiceImpl implements TvService {
 
     @Override
     public List<TvShow> tvSearch(String search) {
-        //String needs to be parsed, and removed for duplcates.
         String[] searchString;
         if (search.contains(" ")) {
             searchString = search.split(" ");
@@ -142,4 +120,22 @@ public class TvServiceImpl implements TvService {
         }
         return resultList;
     }
+
+    public List<TvShow> getOpenThisWeek(){
+        return tvShowRepository.findTop16ByOrderByPremierDateDesc();
+    }
+
+    public List<TvShow> getPopularTv(){
+        return tvShowRepository.findTop16ByOrderByRatingDesc();
+    }
+
+    public List<TvScreenshot> getTvScreenshot(int id){
+        return tvScreenshotRepository.findAllByTvId(id);
+    }
+
+    public List<TvActor> getTvActor(int id){
+        return tvActorRepository.findAllByTvId(id);
+    }
+
+    public List<Creator> getTvCreator(int id){return creatorRepository.findAllByCreatorId(id);}
 }

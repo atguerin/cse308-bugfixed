@@ -17,6 +17,7 @@ public class MovieController {
 
     @Autowired
     private MovieServiceImpl movieService;
+
     @Autowired
     private UserServiceImpl userService;
 
@@ -49,14 +50,13 @@ public class MovieController {
     }
 
     @PostMapping("/postMovieReview")
-    public String postReview(@ModelAttribute MovieReviewUser reviewUser, Model model) throws Exception {
+    public String postReview(@ModelAttribute MovieReviewUser reviewUser, Model model) {
         reviewUser.setUserId(userService.getCurrentUser().getUserId());
         movieService.addUserMovieReview(reviewUser);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully posted your review!");
         return "movie_details :: serverResponseModalContent";
     }
-
 
 }
 

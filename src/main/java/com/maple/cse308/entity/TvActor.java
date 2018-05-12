@@ -1,5 +1,8 @@
 package com.maple.cse308.entity;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import javax.persistence.*;
 
 @Entity
@@ -61,5 +64,19 @@ public class TvActor {
 
     public void setNeedsChecking(Boolean needsChecking) {
         this.needsChecking = needsChecking;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "actorId", insertable = false, updatable = false)
+    @NotFound(action = NotFoundAction.IGNORE)
+    private Actor actor;
+
+
+    public Actor getActor() {
+        return actor;
+    }
+
+    public void setActor(Actor actor) {
+        this.actor = actor;
     }
 }

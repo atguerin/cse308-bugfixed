@@ -3,11 +3,11 @@ package com.maple.cse308.repository;
 import com.maple.cse308.entity.TvReviewCritic;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.HashSet;
+import java.util.List;
 
 public interface TvReviewCriticRepository extends CrudRepository<TvReviewCritic, Integer> {
 
-   HashSet<TvReviewCritic> findAllByTvId(int tvId);
+    List<TvReviewCritic> findAllByTvId(int tvId);
 
-   HashSet<TvReviewCritic> findAllByCriticId(int criticId);
+    List<TvReviewCritic> findAllByCriticId(int criticId);
 }

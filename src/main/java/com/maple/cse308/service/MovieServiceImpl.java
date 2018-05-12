@@ -6,8 +6,9 @@ import com.maple.cse308.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.util.*;
+import java.sql.Date;
+
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -32,15 +33,15 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieReviewCritic> getCriticMovieReviewsByMovie(int movieId) {
+    public List<MovieReviewCritic> getCriticMovieReviewsByMovie(int movieId)  {
         HashSet<MovieReviewCritic> set = movieReviewCriticRepository.findAllByMovieId(movieId);
         List<MovieReviewCritic> movieReviewCritics = new LinkedList();
         movieReviewCritics.addAll(set);
-            return movieReviewCritics;
-        }
+        return movieReviewCritics;
+    }
 
     @Override
-    public List<MovieReviewCritic> getCriticMovieReviewsByCritic(int criticId) {
+    public List<MovieReviewCritic> getCriticMovieReviewsByCritic(int criticId){
         HashSet<MovieReviewCritic> set = movieReviewCriticRepository.findAllByCriticId(criticId);
         List<MovieReviewCritic> movieReviewCritics = new LinkedList();
         movieReviewCritics.addAll(set);
@@ -48,25 +49,27 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieReviewUser> getUserMovieReviewsByMovie(int movieId) {
+    public List<MovieReviewUser> getUserMovieReviewsByMovie(int movieId)  {
         HashSet<MovieReviewUser> set = movieReviewUserRepository.findAllByMovieId(movieId);
-        List<MovieReviewUser> movieReviewUsers = new LinkedList();
-        movieReviewUsers.addAll(set);
-            return movieReviewUsers;
-    }
-
-    @Override
-    public List<MovieReviewUser> getUserMovieReviewsByUser(int userId) {
-        HashSet<MovieReviewUser> set = movieReviewUserRepository.findAllByUserId(userId);
         List<MovieReviewUser> movieReviewUsers = new LinkedList();
         movieReviewUsers.addAll(set);
         return movieReviewUsers;
     }
 
     @Override
+    public List<MovieReviewUser> getUserMovieReviewsByUser(int userId)  {
+        HashSet<MovieReviewUser> set = movieReviewUserRepository.findAllByUserId(userId);
+        List<MovieReviewUser> movieReviewUsers = new LinkedList();
+        movieReviewUsers.addAll(set);
+
+        return movieReviewUsers;
+
+    }
+
+    @Override
     public List<Movie> getMoviesComingSoon() {
         Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-        List<Movie> movies = movieRepository.findTop10ByReleaseDateAfter(date);
+        List<Movie> movies = movieRepository.findTop16ByReleaseDateAfter(date);
         movies.sort(Comparator.comparing(Movie::getReleaseDate));
         return movies;
     }
@@ -74,7 +77,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<Movie> getMoviesOutNow() {
         Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-        List<Movie> movies = movieRepository.findTop10ByReleaseDateBefore(date);
+        List<Movie> movies = movieRepository.findTop16ByReleaseDateBefore(date);
         movies.sort(Comparator.comparing(Movie::getReleaseDate)
                 .reversed());
         return movies;
@@ -84,7 +87,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<Movie> getTopBoxOffice() {
         Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-        List<Movie> movies = movieRepository.findTop10ByReleaseDateBefore(date);
+        List<Movie> movies = movieRepository.findTop16ByReleaseDateBefore(date);
         movies.sort(Comparator.comparingInt(Movie::getRevenueUnformatted)
                 .reversed());
         return movies;
@@ -161,7 +164,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<Movie> getAllTimeHighestRated() {
-        return movieRepository.findTop10ByRatingAvg(movieRepository.findAll());
+        return movieRepository.findTop16ByRatingAvg(movieRepository.findAll());
     }
 
     public List<MovieScreenshot> getMovieScreenShots(int movieId){
@@ -176,16 +179,18 @@ public class MovieServiceImpl implements MovieService {
         return movieActorRepository.findAllByMovieId(movieId);
     }
 
-    @Override
-    public float getAverageUserRating(int movieId){
-        float divisor = 0;
-        float value = 0;
-        HashSet<MovieReviewUser> movieSet = movieReviewUserRepository.findAllByMovieId(movieId);
-        for (MovieReviewUser movieReviewUser : movieSet) {
-            divisor++;
-            value = value + movieReviewUser.getRating();
-        }
-        value = value/divisor;
-        return value;
+    public List<MovieReviewCritic> getMovieReviewCritics(int movieId){
+        HashSet<MovieReviewCritic> set = movieReviewCriticRepository.findAllByMovieId(movieId);
+        List<MovieReviewCritic> list = new LinkedList();
+        list.addAll(set);
+        return list;
     }
+
+    public List<MovieReviewUser> getMovieReviewUsers(int movieId){
+        HashSet<MovieReviewUser> set = movieReviewUserRepository.findAllByMovieId(movieId);
+        List<MovieReviewUser> list = new LinkedList();
+        list.addAll(set);
+        return list;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.maple.cse308.repository;
 
+import com.maple.cse308.entity.Creator;
 import com.maple.cse308.entity.TvShow;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -15,4 +16,10 @@ public interface TvShowRepository extends CrudRepository<TvShow, Integer> {
 
     TvShow save(TvShow tvShow);
 
-    boolean existsByTitleAndPremierDate(String title, Date premierDate);}
+    boolean existsByTitleAndPremierDate(String title, Date premierDate);
+
+    List<TvShow> findTop16ByOrderByPremierDateDesc();
+
+    List<TvShow> findTop16ByOrderByRatingDesc();
+
+}

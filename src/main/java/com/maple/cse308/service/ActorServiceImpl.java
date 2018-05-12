@@ -17,8 +17,10 @@ public class ActorServiceImpl implements ActorService {
 
     @Autowired
     ActorRepository actorRepository;
+
     @Autowired
     ActorScreenshotRepository actorScreenshotRepository;
+
     @Autowired
     MovieActorRepository movieActorRepository;
 

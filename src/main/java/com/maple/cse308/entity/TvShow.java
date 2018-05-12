@@ -25,6 +25,18 @@ public class TvShow {
     @Column(name="overview", length=2048)
     private String overview;
 
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    @Column(name="rating")
+    private String rating;
+
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "tvGenre", joinColumns = @JoinColumn(name = "tvId"), inverseJoinColumns = @JoinColumn(name = "genreId"))
     private Set<Genre> genre;

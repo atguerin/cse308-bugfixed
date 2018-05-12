@@ -1,7 +1,6 @@
 package com.maple.cse308.repository;
 
 import com.maple.cse308.entity.Critic;
-import com.maple.cse308.entity.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,8 +18,6 @@ public interface CriticRepository extends CrudRepository<Critic, Integer> {
     Critic findByFirstNameAndMiddleNameAndLastName(String firstName, String middleName, String lastName);
 
     Critic findByFirstNameAndLastName(String firstName, String lastName);
-
-    Critic findByUser(User user);
 
     List<Critic> findAllByFirstNameOrMiddleNameOrLastNameIgnoreCase(String first, String middle, String last);
 }

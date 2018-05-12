@@ -1,9 +1,7 @@
 package com.maple.cse308.controller;
 
-import com.maple.cse308.entity.Actor;
-import com.maple.cse308.entity.Critic;
-import com.maple.cse308.entity.Movie;
-import com.maple.cse308.entity.User;
+import com.maple.cse308.entity.*;
+import com.maple.cse308.repository.*;
 import com.maple.cse308.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +26,7 @@ public class StaticController {
     @Autowired
     private CriticServiceImpl criticService;
     @Autowired
-    private EmailServiceImpl emailService;
+    private TvServiceImpl tvService;
 
     @RequestMapping("/index")
     public String index(Model model) {
@@ -50,8 +47,8 @@ public class StaticController {
         model.addAttribute("outNowList", movieService.getMoviesOutNow());
         model.addAttribute("topBoxOfficeList", movieService.getTopBoxOffice());
         model.addAttribute("movie", movieService.getMovieDetails(id));
-        model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(id));
-        model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(id));
+        model.addAttribute("criticReviews", movieService.getMovieReviewCritics(id));
+        model.addAttribute("userReviews", movieService.getMovieReviewUsers(id));
         model.addAttribute("screenshots", movieService.getMovieScreenShots(id));
         model.addAttribute("trailers", movieService.getMovieTrailers(id));
         model.addAttribute("actors", movieService.getMovieActors(id));
@@ -59,9 +56,25 @@ public class StaticController {
     }
 
     @RequestMapping("/tv_details")
-    public String tvDetails(Model model) {
+    public String tvDetails(@RequestParam(value = "id", required = false) int id, Model model) throws  Exception  {
+        model.addAttribute("screenshots", tvService.getTvScreenshot(id));
+        model.addAttribute("tv", tvService.getTvShowDetails(id));
+        model.addAttribute("userReviews", tvService.getUserTvReviewsByTvShow(id));
+        model.addAttribute("criticReviews", tvService.getCriticTvReviewsByTvShow(id));
+        List<TvActor> list = tvService.getTvActor(id);
+        List<TvActor> reallist = new ArrayList<>();
+        for(TvActor ta : list){
+            if(ta!=null){
+                reallist.add(ta);
+            }
+        }
+        model.addAttribute("actors", reallist);
+        model.addAttribute("creator", tvService.getTvCreator(id));
+        model.addAttribute("popularList", tvService.getPopularTv());
+        model.addAttribute("outNowList", tvService.getOpenThisWeek());
         return "tv_details";
     }
+
 
     @RequestMapping("/actor_details")
     public String actorDetails(@RequestParam(value = "id", required = false) int id, Model model) {
@@ -115,10 +128,11 @@ public class StaticController {
     @GetMapping("/search/tv")
     public String searchTV(@RequestParam(value = "search") String search, Model model) {
         model.addAttribute("search", search);
-        List<Movie> tvList = new ArrayList<>(); // We don't have TV data currently
+        List<TvShow> tvList = tvService.tvSearch(search);
         model.addAttribute("tvList", tvList);
         return "search :: tvList";
     }
+
 
     @GetMapping("/search/celeb")
     public String searchCelebrities(@RequestParam(value = "search") String search, Model model) {
@@ -186,8 +200,8 @@ public class StaticController {
 
     @GetMapping("/movie/reviews")
     public String updateMovieReviews(@RequestParam(value = "movieId") int movieId, Model model) {
-        model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(movieId));
-        model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(movieId));
+        model.addAttribute("criticReviews", movieService.getMovieReviewCritics(movieId));
+        model.addAttribute("userReviews", movieService.getMovieReviewUsers(movieId));
         return "movie_details :: reviews";
     }
 
@@ -196,50 +210,4 @@ public class StaticController {
         model.addAttribute("user", userService.findByUsername(userName));
         return "user_info";
     }
-
-    @GetMapping("/contactUs")
-    public String contactUs(Model model) {
-        return "contact_us_form";
-    }
-
-    @PostMapping("/contactUs")
-    public String contactUs(@RequestParam(value = "name") String name, @RequestParam(value = "email") String email, @RequestParam(value = "subject") String subject, @RequestParam(value = "message") String message) {
-        emailService.sendSimpleMessage("cse308teammaple@gmail.com", "Contact Form Submission: "+ subject, "Name: " + name + "\nEmail: " + email + "\n\nMessage: " + message);
-        return "index";
-    }
-
-    @GetMapping("/forgotPassword")
-    public String forgotPassword(Model model) {
-        return "forgot_password";
-    }
-
-    @PostMapping("/forgotPassword")
-    public String forgotPassword(Model model, @RequestParam("email") String email, HttpServletRequest request) {
-        try {
-            userService.resetPasswordToken(email,request);
-        } catch (Exception e) {
-
-        }
-        return "forgot_password";
-    }
-
-    @GetMapping("/resetPassword")
-    public String resetPassword(Model model, @RequestParam("token") String token) {
-        model.addAttribute("token", token);
-        return "reset_password";
-    }
-
-    @PostMapping("/resetPassword")
-    public String resetPassword(Model model, @RequestParam("token") String token, @RequestParam("password") String password) {
-        System.out.println(token);
-        try {
-            userService.resetPassword(token,password);
-        } catch (Exception e) {
-
-        }
-        return "index";
-    }
-
-
 }
-

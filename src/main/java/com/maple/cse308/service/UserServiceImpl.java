@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,30 +25,22 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
-    private RoleRepository roleRepository;
+    MovieRepository movieRepository;
+
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-    @Autowired
-    private MovieRepository movieRepository;
-    @Autowired
-    private TvShowRepository tvShowRepository;
+    TvShowRepository tvShowRepository;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private CriticRepository criticRepository;
-    @Autowired
-    private MovieReviewUserRepository movieReviewUserRepository;
-    @Autowired
-    private MovieReviewCriticRepository movieReviewCriticRepository;
-    @Autowired
-    private EmailServiceImpl emailService;
-
-   /* @Autowired
-    private TvReviewUserRepository tvReviewUserRepository;
 
     @Autowired
-    private TvReviewCriticRepository tvReviewCriticRepository;
-    */
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public String changePhoto(String photo) {
@@ -136,61 +127,31 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser() {
         User user = getCurrentUser();
-
-        if (confirmCurrentRole("ROLE_USER")) {
-            Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
-            for (MovieReviewUser movieReviewUser : movieReviewUsers) {
-                movieReviewUserRepository.delete(movieReviewUser);
-            }
-      /*  Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
-        for (TvReviewUser tvReviewUser : tvReviewUsers) {
-            tvReviewUserRepository.delete(tvReviewUser);
-        }*/
-        } else if (confirmCurrentRole("ROLE_CRITIC")) {
-            Critic critic = criticRepository.findByUser(user);
-            Set<MovieReviewCritic> movieReviewCritics = movieReviewCriticRepository.findAllByCriticId(critic.getCriticId());
-            for (MovieReviewCritic movieReviewCritic : movieReviewCritics) {
-                movieReviewCriticRepository.delete(movieReviewCritic);
-            }
-      /*  Set<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByCriticId(critic.getCriticId());
-        for (TvReviewCritic tvReviewCritic : tvReviewCritics) {
-            tvReviewCriticRepository.delete(tvReviewUser);
-        }*/
-        }
         userRepository.delete(user);
     }
 
     //allows administrator to delete a user account
-    public void deleteUser(String username) {
-
-        User user = findByUsername(username);
-        if (user.getRoles().contains("ROLE_USER")) {
-            Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
-            for (MovieReviewUser movieReviewUser : movieReviewUsers) {
-                movieReviewUserRepository.delete(movieReviewUser);
-            }
-            /*  Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
-                for (TvReviewUser tvReviewUser : tvReviewUsers) {
-                    tvReviewUserRepository.delete(tvReviewUser);
-                }*/
-        } else if (user.getRoles().contains("ROLE_CRITIC")) {
-            Critic critic = criticRepository.findByUser(user);
-            Set<MovieReviewCritic> movieReviewCritics = movieReviewCriticRepository.findAllByCriticId(critic.getCriticId());
-            for (MovieReviewCritic movieReviewCritic : movieReviewCritics) {
-                movieReviewCriticRepository.delete(movieReviewCritic);
-            }
-                /* Set<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByCriticId(critic.getCriticId());
-                for (TvReviewCritic tvReviewCritic : tvReviewCritics) {
-                tvReviewCriticRepository.delete(tvReviewUser);
-                }*/
-        }
+    public void deleteUser(String username) throws Exception {
+        if (userRepository.existsByUsername(username)) {
+            User user = findByUsername(username);
             userRepository.delete(user);
+        } else {
+            throw new Exception("Error: User doesn't exist");
+        }
+    }
+
+    private void updateUser(){
+        User user = findByUsername(getCurrentUser().getUsername());
+        UserDetailsImpl userDetails = new UserDetailsImpl(user);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails,userDetails.getPassword(),userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
 
     //get current user from security context singleton
     @Override
@@ -200,7 +161,6 @@ public class UserServiceImpl implements UserService {
     }
 
     //confirm current authorization level of user
-    @Override
     public boolean confirmCurrentRole(String role) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
@@ -209,14 +169,6 @@ public class UserServiceImpl implements UserService {
                 return true;
         }
         return false;
-    }
-
-    @Override
-    public void updateUser() {
-        User user = findByUsername(getCurrentUser().getUsername());
-        UserDetailsImpl userDetails = new UserDetailsImpl(user);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     @Override
@@ -535,31 +487,5 @@ public class UserServiceImpl implements UserService {
     }
     */
 
-     public void resetPasswordToken(String email, HttpServletRequest request) throws Exception{
-         User user = userRepository.findByEmail(email);
-         if(user == null){
-            throw new Exception("Error: This user does not exist");
-         }else{
-             String token = UUID.randomUUID().toString();
-             user.setResetToken(token);
-             userRepository.save(user);
-
-             String resetUrl = request.getScheme() + "://" + request.getServerName();
-             emailService.sendSimpleMessage(user.getEmail(),"Rotten Tomatoes: Passsword Reset Request","To reset your password, click the link below:\n" + resetUrl
-                     + ":8080/resetPassword?token=" + user.getResetToken());
-         }
-     }
-
-    public void resetPassword(String token, String newPass) throws Exception {
-            User user = userRepository.findByResetToken(token);
-        if(user == null){
-            throw new Exception("Error: This user does not exist");
-        }else{
-            System.out.println("\n" + user.getUsername()+ "\n");
-            user.setPassword(passwordEncoder.encode(newPass));
-            user.setResetToken("null");
-            userRepository.save(user);
-        }
-    }
 
 }

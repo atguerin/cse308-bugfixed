@@ -1,4 +1,4 @@
-/*
+package com.maple.cse308.entity;/*
 package com.maple.cse308.entity;
 
 import javax.persistence.Column;
