@@ -44,7 +44,18 @@ public class StaticController {
         model.addAttribute("comingSoonList", movieService.getMoviesComingSoon());
         model.addAttribute("outNowList", movieService.getMoviesOutNow());
         model.addAttribute("topBoxOfficeList", movieService.getTopBoxOffice());
+        MovieReviewUser review = null;
+        try {
+            User user = userService.getCurrentUser();
+            List<MovieReviewUser> l = movieService.getUserMovieReviewsByUserAndMovie(user.getUserId(), id);
+            if (!l.isEmpty()){
+                review = l.get(0);
+            }
+        } catch (Exception e){
+
+        }
         model.addAttribute("movie", movieService.getMovieDetails(id));
+        model.addAttribute("review", review);
         model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(id));
         model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(id));
         model.addAttribute("screenshots", movieService.getMovieScreenShots(id));

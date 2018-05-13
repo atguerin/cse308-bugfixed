@@ -110,10 +110,18 @@
                     </thead>
                     <tbody>
                         <tr th:unless="${movies.isEmpty()}" th:each="movie : ${movies}">
-                            <td th:text="${movie.movie.ratingAvg}">Rating</td>
-                            <td th:text="${movie.movie.title}">Title</td>
-                            <td th:text="${movie.movie.revenue}">$10.4M</td>
-                            <td th:text="${movie.movie.getReleaseYear()}">2017</td>
+                            <td>
+                                <a th:text="${movie.movie.ratingAvg}"th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Rating</a>
+                            </td>
+                            <td>
+                                <a th:text="${movie.movie.title}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Title</a>
+                            </td>
+                            <td>
+                                <a th:text="${movie.movie.getRevenue()}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">revenue</a>
+                            </td>
+                            <td>
+                                <a th:text="${movie.movie.getReleaseYear()}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">2017</a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

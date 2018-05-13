@@ -90,7 +90,7 @@
         <div class="col-sm-12 col-md-12 col-lg-8">
             <!-- Trailer -->
             <div th:unless="${trailers.isEmpty()}" class="embed-responsive embed-responsive-16by9">
-                <video th:src="@{${trailers.iterator().next().getVideo()}}" class="embed-responsive-item" controls="controls"></video>
+                <iframe th:src="@{${trailers.iterator().next().getVideo()}}" class="embed-responsive-item" controls="controls"></iframe>
             </div>
 
             <!-- Movie details -->
@@ -128,15 +128,18 @@
                         </form>
                     </div>
 
-                    <form th:action="@{/postMovieReview}" method="post" class="w-100" id="postReviewForm">
-                        <input name="movieId" type="hidden" th:value="${movie.movieId}"/>
-                        <input name="rating" id="rating" class="rating rating-loading" value="0" data-min="0" data-size="xxs"/>
-                        <textarea name="review" class="form-control" id="review" rows="3" style="resize: none;"></textarea>
-                        <div class="d-flex w-100 mt-1">
-                            <button sec:authorize="isAuthenticated()" type="button" id="postReview" class="btn btn-primary btn-sm ml-auto">POST</button>
-                            <button sec:authorize="isAnonymous()" data-toggle="modal" data-target="#login_modal" type="button" class="btn btn-primary btn-sm ml-auto">POST</button>
-                        </div>
-                    </form>
+                    <div id="reviewForm" class="w-100">
+                        <form th:action="@{/postMovieReview}" method="post" class="w-100" id="postReviewForm" th:fragment="reviewForm">
+                            <input name="movieId" type="hidden" th:value="${movie.movieId}"/>
+                            <input name="rating" id="rating" class="rating rating-loading" th:value="${review}?${review.rating}:'0'" data-min="0" data-size="xxs"/>
+                            <textarea name="review" class="form-control" id="review" rows="3" style="resize: none;" th:text="${review}?${review.review}:''"></textarea>
+                            <div class="d-flex w-100 mt-1">
+                                <button sec:authorize="isAuthenticated()" th:unless="${review}" type="button" id="postReview" class="btn btn-primary btn-sm ml-auto">POST</button>
+                                <button sec:authorize="isAuthenticated()" th:if="${review}" type="button" id="editReview" class="btn btn-primary btn-sm ml-auto">EDIT</button>
+                                <button sec:authorize="isAnonymous()" data-toggle="modal" data-target="#login_modal" type="button" class="btn btn-primary btn-sm ml-auto">POST</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- Server response modal -->
@@ -200,7 +203,7 @@
 
             <!-- Trailer -->
             <div th:if="${trailers.size()>0}" class="details-jumbotron mt-1 mb-4">
-                <h6 class="border-bottom border-gray pb-2 mb-0">VIDEOS</h6>
+                <h6 class="border-bottom border-gray pb-2 mb-0">TRAILERS</h6>
                 <div class="row container">
                     <div th:each="trailer,iterStat : ${trailers}" th:if="${iterStat.index<4}" class="video-thumbnail-container">
                         <img th:src="@{${trailer.videoThumb}}" class="video-thumbnail-img" alt="video_thumbnail"/>
@@ -211,7 +214,7 @@
                         </a>
                     </div>
                 </div>
-                <!-- <div class="mt-4"><a href="#"><p class="text-right">See more</p></a></div> -->
+                <div class="mt-4"><a th:href="@{/movie_trailers(id=${movie.movieId})}"><p class="text-right">See All Trailers</p></a></div>
             </div>
 
             <!-- Trailer Modal -->
@@ -219,7 +222,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content video-modal">
                         <div class="embed-responsive embed-responsive-16by9">
-                            <video class="embed-responsive-item" th:src="@{${trailer.video}}" controls="controls"></video>
+                            <iframe class="embed-responsive-item" th:src="@{${trailer.video}}" controls="controls"></iframe>
                         </div>
                     </div>
                 </div>
@@ -355,17 +358,32 @@
 <script src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
 <script src="../../js/star-rating.js" th:src="@{/js/star-rating.js}"></script>
 <script th:inline="javascript">
+    var stopVideo = function ( element ) {
+        var iframe = element.querySelector( 'iframe');
+        var video = element.querySelector( 'video' );
+        if ( iframe !== null ) {
+            var iframeSrc = iframe.src;
+            iframe.src = iframeSrc;
+        }
+        if ( video !== null ) {
+            video.pause();
+        }
+    };
+
     $(document).ready(function(){
         $('.modal.trailer').on('shown.bs.modal', function (e) {
-            $(this).find('video')[0].play();
+            /*$(this).find('video')[0].play();
+            var symbol = $("#video1")[0].src.indexOf("?") > -1 ? "&" : "?";
+            $("#video1")[0].src += symbol + "autoplay=1";
+            */
         });
         $('.modal.trailer').on('hidden.bs.modal', function (e) {
-            $(this).find('video')[0].pause();
+            /*$(this).find('video')[0].pause();*/
+            stopVideo(this);
         });
     });
 
-
-    $("#addToWantToSee").on("click", function () {
+    $(document).on("click", "#addToWantToSee", function () {
         $.ajax({
             method: "POST",
             url: "/movie/addToWantToSeeList",
@@ -377,7 +395,7 @@
         });
     });
 
-    $("#addToNotInterested").on("click", function () {
+    $(document).on("click", "#addToNotInterested", function () {
         $.ajax({
             method: "POST",
             url: "/movie/addToDontWantToSeeList",
@@ -389,8 +407,7 @@
         });
     });
 
-
-    $("#postReview").on("click", function () {
+    $(document).on("click", "#postReview", function () {
         value = $("#rating").val();
         if (!(value)){
             $("#serverResponseModal").find('.modal-title').text("Select score");
@@ -404,15 +421,40 @@
                 success: function(data){
                     $("#serverResponseModalContent").replaceWith(data);
                     $("#serverResponseModal").modal('show');
-                    url = /*[[@{/movie/reviews(movieId=${movie.movieId})}]]*/ '';
-                    $("#reviews").load(url);
+                    url1 = /*[[@{/movie/reviewForm(movieId=${movie.movieId})}]]*/ '';
+                    url2 = /*[[@{/movie/reviews(movieId=${movie.movieId})}]]*/ '';
+                    $("#reviewForm").load(url1)
+                    $("#reviews").load(url2);
+                }
+            });
+        }
+    });
+
+    $(document).on("click", "#editReview", function () {
+        value = $("#rating").val();
+        if (!(value)){
+            $("#serverResponseModal").find('.modal-title').text("Select score");
+            $("#serverResponseModal").find('.modal-body').text("Please select a score.");
+            $("#serverResponseModal").modal('show');
+        } else{
+            $.ajax({
+                method: "POST",
+                url: "/editMovieReview",
+                data: $('#postReviewForm').serialize(),
+                success: function(data){
+                    $("#serverResponseModalContent").replaceWith(data);
+                    $("#serverResponseModal").modal('show');
+                    url1 = /*[[@{/movie/reviewForm(movieId=${movie.movieId})}]]*/ '';
+                    url2 = /*[[@{/movie/reviews(movieId=${movie.movieId})}]]*/ '';
+                    $("#reviewForm").load(url1)
+                    $("#reviews").load(url2);
                 }
             });
         }
     });
 
     $( document ).ajaxComplete(function( event, xhr, settings ) {
-        $(".rating.score").rating({});
+        $(".rating").rating({});
     });
 
 </script>

@@ -191,4 +191,12 @@ public class MovieServiceImpl implements MovieService {
         value = value/divisor;
         return value;
     }
+
+    @Override
+    public List<MovieReviewUser> getUserMovieReviewsByUserAndMovie(int userId, int movieId) {
+        HashSet<MovieReviewUser> set = movieReviewUserRepository.findByUserIdAndMovieId(userId, movieId);
+        List<MovieReviewUser> userMovieReview = new LinkedList();
+        userMovieReview.addAll(set);
+        return userMovieReview;
+    }
 }

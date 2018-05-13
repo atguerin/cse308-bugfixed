@@ -74,12 +74,12 @@
                     <h4 class="border-bottom mb-1">Coming Soon</h4>
                 </div>
                 <div class="row">
-                    <div th:each="movie : ${comingSoonList}" class="col-sm-6 col-md-4 col-lg-2 mt-2">
+                    <div th:each="movie,iterStat : ${comingSoonList}" class="col-sm-6 col-md-4 col-lg-2 mt-2">
                         <a th:href="@{/movie_details(id=${movie.movieId})}">
                             <div class="card" style="width: 10rem;">
                                 <img class="card-img-top" th:src="@{${movie.getPoster()}}" alt="Card image cap"/>
                                 <div class="card-body">
-                                    <p th:text="${movie.getTitle()}" class="card-title">Movie title</p>
+                                    <p th:text="|${iterStat.index+1}. ${movie.getTitle()}|" class="card-title">Movie title</p>
                                     <p th:text="${movie.getDateString()}" class="card-text">May 1</p>
                                 </div>
                             </div>
@@ -97,12 +97,12 @@
                     <h4 class="border-bottom mb-1">Out Now</h4>
                 </div>
                 <div class="row">
-                    <div th:each="movie : ${outNowList}" class="col-sm-6 col-md-4 col-lg-2 mt-2">
+                    <div th:each="movie, iterStat : ${outNowList}" class="col-sm-6 col-md-4 col-lg-2 mt-2">
                         <a th:href="@{/movie_details(id=${movie.movieId})}">
                             <div class="card" style="width: 10rem;">
                                 <img class="card-img-top" th:src="@{${movie.getPoster()}}" alt="Card image cap"/>
                                 <div class="card-body">
-                                    <p th:text="${movie.getTitle()}" class="card-title">Movie title</p>
+                                    <p th:text="|${iterStat.index+1}. ${movie.getTitle()}|" class="card-title">Movie title</p>
                                     <p th:text="${movie.getDateString()}" class="card-text">May 1</p>
                                 </div>
                             </div>
@@ -120,12 +120,12 @@
                     <h4 class="border-bottom mb-1">Top Box Office</h4>
                 </div>
                 <div class="row">
-                    <div th:each="movie : ${topBoxOfficeList}" class="col-sm-6 col-md-4 col-lg-2 mt-2">
+                    <div th:each="movie, iterStat : ${topBoxOfficeList}" class="col-sm-6 col-md-4 col-lg-2 mt-2">
                         <a th:href="@{/movie_details(id=${movie.movieId})}">
                             <div class="card" style="width: 10rem;">
                                 <img class="card-img-top" th:src="@{${movie.poster}}" alt="Card image cap"/>
                                 <div class="card-body">
-                                    <p th:text="${movie.title}" class="card-title">Movie title</p>
+                                    <p th:text="|${iterStat.index+1}. ${movie.getTitle()}|" class="card-title">Movie title</p>
                                     <p th:text="|$${movie.getRevenue()}|" class="card-text">$</p>
                                 </div>
                             </div>

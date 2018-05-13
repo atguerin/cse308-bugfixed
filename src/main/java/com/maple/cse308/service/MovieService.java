@@ -18,6 +18,8 @@ public interface MovieService {
 
     List<MovieReviewUser> getUserMovieReviewsByUser(int userId) throws Exception;
 
+    List<MovieReviewUser> getUserMovieReviewsByUserAndMovie(int userId, int movieId);
+
     List<Movie> getMoviesComingSoon();
 
     List<Movie> getMoviesOutNow();

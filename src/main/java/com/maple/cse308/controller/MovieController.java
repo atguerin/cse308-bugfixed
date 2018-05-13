@@ -59,6 +59,26 @@ public class MovieController {
         return "movie_details :: serverResponseModalContent";
     }
 
+    @PostMapping("/editMovieReview")
+    public String editReview(@ModelAttribute MovieReviewUser reviewUser, Model model) throws Exception {
+        int userId = userService.getCurrentUser().getUserId();
+        MovieReviewUser review = movieService.getUserMovieReviewsByUserAndMovie(userId, reviewUser.getMovieId()).get(0);
+        review.setRating(reviewUser.getRating());
+        review.setReview(reviewUser.getReview());
+        movieService.editUserMovieReview(review);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully edited your review!");
+        return "movie_details :: serverResponseModalContent";
+    }
+
+    @GetMapping("/movie/reviewForm")
+    public String updateMovieReviewForm(@RequestParam(value = "movieId") int movieId, Model model) {
+        model.addAttribute("movie", movieService.getMovieDetails(movieId));
+        int userId = userService.getCurrentUser().getUserId();
+        model.addAttribute("review", movieService.getUserMovieReviewsByUserAndMovie(userId, movieId).get(0));
+        return "movie_details :: reviewForm";
+    }
+
     @GetMapping("/movie/reviews")
     public String updateMovieReviews(@RequestParam(value = "movieId") int movieId, Model model) {
         model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(movieId));
@@ -131,7 +151,12 @@ public class MovieController {
         return "profile :: movieReviews";
     }
 
-
+    @RequestMapping("/movie_trailers")
+    public String movieDetails(@RequestParam(value = "id", required = false) int id, Model model) {
+        model.addAttribute("movie", movieService.getMovieDetails(id));
+        model.addAttribute("trailers", movieService.getMovieTrailers(id));
+        return "movie_trailers";
+    }
 
 
 }
