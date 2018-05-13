@@ -301,8 +301,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addEmployee(User user) throws Exception {
 
-        if (confirmCurrentRole("ADMIN")) {
-            user.setRoles(roleRepository.findByRole("ADMIN"));
+        if (confirmCurrentRole("ROLE_ADMIN")) {
+            user.setRoles(roleRepository.findByRole("ROLE_ADMIN"));
             userRepository.save(user);
         } else {
             throw new Exception("Error: Currently logged in user is not an administrator and can not add employee");
@@ -313,8 +313,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void removeEmployee(User user) throws Exception {
 
-        if (confirmCurrentRole("ADMIN")) {
-            user.setRoles(roleRepository.findByRole("USER"));
+        if (confirmCurrentRole("ROLE_ADMIN")) {
+            user.setRoles(roleRepository.findByRole("ROLE_USER"));
             userRepository.save(user);
         } else {
             throw new Exception("Error: Currently logged in user is not an administrator and can not demote an employee");
@@ -325,8 +325,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void banUser(User user) throws Exception {
 
-        if (confirmCurrentRole("ADMIN")) {
-            user.setRoles(roleRepository.findByRole("BANNED"));
+        if (confirmCurrentRole("ROLE_DMIN")) {
+            user.setRoles(roleRepository.findByRole("ROLE_BANNED"));
             userRepository.save(user);
         } else {
             throw new Exception("Error: Currently logged in user is not an administrator and can not ban user");
@@ -337,8 +337,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void suspendUser(User user, Calendar calendar) throws Exception {
 
-        if (confirmCurrentRole("ADMIN")) {
-            user.setRoles(roleRepository.findByRole("SUSPENDED"));
+        if (confirmCurrentRole("ROLE_ADMIN")) {
+            user.setRoles(roleRepository.findByRole("ROLE_SUSPENDED"));
             user.setSuspendDate(calendar);
             userRepository.save(user);
         } else {
@@ -464,7 +464,7 @@ public class UserServiceImpl implements UserService {
     public void addMovie(Movie movie) throws Exception {
         if(movieRepository.existsByTitleAndReleaseDate(movie.getTitle(), movie.getReleaseDate())){
             throw new Exception("Error: This movie already exists in the database");
-        }else if(!confirmCurrentRole("ADMIN")){
+        }else if(!confirmCurrentRole("ROLE_ADMIN")){
             throw new Exception("Error: You are not an administrator");
         }else{
             movieRepository.save(movie);
@@ -473,7 +473,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editMovie(Movie movie) throws Exception {
-        if(confirmCurrentRole("ADMIN")) {
+        if(confirmCurrentRole("ROLE_ADMIN")) {
             movieRepository.save(movie);
         }else{
             throw new Exception("Error: You are not an administrator");
@@ -484,7 +484,7 @@ public class UserServiceImpl implements UserService {
     public void addTvShow(TvShow tvShow) throws Exception {
         if(tvShowRepository.existsByTitleAndPremierDate(tvShow.getTitle(),tvShow.getPremierDate())){
             throw new Exception("Error: This TV show already exists in the database.");
-        }else if(!confirmCurrentRole("ADMIN")){
+        }else if(!confirmCurrentRole("ROLE_ADMIN")){
             throw new Exception("Error: You are not an administrator");
         }else{
             tvShowRepository.save(tvShow);
@@ -493,7 +493,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editTvShow(TvShow tvShow) throws Exception {
-        if (confirmCurrentRole("ADMIN")) {
+        if (confirmCurrentRole("ROLE_ADMIN")) {
             tvShowRepository.save(tvShow);
         } else {
             throw new Exception("Error: You are not an administrator");
@@ -557,7 +557,7 @@ public class UserServiceImpl implements UserService {
         }else{
             System.out.println("\n" + user.getUsername()+ "\n");
             user.setPassword(passwordEncoder.encode(newPass));
-            user.setResetToken("null");
+            user.setResetToken(null);
             userRepository.save(user);
         }
     }
