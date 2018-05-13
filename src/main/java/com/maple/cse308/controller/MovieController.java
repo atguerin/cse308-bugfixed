@@ -58,6 +58,12 @@ public class MovieController {
         return "movie_details :: serverResponseModalContent";
     }
 
+    @GetMapping("/movies/cerified")
+    public String moviesCertifiedFresh(Model model){
+        model.addAttribute("certifiedFresh", movieService.getCertifiedFresh());
+        return "movies";
+    }
+
 
 }
 

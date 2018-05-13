@@ -6,6 +6,8 @@ import com.maple.cse308.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.sql.Date;
 
@@ -180,7 +182,9 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<Movie> getAllTimeHighestRated() {
-        return movieRepository.findTop10ByRatingAvg(movieRepository.findAll());
+        List<Movie> highestRated = movieRepository.findTop20OrderByRatingAvgLessThanEqual();
+        Collections.sort(highestRated, (o1, o2) -> o2.getRatingAvg().compareTo(o1.getRatingAvg()));
+        return highestRated;
     }
 
     public List<MovieScreenshot> getMovieScreenShots(int movieId){
@@ -208,5 +212,58 @@ public class MovieServiceImpl implements MovieService {
         list.addAll(set);
         return list;
     }
+
+    public List<Movie> movieAdvancedSearch(String search, String[] genre, String start, String end) throws ParseException {
+        //String needs to be parsed, and removed for duplcates.
+        String[] searchString;
+        if (search.contains(" ")) {
+            searchString = search.split(" ");
+        } else {
+            searchString = new String[1];
+            searchString[0] = search;
+        }
+        String longest = searchString[0];
+        for (String string : searchString) {
+            if (string.length() > longest.length()) {
+                longest = string;
+            }
+        }
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date parsed = format.parse(start);
+        java.sql.Date startDate = new java.sql.Date(parsed.getTime());
+        parsed = format.parse(end);
+        java.sql.Date endDate = new java.sql.Date(parsed.getTime());
+        List<Movie> movieList = movieRepository.findAllByTitleContainingIgnoreCaseBetween(longest, startDate, endDate);
+        List<Movie> resultList = new LinkedList();
+        resultList.addAll(movieList);
+        for (String string : searchString) {
+            string = string.toLowerCase();
+            for (Movie movie : movieList) {
+                String movieTitle = movie.getTitle().toLowerCase();
+                if (!movieTitle.contains(string)) {
+                    resultList.remove(movie);
+                }
+            }
+        }
+
+        for(Movie movie : movieList){
+            Set<Genre> genreList = movie.getGenre();
+            for(String genreString : genre){
+                if(!genreList.contains(genreString)){
+                    if(resultList.contains(movie)){
+                        resultList.remove(movie);
+                    }
+                }
+            }
+        }
+
+        return resultList;
+    }
+
+    public List<Movie> getCertifiedFresh(){
+        List<Movie> certifiedFresh = movieRepository.findAllByRatingAvgGreaterThanEqualAndRatingCountGreaterThanEqual(7.5F, 80);
+        return certifiedFresh;
+    }
+
 
 }

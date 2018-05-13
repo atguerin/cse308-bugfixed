@@ -1,6 +1,7 @@
 package com.maple.cse308.repository;
 
 import com.maple.cse308.entity.Movie;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.sql.Date;
@@ -25,4 +26,11 @@ public interface MovieRepository extends CrudRepository<Movie, Integer> {
     List<Movie> findAllByTitleContainingIgnoreCase(String search);
 
     List<Movie> findAll();
+
+    List<Movie> findAllByRatingAvgGreaterThanEqualAndRatingCountGreaterThanEqual(float ratingAvg, int ratingCount);
+
+    @Query(value="SELECT * FROM movie WHERE rating_avg<=10  ORDER BY rating_avg DESC LIMIT 20", nativeQuery=true)
+    List<Movie> findTop20OrderByRatingAvgLessThanEqual();
+
+    List<Movie> findAllByTitleContainingIgnoreCaseBetween(String search, Date startDate, Date endDate);
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class StaticController {
         model.addAttribute("comingSoonList", movieService.getMoviesComingSoon());
         model.addAttribute("outNowList", movieService.getMoviesOutNow());
         model.addAttribute("topBoxOfficeList", movieService.getTopBoxOffice());
+        model.addAttribute("certifiedFreshList", movieService.getCertifiedFresh());
         return "index";
     }
 
@@ -98,6 +100,22 @@ public class StaticController {
         model.addAttribute("tvList", tvList);
         model.addAttribute("celebList", actorService.actorSearch(search));
         return "search";
+    }
+
+    @GetMapping("/search/advanced")
+    public String searchAdvanced(@RequestParam(value="search") String search, @RequestParam(value="genres") String genres,
+                                 @RequestParam(value="start") String start, @RequestParam(value="end") String end,
+                                 Model model){
+
+        String[] genre = genres.split(",");
+        try {
+            model.addAttribute("movieList", movieService.movieAdvancedSearch(search, genre, start, end));
+        }catch(ParseException p){
+            p.printStackTrace();
+        }
+
+        model.addAttribute("celebList", actorService.actorSearch(search));
+        return "advancedSearch";
     }
 
     @GetMapping("/search/movies")
