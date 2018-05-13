@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface CriticService {
 
+    Critic getCriticById(int criticId);
+
     List<Critic> criticSearch(String search);
 }

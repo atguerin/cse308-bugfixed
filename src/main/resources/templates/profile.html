@@ -36,31 +36,31 @@
             <div class="jumbotron-side">
                 <div class="nav flex-column justify-content-center">
                     <div class="profile-thumbnail-container">
-                        <img class="profile-thumbnail-img" src="img/photo/titanic.jpg" alt="Profile img"/>
+                        <img class="profile-thumbnail-img" src="img/default.gif" alt="Profile img"/>
                     </div>
                     <strong class="mt-2">User Name</strong>
-                    <div th:text="|- ${user.username}|">
+                    <div th:text="'- '+ ${user.username}">
                         username
                     </div>
                     <strong class="mt-2">FIRST NAME</strong>
-                    <div th:text="|- ${user.firstName}|">
+                    <div th:text="'- '+ ${user.firstName}">
                         first name
                     </div>
                     <strong class="mt-2">LAST NAME</strong>
-                    <div th:text="|- ${user.lastName}|">
+                    <div th:text="'- '+ ${user.lastName}">
                         last name
                     </div>
                     <strong class="mt-2">HOMETOWN</strong>
-                    <div th:text="|- ${user.hometown}|">
+                    <div th:text="${user.hometown}?'- '+${user.hometown}:'- Not available'">
                         hometown
                     </div>
                     <strong class="mt-2">COUNTRY</strong>
-                    <div th:text="|- ${user.country}|">
+                    <div th:text="${user.country}?'- '+${user.country}:'- Not available'">
                         country
                     </div>
                     <strong class="mt-2">BIOGRAPHY</strong>
                     <div>
-                        <p th:text="|- ${user.bio}|" style="word-wrap: break-word;">
+                        <p th:text="${user.bio}?'- '+${user.bio}:'- Not available'" style="word-wrap: break-word;">
                             bio
                         </p>
                     </div>
@@ -277,7 +277,7 @@
 
 
 <!-- footer -->
-<div th:replace="fragments/footer">>Navbar</div>
+<div th:replace="fragments/footer">Navbar</div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

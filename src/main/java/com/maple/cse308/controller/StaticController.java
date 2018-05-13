@@ -39,31 +39,6 @@ public class StaticController {
         return "tv";
     }
 
-    @RequestMapping("/movie_details")
-    public String movieDetails(@RequestParam(value = "id", required = false) int id, Model model) {
-        model.addAttribute("comingSoonList", movieService.getMoviesComingSoon());
-        model.addAttribute("outNowList", movieService.getMoviesOutNow());
-        model.addAttribute("topBoxOfficeList", movieService.getTopBoxOffice());
-        MovieReviewUser review = null;
-        try {
-            User user = userService.getCurrentUser();
-            List<MovieReviewUser> l = movieService.getUserMovieReviewsByUserAndMovie(user.getUserId(), id);
-            if (!l.isEmpty()){
-                review = l.get(0);
-            }
-        } catch (Exception e){
-
-        }
-        model.addAttribute("movie", movieService.getMovieDetails(id));
-        model.addAttribute("review", review);
-        model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(id));
-        model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(id));
-        model.addAttribute("screenshots", movieService.getMovieScreenShots(id));
-        model.addAttribute("trailers", movieService.getMovieTrailers(id));
-        model.addAttribute("actors", movieService.getMovieActors(id));
-        return "movie_details";
-    }
-
     @RequestMapping("/tv_details")
     public String tvDetails(Model model) {
         return "tv_details";
@@ -140,9 +115,21 @@ public class StaticController {
     }
 
     @GetMapping("/userInformation")
-    public String profile(@RequestParam(value = "userName") String userName, Model model) {
-        model.addAttribute("user", userService.findByUsername(userName));
+    public String userInformation(@RequestParam(value = "userName") String userName, Model model) {
+        User user = userService.findByUsername(userName);
+        model.addAttribute("user", user);
+        List<MovieReviewUser> movieReviews = movieService.getUserMovieReviewsByUser(user.getUserId());
+        model.addAttribute("movieReviews", movieReviews);
         return "user_info";
+    }
+
+    @GetMapping("/criticHome")
+    public String criticHome(@RequestParam(value = "criticId") int criticId, Model model) {
+        Critic critic = criticService.getCriticById(criticId);
+        model.addAttribute("critic", critic);
+        List<MovieReviewCritic> movieReviews = movieService.getCriticMovieReviewsByCritic(criticId);
+        model.addAttribute("movieReviews", movieReviews);
+        return "critic_home";
     }
 
     @RequestMapping("/contactUs")

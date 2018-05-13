@@ -212,7 +212,7 @@
                         <span class="response" th:text="${response}"></span>
                         <div class="form-group">
                             <label>Change Country</label>
-                            <input type="text" name="country" class="form-control" id="country" th:value="${user.country}"/>
+                            <input type="text" name="country" class="form-control" id="country" th:value="${user.country}" />
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -374,6 +374,13 @@
                     $('#deleted').val("true");
                 }
             });
+        });
+
+
+        $(document).on("keypress", "form", function(e) {
+            if (e.which == 13) {
+                return false;
+            }
         });
 
         $(document).ready(function(){

@@ -288,13 +288,17 @@
                     <h6 th:if="${criticReviews.size()>0}" class="border-bottom border-gray pb-2 mb-0">CRITIC REVIEWS</h6>
                     <div th:each="criticReview,iterStat : ${criticReviews}" th:if="${iterStat.index<10}" class="media flex-md-row pt-3">
                         <div class="review-thumbnail-container">
-                            <img th:src="@{(${criticReview.critic.photo}?: '/img/default.gif')}" alt="..." class="review-img-thumbnail"/>
+                            <a th:href="@{/criticHome(criticId=${criticReview.critic.criticId})}">
+                                <img th:src="@{(${criticReview.critic.photo}?: '/img/default.gif')}" alt="..." class="review-img-thumbnail"/>
+                            </a>
                         </div>
                         <div class="d-flex flex-column align-items-start w-100">
                             <div class="d-flex w-100 mb-1">
                                 <div>
                                     <span class="ml-2">@</span>
-                                    <span th:text="|${criticReview.critic.firstName} ${criticReview.critic.lastName}|">@User Name</span>
+                                    <a th:href="@{/criticHome(criticId=${criticReview.critic.criticId})}">
+                                        <span th:text="|${criticReview.critic.firstName} ${criticReview.critic.lastName}|">@User Name</span>
+                                    </a>
                                 </div>
                                 <div class="ml-auto mr-1">Critic score:</div>
                                 <div class="mr-2">
@@ -307,6 +311,9 @@
                             </p>
                         </div>
                     </div>
+                    <small class="d-block text-right mt-3">
+                        <a th:href="@{/movie_all_critics(id=${movie.movieId})}">All Critic Reviews</a>
+                    </small>
 
                     <!-- User(Audience) Reviews -->
                     <h6 th:if="${userReviews.size()>0}" class="border-bottom border-gray pb-2 mb-0 mt-4">USER REVIEWS</h6>
@@ -337,9 +344,6 @@
                         </div>
                     </div>
 
-                    <small class="d-block text-right mt-3">
-                    <a href="#">All reviews</a>
-                    </small>
                 </div>
             </div>
 
@@ -349,7 +353,7 @@
 
 
 <!-- footer -->
-<div th:replace="fragments/footer">>Navbar</div>
+<div th:replace="fragments/footer">Navbar</div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

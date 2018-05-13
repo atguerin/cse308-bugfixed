@@ -29,6 +29,31 @@ public class MovieController {
         return "movies";
     }
 
+    @RequestMapping("/movie_details")
+    public String movieDetails(@RequestParam(value = "id", required = false) int id, Model model) {
+        model.addAttribute("comingSoonList", movieService.getMoviesComingSoon());
+        model.addAttribute("outNowList", movieService.getMoviesOutNow());
+        model.addAttribute("topBoxOfficeList", movieService.getTopBoxOffice());
+        MovieReviewUser review = null;
+        try {
+            User user = userService.getCurrentUser();
+            List<MovieReviewUser> l = movieService.getUserMovieReviewsByUserAndMovie(user.getUserId(), id);
+            if (!l.isEmpty()){
+                review = l.get(0);
+            }
+        } catch (Exception e){
+
+        }
+        model.addAttribute("movie", movieService.getMovieDetails(id));
+        model.addAttribute("review", review);
+        model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(id));
+        model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(id));
+        model.addAttribute("screenshots", movieService.getMovieScreenShots(id));
+        model.addAttribute("trailers", movieService.getMovieTrailers(id));
+        model.addAttribute("actors", movieService.getMovieActors(id));
+        return "movie_details";
+    }
+
     @GetMapping("/movies/opening")
     public String moviesOpeningSoon(Model model) {
         model.addAttribute("listType", "OUT NOW");
@@ -81,6 +106,7 @@ public class MovieController {
 
     @GetMapping("/movie/reviews")
     public String updateMovieReviews(@RequestParam(value = "movieId") int movieId, Model model) {
+        model.addAttribute("movie", movieService.getMovieDetails(movieId));
         model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(movieId));
         model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(movieId));
         return "movie_details :: reviews";
@@ -152,10 +178,17 @@ public class MovieController {
     }
 
     @RequestMapping("/movie_trailers")
-    public String movieDetails(@RequestParam(value = "id", required = false) int id, Model model) {
+    public String allMovieTrailers(@RequestParam(value = "id", required = false) int id, Model model) {
         model.addAttribute("movie", movieService.getMovieDetails(id));
         model.addAttribute("trailers", movieService.getMovieTrailers(id));
         return "movie_trailers";
+    }
+
+    @RequestMapping("/movie_all_critics")
+    public String allMovieCriticReviews(@RequestParam(value = "id", required = false) int id, Model model) {
+        model.addAttribute("movie", movieService.getMovieDetails(id));
+        model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(id));
+        return "movie_all_critics";
     }
 
 
