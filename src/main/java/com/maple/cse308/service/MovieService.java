@@ -18,6 +18,8 @@ public interface MovieService {
 
     List<MovieReviewUser> getUserMovieReviewsByUser(int userId) throws Exception;
 
+    List<MovieReviewUser> getUserMovieReviewsByUserAndMovie(int userId, int movieId);
+
     List<Movie> getMoviesComingSoon();
 
     List<Movie> getMoviesOutNow();
@@ -34,7 +36,7 @@ public interface MovieService {
 
     void editUserMovieReview(MovieReviewUser movieReviewUser);
 
-    void deleteUserMovieReview(MovieReviewUser movieReviewUser);
+    void deleteUserMovieReview(int reviewId);
 
     List<Movie> movieSearch(String search);
 

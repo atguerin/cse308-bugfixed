@@ -22,5 +22,7 @@ public interface CriticRepository extends CrudRepository<Critic, Integer> {
 
     Critic findByUser(User user);
 
+    Critic findByCriticId(int criticId);
+
     List<Critic> findAllByFirstNameOrMiddleNameOrLastNameIgnoreCase(String first, String middle, String last);
 }

@@ -12,7 +12,7 @@ public class Creator {
     @Column(name = "creatorId")
     private Integer creatorId;
 
-    @Column(name = "creator", unique = true, length=32)
+    @Column(name = "creator", unique = true, length = 32)
     private String creator;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

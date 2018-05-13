@@ -7,25 +7,25 @@ import javax.persistence.Table;
 import java.sql.Date;
 
 @Entity
-@Table(name="Season")
+@Table(name = "Season")
 public class Season {
 
     @EmbeddedId
     private SeasonIdentity season;
 
-    @Column(name="poster")
+    @Column(name = "poster")
     private String poster;
 
-    @Column(name="overview", length=2048)
+    @Column(name = "overview", length = 2048)
     private String overview;
 
-    @Column(name="premierDate")
+    @Column(name = "premierDate")
     private Date premierDate;
 
-    @Column(name="rating")
+    @Column(name = "rating")
     private Float rating;
 
-    @Column(name="ratingCount")
+    @Column(name = "ratingCount")
     private Integer ratingCount;
 
     public SeasonIdentity getSeason() {

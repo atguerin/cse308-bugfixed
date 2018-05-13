@@ -6,23 +6,23 @@ import java.text.SimpleDateFormat;
 import java.util.Set;
 
 @Entity
-@Table(name="TvShow")
+@Table(name = "TvShow")
 public class TvShow {
 
     @Id
-    @Column(name="tvId")
+    @Column(name = "tvId")
     private Integer tvId;
 
-    @Column(name="title")
+    @Column(name = "title")
     private String title;
 
-    @Column(name="premierDate")
+    @Column(name = "premierDate")
     private Date premierDate;
 
-    @Column(name="poster")
+    @Column(name = "poster")
     private String poster;
 
-    @Column(name="overview", length=2048)
+    @Column(name = "overview", length = 2048)
     private String overview;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -33,7 +33,7 @@ public class TvShow {
     @JoinTable(name = "tvCreator", joinColumns = @JoinColumn(name = "tvId"), inverseJoinColumns = @JoinColumn(name = "creatorId"))
     private Set<Creator> creators;
 
-    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "tvId")
     private Set<TvScreenshot> tvScreenshots;
 

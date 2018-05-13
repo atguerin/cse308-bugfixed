@@ -141,15 +141,21 @@ public class Movie {
         return releaseDate;
     }
 
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
     //use this for frontend
     public String getDateString() {
-        SimpleDateFormat dataFormat = new SimpleDateFormat("MM/dd/yy");
+        SimpleDateFormat dataFormat = new SimpleDateFormat("MMM dd, yyyy");
         String date = dataFormat.format(releaseDate);
         return date;
     }
 
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
+    public String getDateForList() {
+        SimpleDateFormat dataFormat = new SimpleDateFormat("MMM dd");
+        String date = dataFormat.format(releaseDate);
+        return date;
     }
 
     public String getReleaseYear() {

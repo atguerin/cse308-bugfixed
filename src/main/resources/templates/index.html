@@ -21,9 +21,9 @@
 
   <body>
     <!-- Navbar -->
-    <div sec:authorize="isAnonymous()"><div th:replace="fragments/navbar">>Navbar</div></div>
-    <div sec:authorize="hasRole('ROLE_USER')"><div th:replace="fragments/user_navbar">>Navbar</div></div>
-    <div sec:authorize="hasRole('ROLE_ADMIN')"><div th:replace="fragments/admin_navbar">>Navbar</div></div>
+    <div sec:authorize="isAnonymous()"><div th:replace="fragments/navbar">Navbar</div></div>
+    <div sec:authorize="hasRole('ROLE_USER')"><div th:replace="fragments/user_navbar">Navbar</div></div>
+    <div sec:authorize="hasRole('ROLE_ADMIN')"><div th:replace="fragments/admin_navbar">Navbar</div></div>
 
     <!-- Top carousel -->
     <div id="top_carousel" class="carousel slide" data-ride="carousel">
@@ -74,18 +74,16 @@
                     <h4 class="border-bottom mb-1">Coming Soon</h4>
                 </div>
                 <div class="row">
-                    <div class="card-deck">
-                        <div th:each="movie : ${comingSoonList}" class="col-sm-6 col-md-4 col-lg-2 mt-2">
-                            <a th:href="@{/movie_details(id=${movie.movieId})}">
-                                <div class="card" style="width: 10rem;">
-                                    <img class="card-img-top" th:src="@{${movie.getPoster()}}" alt="Card image cap"/>
-                                    <div class="card-body">
-                                        <p th:text="${movie.getTitle()}" class="card-title">Movie title</p>
-                                        <p th:text="${movie.getReleaseDate()}" class="card-text">May 1</p>
-                                    </div>
+                    <div th:each="movie,iterStat : ${comingSoonList}" class="col-sm-6 col-md-4 col-lg-2 mt-2">
+                        <a th:href="@{/movie_details(id=${movie.movieId})}">
+                            <div class="card" style="width: 10rem;">
+                                <img class="card-img-top" th:src="@{${movie.getPoster()}}" alt="Card image cap"/>
+                                <div class="card-body">
+                                    <p th:text="|${iterStat.index+1}. ${movie.getTitle()}|" class="card-title">Movie title</p>
+                                    <p th:text="${movie.getDateString()}" class="card-text">May 1</p>
                                 </div>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -99,18 +97,16 @@
                     <h4 class="border-bottom mb-1">Out Now</h4>
                 </div>
                 <div class="row">
-                    <div class="card-deck">
-                        <div th:each="movie : ${outNowList}" class="col-sm-6 col-md-4 col-lg-2 mt-2">
-                            <a th:href="@{/movie_details(id=${movie.movieId})}">
-                                <div class="card" style="width: 10rem;">
-                                    <img class="card-img-top" th:src="@{${movie.getPoster()}}" alt="Card image cap"/>
-                                    <div class="card-body">
-                                        <p th:text="${movie.getTitle()}" class="card-title">Movie title</p>
-                                        <p th:text="${movie.getReleaseDate()}" class="card-text">May 1</p>
-                                    </div>
+                    <div th:each="movie, iterStat : ${outNowList}" class="col-sm-6 col-md-4 col-lg-2 mt-2">
+                        <a th:href="@{/movie_details(id=${movie.movieId})}">
+                            <div class="card" style="width: 10rem;">
+                                <img class="card-img-top" th:src="@{${movie.getPoster()}}" alt="Card image cap"/>
+                                <div class="card-body">
+                                    <p th:text="|${iterStat.index+1}. ${movie.getTitle()}|" class="card-title">Movie title</p>
+                                    <p th:text="${movie.getDateString()}" class="card-text">May 1</p>
                                 </div>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -124,18 +120,16 @@
                     <h4 class="border-bottom mb-1">Top Box Office</h4>
                 </div>
                 <div class="row">
-                    <div class="card-deck">
-                        <div th:each="movie : ${topBoxOfficeList}" class="col-sm-6 col-md-4 col-lg-2 mt-2">
-                            <a th:href="@{/movie_details(id=${movie.movieId})}">
-                                <div class="card" style="width: 10rem;">
-                                    <img class="card-img-top" th:src="@{${movie.poster}}" alt="Card image cap"/>
-                                    <div class="card-body">
-                                        <p th:text="${movie.title}" class="card-title">Movie title</p>
-                                        <p th:text="|$${movie.getRevenue()}|" class="card-text">$</p>
-                                    </div>
+                    <div th:each="movie, iterStat : ${topBoxOfficeList}" class="col-sm-6 col-md-4 col-lg-2 mt-2">
+                        <a th:href="@{/movie_details(id=${movie.movieId})}">
+                            <div class="card" style="width: 10rem;">
+                                <img class="card-img-top" th:src="@{${movie.poster}}" alt="Card image cap"/>
+                                <div class="card-body">
+                                    <p th:text="|${iterStat.index+1}. ${movie.getTitle()}|" class="card-title">Movie title</p>
+                                    <p th:text="|$${movie.getRevenue()}|" class="card-text">$</p>
                                 </div>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -143,7 +137,7 @@
     </div>
 
     <!-- footer -->
-    <div th:replace="fragments/footer">>Navbar</div>
+    <div th:replace="fragments/footer">Navbar</div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

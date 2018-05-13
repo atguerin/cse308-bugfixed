@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.util.*;
 
+
 @Service
 public class MovieServiceImpl implements MovieService {
 
@@ -18,6 +19,7 @@ public class MovieServiceImpl implements MovieService {
     MovieReviewUserRepository movieReviewUserRepository;
     @Autowired
     MovieRepository movieRepository;
+
     @Autowired
     MovieScreenshotRepository movieScreenshotRepository;
     @Autowired
@@ -36,8 +38,8 @@ public class MovieServiceImpl implements MovieService {
         HashSet<MovieReviewCritic> set = movieReviewCriticRepository.findAllByMovieId(movieId);
         List<MovieReviewCritic> movieReviewCritics = new LinkedList();
         movieReviewCritics.addAll(set);
-            return movieReviewCritics;
-        }
+        return movieReviewCritics;
+    }
 
     @Override
     public List<MovieReviewCritic> getCriticMovieReviewsByCritic(int criticId) {
@@ -52,7 +54,7 @@ public class MovieServiceImpl implements MovieService {
         HashSet<MovieReviewUser> set = movieReviewUserRepository.findAllByMovieId(movieId);
         List<MovieReviewUser> movieReviewUsers = new LinkedList();
         movieReviewUsers.addAll(set);
-            return movieReviewUsers;
+        return movieReviewUsers;
     }
 
     @Override
@@ -133,7 +135,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void deleteUserMovieReview(MovieReviewUser movieReviewUser) {
+    public void deleteUserMovieReview(int reviewId) {
+        MovieReviewUser movieReviewUser = movieReviewUserRepository.findByReviewId(reviewId);
         movieReviewUserRepository.delete(movieReviewUser);
 
     }
@@ -154,7 +157,7 @@ public class MovieServiceImpl implements MovieService {
         movieReviewCriticRepository.delete(movieReviewCritic);
     }
 
-   @Override
+    @Override
     public List<Movie> findAllByTitleContainingIgnoreCase(String search) {
         return movieRepository.findAllByTitleContainingIgnoreCase(search);
     }
@@ -164,20 +167,20 @@ public class MovieServiceImpl implements MovieService {
         return movieRepository.findTop10ByRatingAvg(movieRepository.findAll());
     }
 
-    public List<MovieScreenshot> getMovieScreenShots(int movieId){
+    public List<MovieScreenshot> getMovieScreenShots(int movieId) {
         return movieScreenshotRepository.findAllByMovieId(movieId);
     }
 
-    public List<MovieTrailer> getMovieTrailers(int movieId){
+    public List<MovieTrailer> getMovieTrailers(int movieId) {
         return movieTrailerRepository.findAllByMovieId(movieId);
     }
 
-    public List<MovieActor> getMovieActors(int movieId){
+    public List<MovieActor> getMovieActors(int movieId) {
         return movieActorRepository.findAllByMovieId(movieId);
     }
 
     @Override
-    public float getAverageUserRating(int movieId){
+    public float getAverageUserRating(int movieId) {
         float divisor = 0;
         float value = 0;
         HashSet<MovieReviewUser> movieSet = movieReviewUserRepository.findAllByMovieId(movieId);
@@ -185,7 +188,15 @@ public class MovieServiceImpl implements MovieService {
             divisor++;
             value = value + movieReviewUser.getRating();
         }
-        value = value/divisor;
+        value = value / divisor;
         return value;
+    }
+
+    @Override
+    public List<MovieReviewUser> getUserMovieReviewsByUserAndMovie(int userId, int movieId) {
+        HashSet<MovieReviewUser> set = movieReviewUserRepository.findByUserIdAndMovieId(userId, movieId);
+        List<MovieReviewUser> userMovieReview = new LinkedList();
+        userMovieReview.addAll(set);
+        return userMovieReview;
     }
 }
