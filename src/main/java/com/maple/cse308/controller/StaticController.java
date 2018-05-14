@@ -325,4 +325,10 @@ public class StaticController {
         return "follingLists";
     }
 
+    @GetMapping("/getGenres")
+    public String getGenres(Model model){
+        model.addAttribute("genreList", movieService.getGenres());
+        return "genres";
+    }
+
 }

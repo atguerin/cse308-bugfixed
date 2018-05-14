@@ -1,5 +1,6 @@
 package com.maple.cse308.service;
 
+import com.maple.cse308.entity.Genre;
 import com.maple.cse308.entity.Movie;
 import com.maple.cse308.entity.MovieReviewCritic;
 import com.maple.cse308.entity.MovieReviewUser;
@@ -50,5 +51,7 @@ public interface MovieService {
     List<Movie> movieAdvancedSearch(String search, String[] genre, String start, String end) throws ParseException;
 
     List<Movie> getCertifiedFresh();
+
+    List<Genre> getGenres();
 }
 

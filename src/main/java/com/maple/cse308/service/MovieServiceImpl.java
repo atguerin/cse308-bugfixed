@@ -29,6 +29,8 @@ public class MovieServiceImpl implements MovieService {
     MovieTrailerRepository movieTrailerRepository;
     @Autowired
     MovieActorRepository movieActorRepository;
+    @Autowired
+    GenreRepository genreRepository;
 
     @Override
     public Movie getMovieDetails(int movieId) {
@@ -257,5 +259,10 @@ public class MovieServiceImpl implements MovieService {
         List<MovieReviewUser> userMovieReview = new LinkedList();
         userMovieReview.addAll(set);
         return userMovieReview;
+    }
+
+    @Override
+    public List<Genre> getGenres(){
+        return genreRepository.findAll();
     }
 }
