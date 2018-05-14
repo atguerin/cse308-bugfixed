@@ -6,15 +6,15 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class SeasonIdentity implements Serializable{
+public class SeasonIdentity implements Serializable {
 
-    @Column(name="season")
+    @Column(name = "season")
     private Integer seasonNum;
 
-    @Column(name="tvId")
+    @Column(name = "tvId")
     private Integer tvId;
 
-    public SeasonIdentity(){
+    public SeasonIdentity() {
 
     }
 

@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,27 +27,22 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-
     @Autowired
     private MovieRepository movieRepository;
-
     @Autowired
     private TvShowRepository tvShowRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private CriticRepository criticRepository;
-
     @Autowired
     private MovieReviewUserRepository movieReviewUserRepository;
-
     @Autowired
     private MovieReviewCriticRepository movieReviewCriticRepository;
+    @Autowired
+    private EmailServiceImpl emailService;
 
    /* @Autowired
     private TvReviewUserRepository tvReviewUserRepository;
@@ -188,7 +184,7 @@ public class UserServiceImpl implements UserService {
                 tvReviewCriticRepository.delete(tvReviewUser);
                 }*/
         }
-            userRepository.delete(user);
+        userRepository.delete(user);
     }
 
     @Override
@@ -305,8 +301,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addEmployee(User user) throws Exception {
 
-        if (confirmCurrentRole("ADMIN")) {
-            user.setRoles(roleRepository.findByRole("ADMIN"));
+        if (confirmCurrentRole("ROLE_ADMIN")) {
+            user.setRoles(roleRepository.findByRole("ROLE_ADMIN"));
             userRepository.save(user);
         } else {
             throw new Exception("Error: Currently logged in user is not an administrator and can not add employee");
@@ -317,8 +313,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void removeEmployee(User user) throws Exception {
 
-        if (confirmCurrentRole("ADMIN")) {
-            user.setRoles(roleRepository.findByRole("USER"));
+        if (confirmCurrentRole("ROLE_ADMIN")) {
+            user.setRoles(roleRepository.findByRole("ROLE_USER"));
             userRepository.save(user);
         } else {
             throw new Exception("Error: Currently logged in user is not an administrator and can not demote an employee");
@@ -329,8 +325,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void banUser(User user) throws Exception {
 
-        if (confirmCurrentRole("ADMIN")) {
-            user.setRoles(roleRepository.findByRole("BANNED"));
+        if (confirmCurrentRole("ROLE_ADMIN")) {
+            user.setRoles(roleRepository.findByRole("ROLE_BANNED"));
             userRepository.save(user);
         } else {
             throw new Exception("Error: Currently logged in user is not an administrator and can not ban user");
@@ -341,8 +337,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void suspendUser(User user, Calendar calendar) throws Exception {
 
-        if (confirmCurrentRole("ADMIN")) {
-            user.setRoles(roleRepository.findByRole("SUSPENDED"));
+        if (confirmCurrentRole("ROLE_ADMIN")) {
+            user.setRoles(roleRepository.findByRole("ROLE_SUSPENDED"));
             user.setSuspendDate(calendar);
             userRepository.save(user);
         } else {
@@ -387,12 +383,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addToWantToSeeList(Movie movie) throws Exception {
         User user = getCurrentUser();
-        if(!user.getDontWatchList().contains(movie)) {
+        if (!user.getDontWatchList().contains(movie)) {
             user.getWatchList().add(movie);
             userRepository.save(user);
             updateUser();
-        }
-        else{
+        } else {
             throw new Exception("Error: Cannot add a movie that is already on your ignore list");
         }
     }
@@ -401,8 +396,8 @@ public class UserServiceImpl implements UserService {
     public void removeFromWantToSeeList(Movie movie) throws Exception {
         User user = getCurrentUser();
         Movie m = new Movie();
-        for (Movie mv : user.getWatchList()){
-            if(mv.getMovieId().intValue() == movie.getMovieId().intValue()){
+        for (Movie mv : user.getWatchList()) {
+            if (mv.getMovieId().intValue() == movie.getMovieId().intValue()) {
                 m = mv;
                 break;
             }
@@ -427,24 +422,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addToDontWantToSeeList(Movie movie) throws Exception{
+    public void addToDontWantToSeeList(Movie movie) throws Exception {
         User user = getCurrentUser();
-        if(!user.getWatchList().contains(movie)) {
+        if (!user.getWatchList().contains(movie)) {
             user.getDontWatchList().add(movie);
             userRepository.save(user);
             updateUser();
-        }
-        else{
+        } else {
             throw new Exception("Error: Cannot add a movie that is already on your watch list");
         }
     }
 
     @Override
-    public void removeFromDontWantToSeeList(Movie movie) throws Exception{
+    public void removeFromDontWantToSeeList(Movie movie) throws Exception {
         User user = getCurrentUser();
         Movie m = new Movie();
-        for (Movie mv : user.getDontWatchList()){
-            if(mv.getMovieId().intValue() == movie.getMovieId().intValue()){
+        for (Movie mv : user.getDontWatchList()) {
+            if (mv.getMovieId().intValue() == movie.getMovieId().intValue()) {
                 m = mv;
                 break;
             }
@@ -466,38 +460,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addMovie(Movie movie) throws Exception {
-        if(movieRepository.existsByTitleAndReleaseDate(movie.getTitle(), movie.getReleaseDate())){
+        if (movieRepository.existsByTitleAndReleaseDate(movie.getTitle(), movie.getReleaseDate())) {
             throw new Exception("Error: This movie already exists in the database");
-        }else if(!confirmCurrentRole("ADMIN")){
+        } else if (!confirmCurrentRole("ROLE_ADMIN")) {
             throw new Exception("Error: You are not an administrator");
-        }else{
+        } else {
             movieRepository.save(movie);
         }
     }
 
     @Override
     public void editMovie(Movie movie) throws Exception {
-        if(confirmCurrentRole("ADMIN")) {
+        if (confirmCurrentRole("ROLE_ADMIN")) {
             movieRepository.save(movie);
-        }else{
+        } else {
             throw new Exception("Error: You are not an administrator");
         }
     }
 
     @Override
     public void addTvShow(TvShow tvShow) throws Exception {
-        if(tvShowRepository.existsByTitleAndPremierDate(tvShow.getTitle(),tvShow.getPremierDate())){
+        if (tvShowRepository.existsByTitleAndPremierDate(tvShow.getTitle(), tvShow.getPremierDate())) {
             throw new Exception("Error: This TV show already exists in the database.");
-        }else if(!confirmCurrentRole("ADMIN")){
+        } else if (!confirmCurrentRole("ROLE_ADMIN")) {
             throw new Exception("Error: You are not an administrator");
-        }else{
+        } else {
             tvShowRepository.save(tvShow);
         }
     }
 
     @Override
     public void editTvShow(TvShow tvShow) throws Exception {
-        if (confirmCurrentRole("ADMIN")) {
+        if (confirmCurrentRole("ROLE_ADMIN")) {
             tvShowRepository.save(tvShow);
         } else {
             throw new Exception("Error: You are not an administrator");
@@ -539,5 +533,31 @@ public class UserServiceImpl implements UserService {
     }
     */
 
+    public void resetPasswordToken(String email, HttpServletRequest request) throws Exception {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new Exception("Error: This user does not exist");
+        } else {
+            String token = UUID.randomUUID().toString();
+            user.setResetToken(token);
+            userRepository.save(user);
+
+            String resetUrl = request.getScheme() + "://" + request.getServerName();
+            emailService.sendSimpleMessage(user.getEmail(), "Rotten Tomatoes: Passsword Reset Request", "To reset your password, click the link below:\n" + resetUrl
+                    + ":8080/resetPassword?token=" + user.getResetToken());
+        }
+    }
+
+    public void resetPassword(String token, String newPass) throws Exception {
+        User user = userRepository.findByResetToken(token);
+        if(user == null){
+            throw new Exception("Error: This user does not exist");
+        }else{
+            System.out.println("\n" + user.getUsername()+ "\n");
+            user.setPassword(passwordEncoder.encode(newPass));
+            user.setResetToken(null);
+            userRepository.save(user);
+        }
+    }
 
 }

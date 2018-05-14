@@ -25,6 +25,9 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "resetToken")
+    private String resetToken;
+
     @Column(name = "firstName")
     private String firstName;
 
@@ -62,19 +65,19 @@ public class User {
     @JoinTable(name = "UserUser", joinColumns = @JoinColumn(name = "userId1"), inverseJoinColumns = @JoinColumn(name = "userId2"))
     private Set<User> blocklist;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REFRESH,CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinTable(name = "WatchList", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "movieId"))
     private Set<Movie> watchList;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REFRESH,CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinTable(name = "DontWatchList", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "movieId"))
     private Set<Movie> dontWatchList;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REFRESH,CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinTable(name = "WatchListTV", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "tvId"))
     private Set<TvShow> watchListTV;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REFRESH,CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinTable(name = "DontWatchListTV", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "tvId"))
     private Set<TvShow> dontWatchListTV;
 
@@ -107,6 +110,14 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
     }
 
     public void setPassword(String password) {

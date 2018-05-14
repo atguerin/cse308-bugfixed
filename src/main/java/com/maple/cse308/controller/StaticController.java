@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,8 @@ public class StaticController {
     private UserServiceImpl userService;
     @Autowired
     private CriticServiceImpl criticService;
+    @Autowired
+    private EmailServiceImpl emailService;
 
 
     @RequestMapping("/index")
@@ -132,14 +135,52 @@ public class StaticController {
         return "critic_home";
     }
 
-    @RequestMapping("/contactUs")
+    @RequestMapping("/about")
+    public String about(Model model) {
+        return "about";
+    }
+
+    @GetMapping("/contactUs")
     public String contactUs(Model model) {
         return "contact_us_form";
     }
 
-    @RequestMapping("/about")
-    public String about(Model model) {
-        return "about";
+    @PostMapping("/contactUs")
+    public String contactUs(@RequestParam(value = "name") String name, @RequestParam(value = "email") String email, @RequestParam(value = "subject") String subject, @RequestParam(value = "message") String message) {
+        emailService.sendSimpleMessage("cse308teammaple@gmail.com", "Contact Form Submission: "+ subject, "Name: " + name + "\nEmail: " + email + "\n\nMessage: " + message);
+        return "index";
+    }
+
+    @GetMapping("/forgotPassword")
+    public String forgotPassword(Model model) {
+        return "forgot_password";
+    }
+
+    @PostMapping("/forgotPassword")
+    public String forgotPassword(Model model, @RequestParam("email") String email, HttpServletRequest request) {
+        try {
+            userService.resetPasswordToken(email,request);
+        } catch (Exception e) {
+
+        }
+        return "forgot_password";
+    }
+
+    @GetMapping("/resetPassword")
+    public String resetPassword(Model model, @RequestParam("token") String token) {
+        model.addAttribute("token", token);
+        return "reset_password";
+    }
+
+    @PostMapping("/resetPassword")
+    public String resetPassword(Model model, @RequestParam("token") String token, @RequestParam("password") String password) {
+        System.out.println(token);
+        try {
+            userService.resetPassword(token,password);
+        } catch (Exception e) {
+
+        }
+        return "index";
     }
 
 }

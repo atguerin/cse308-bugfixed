@@ -36,7 +36,7 @@ public class AccountController {
     }
 
     @PostMapping("/registration")
-    public String registerSubmit(@ModelAttribute User user, Model model){
+    public String registerSubmit(@ModelAttribute User user, Model model) {
         try {
             userService.registerUser(user);
         } catch (Exception e) {

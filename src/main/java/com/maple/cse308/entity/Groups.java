@@ -12,7 +12,7 @@ public class Groups {
     @Column(name = "groupId")
     private Integer groupId;
 
-    @Column(name = "groupName", length=64, unique=true)
+    @Column(name = "groupName", length = 64, unique = true)
     private String groupName;
 
     public Integer getGroupId() {

@@ -7,11 +7,13 @@ import com.maple.cse308.repository.TvReviewCriticRepository;
 import com.maple.cse308.repository.TvReviewUserRepository;
 import com.maple.cse308.repository.TvShowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+@Service
 public class TvServiceImpl implements TvService {
 
     @Autowired
@@ -26,6 +28,7 @@ public class TvServiceImpl implements TvService {
         TvShow tvShow = tvShowRepository.findTvShowByTvId(tvId);
         return tvShow;
     }
+
     @Override
     public void addCriticTvReview(TvReviewCritic tvReviewCritic) {
         tvReviewCriticRepository.save(tvReviewCritic);

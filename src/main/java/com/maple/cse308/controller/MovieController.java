@@ -38,10 +38,10 @@ public class MovieController {
         try {
             User user = userService.getCurrentUser();
             List<MovieReviewUser> l = movieService.getUserMovieReviewsByUserAndMovie(user.getUserId(), id);
-            if (!l.isEmpty()){
+            if (!l.isEmpty()) {
                 review = l.get(0);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
         model.addAttribute("movie", movieService.getMovieDetails(id));

@@ -72,7 +72,7 @@ public class ActorServiceImpl implements ActorService {
         return resultList;
     }
 
-    public Actor getActor(int actorId){
+    public Actor getActor(int actorId) {
         return actorRepository.findActorByActorId(actorId);
     }
 
@@ -81,7 +81,7 @@ public class ActorServiceImpl implements ActorService {
         return actorScreenshotRepository.findAllByActorId(actorId);
     }
 
-    public List<MovieActor> getActorMovies(int actorId){
+    public List<MovieActor> getActorMovies(int actorId) {
         return movieActorRepository.findAllByActorId(actorId);
     }
 

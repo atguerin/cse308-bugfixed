@@ -13,7 +13,7 @@ public class EpisodeIdentity implements Serializable {
     private SeasonIdentity seasonId;
 
     @NotNull
-    @Column(name="episode")
+    @Column(name = "episode")
     private Integer episodeNum;
 
     public EpisodeIdentity(SeasonIdentity seasonId, Integer episodeNum) {
