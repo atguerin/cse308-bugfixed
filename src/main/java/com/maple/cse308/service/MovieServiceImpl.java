@@ -89,7 +89,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<Movie> getTopBoxOffice() {
         Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-        List<Movie> movies = movieRepository.findTop10ByReleaseDateBefore(date);
+        List<Movie> movies = movieRepository.findTop10OrderByReleaseDateLessThanDesc(date);
         movies.sort(Comparator.comparingInt(Movie::getRevenueUnformatted)
                 .reversed());
         return movies;
