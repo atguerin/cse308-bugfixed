@@ -34,7 +34,7 @@ public interface MovieService {
 
     void editUserMovieReview(MovieReviewUser movieReviewUser);
 
-    void deleteUserMovieReview(MovieReviewUser movieReviewUser);
+    void deleteUserMovieReview(int id);
 
     List<Movie> movieSearch(String search);
 
@@ -42,5 +42,8 @@ public interface MovieService {
 
     List<Movie> getAllTimeHighestRated();
 
+    float getAverageUserRating(int movieId);
+
+    MovieReviewUser getMovieReviewUser(int reviewid);
 }
 

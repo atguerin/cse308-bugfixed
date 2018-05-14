@@ -6,10 +6,7 @@ import com.maple.cse308.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/")
@@ -58,6 +55,29 @@ public class MovieController {
         return "movie_details :: serverResponseModalContent";
     }
 
+    @RequestMapping(value = "/deleteMovieReview")
+    public String deleteReview(@RequestParam("reviewId") String id, Model model) {
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully deleted your review!");
+        int num = Integer.parseInt(id);
+        movieService.deleteUserMovieReview(num);
+        return "movie_details :: serverResponseModalContent";
+    }
+
+    @RequestMapping(value = "/editMovieReview")
+    public String changeReview(@ModelAttribute MovieReviewUser reviewUser, Model model) {
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully posted your review!");
+        MovieReviewUser mru = movieService.getMovieReviewUser(reviewUser.getReviewId());
+        reviewUser.setReviewId(mru.getReviewId());
+        reviewUser.setLink(mru.getLink());
+        reviewUser.setMovieId(mru.getMovieId());
+        reviewUser.setUserId(mru.getUserId());
+        reviewUser.setUser(mru.getUser());
+        movieService.deleteUserMovieReview(reviewUser.getReviewId());
+        movieService.addUserMovieReview(reviewUser);
+        return "movie_details:: serverResponseModalContent";
+    }
 }
 
 

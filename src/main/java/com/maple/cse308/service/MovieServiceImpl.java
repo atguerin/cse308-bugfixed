@@ -136,10 +136,12 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void deleteUserMovieReview(MovieReviewUser movieReviewUser) {
-        movieReviewUserRepository.delete(movieReviewUser);
-
+    public void deleteUserMovieReview(int id) {
+        MovieReviewUser mru = movieReviewUserRepository.findByReviewId(id);
+        movieReviewUserRepository.delete(mru);
     }
+
+
 
     @Override
     public void addCriticMovieReview(MovieReviewCritic movieReviewCritic) {
@@ -167,6 +169,11 @@ public class MovieServiceImpl implements MovieService {
         return movieRepository.findTop16ByRatingAvg(movieRepository.findAll());
     }
 
+    @Override
+    public float getAverageUserRating(int movieId) {
+        return 0;
+    }
+
     public List<MovieScreenshot> getMovieScreenShots(int movieId){
         return movieScreenshotRepository.findAllByMovieId(movieId);
     }
@@ -191,6 +198,15 @@ public class MovieServiceImpl implements MovieService {
         List<MovieReviewUser> list = new LinkedList();
         list.addAll(set);
         return list;
+    }
+    public List<MovieReviewUser> getUserMovieReviewByUserIdAndMovieId(int userId, int movieId){
+        List<MovieReviewUser> list = movieReviewUserRepository.findAllByUserIdAndMovieId(userId, movieId);
+        return list;
+    }
+
+    @Override
+    public MovieReviewUser getMovieReviewUser(int reviewid) {
+        return movieReviewUserRepository.findByReviewId(reviewid);
     }
 
 }
