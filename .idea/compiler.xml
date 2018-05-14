@@ -9,8 +9,5 @@
         <module name="cse308" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="cse308" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
