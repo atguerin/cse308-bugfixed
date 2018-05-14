@@ -43,6 +43,8 @@ public class UserServiceImpl implements UserService {
     private MovieReviewCriticRepository movieReviewCriticRepository;
     @Autowired
     private EmailServiceImpl emailService;
+    @Autowired
+    private FollowRepository followRepository;
 
    /* @Autowired
     private TvReviewUserRepository tvReviewUserRepository;
@@ -559,5 +561,42 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
         }
     }
+
+    public void addFollow(Integer userId){
+        Integer currentUserId = getCurrentUser().getUserId();
+        FollowIdentity followId = new FollowIdentity(currentUserId, userId);
+        Follow follow = new Follow();
+        follow.setFollowId(followId);
+        followRepository.save(follow);
+    }
+
+    public void removeFollow(Integer userId){
+        Integer currentUserId = getCurrentUser().getUserId();
+        FollowIdentity followId = new FollowIdentity(currentUserId, userId);
+        Follow follow = followRepository.findByFollowIdentity(followId);
+        followRepository.delete(follow);
+    }
+
+    public List<User> getFollowing(){
+        Integer userId = getCurrentUser().getUserId();
+        List<FollowIdentity> followIds = followRepository.findAllByFollowIdentityUserId(userId);
+        List<User> followingList = new LinkedList();
+        for(FollowIdentity followId : followIds){
+            followingList.add(userRepository.findByUserId(followId.getUserId()));
+        }
+        return followingList;
+
+    }
+    public List<User> getFollowers(){
+        Integer userId = getCurrentUser().getUserId();
+        List<FollowIdentity> followIds = followRepository.findAllByFollowIdentityFollowingId(userId);
+        List<User> followersList = new LinkedList();
+        for(FollowIdentity followId : followIds){
+            followersList.add(userRepository.findByUserId(followId.getUserId()));
+        }
+        return followersList;
+
+    }
+
 
 }

@@ -304,4 +304,25 @@ public class StaticController {
         return "reports";
     }
 
+    @PostMapping("/follow")
+    public String follow(@RequestParam("userId") Integer userId, Model model){
+        userService.addFollow(userId);
+        model.addAttribute("success", true);
+        return "nowFollowing";
+    }
+
+    @PostMapping("/unfollow")
+    public String unfollow(@RequestParam("userId") Integer userId, Model model){
+        userService.removeFollow(userId);
+        model.addAttribute("success", true);
+        return "nowUnfollowing";
+    }
+
+    @PostMapping("/followingInfo")
+    public String followingInfo(Model model){
+        model.addAttribute("followers", userService.getFollowers());
+        model.addAttribute("following", userService.getFollowing());
+        return "follingLists";
+    }
+
 }

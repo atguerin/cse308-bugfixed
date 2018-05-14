@@ -13,6 +13,8 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     User findByResetToken(String token);
 
+    User findByUserId(Integer userId);
+
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
