@@ -16,6 +16,8 @@ public class EpisodeIdentity implements Serializable {
     @Column(name = "episode")
     private Integer episodeNum;
 
+    public EpisodeIdentity(){}
+
     public EpisodeIdentity(SeasonIdentity seasonId, Integer episodeNum) {
         this.seasonId = seasonId;
         this.episodeNum = episodeNum;

@@ -56,7 +56,7 @@ public class MovieController {
 
     @GetMapping("/movies/opening")
     public String moviesOpeningSoon(Model model) {
-        model.addAttribute("listType", "OUT NOW");
+        model.addAttribute("listType", "OPENING THIS WEEK");
         model.addAttribute("selectedList", movieService.getMoviesOutNow());
         return "movies";
     }

@@ -12,27 +12,6 @@ public class Episode {
     @EmbeddedId
     private EpisodeIdentity episodeId;
 
-    @Column(name = "tvId", insertable = false, updatable = false)
-    private int tvId;
-
-    public int getTvId() {
-        return tvId;
-    }
-
-    public void setTvId(int tvId) {
-        this.tvId = tvId;
-    }
-    @Column(name = "season", insertable = false, updatable = false)
-    private int season;
-
-    public int getSeason() {
-        return season;
-    }
-
-    public void setSeason(int season) {
-        this.season = season;
-    }
-
     @Column(name = "title")
     private String title;
 

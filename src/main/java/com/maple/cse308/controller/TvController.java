@@ -1,8 +1,10 @@
 package com.maple.cse308.controller;
 
 import com.maple.cse308.entity.TvReviewUser;
-import com.maple.cse308.entity.User;
 import com.maple.cse308.entity.TvShow;
+import com.maple.cse308.entity.User;
+import com.maple.cse308.repository.EpisodeRepository;
+import com.maple.cse308.repository.SeasonRepository;
 import com.maple.cse308.service.TvServiceImpl;
 import com.maple.cse308.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,12 @@ public class TvController {
 
     @Autowired
     private UserServiceImpl userService;
+
+    @Autowired
+    SeasonRepository seasonRepository;
+
+    @Autowired
+    EpisodeRepository episodeRepository;
 
     @GetMapping("/tv")
     public String tv(Model model) {
@@ -58,8 +66,28 @@ public class TvController {
 
         }
         model.addAttribute("tv", tvService.getTvShowDetails(id));
-        //model.addAttribute("seasons", tvService.getTvSeasons(id));
-        //model.addAttribute("episodes", tvService.getTvEpisodes(id, 1));
+
+        /*
+        List<SeasonIdentity> seasonIdList = seasonRepository.findAllBySeasonTvId(id);
+        List seasons = new LinkedList();
+        for(SeasonIdentity seasonId : seasonIdList){
+            seasons.add(seasonRepository.findBySeason(seasonId));
+        }
+
+        model.addAttribute("seasons", seasons);
+
+
+        SeasonIdentity seasonId = new SeasonIdentity(1, id);
+        List<EpisodeIdentity> episodeIdList = episodeRepository.findAllByEpisodeIdSeasonId(seasonId);
+        List episodeList = new LinkedList();
+        for(EpisodeIdentity episode : episodeIdList){
+            episodeList.add(episodeRepository.findByEpisodeId(episode));
+
+        }
+
+        model.addAttribute("episodes", episodeList);
+        */
+
         model.addAttribute("review", review);
         model.addAttribute("criticReviews", tvService.getCriticTvReviewsByTvShow(id));
         model.addAttribute("userReviews", tvService.getUserTvReviewsByTvShow(id));

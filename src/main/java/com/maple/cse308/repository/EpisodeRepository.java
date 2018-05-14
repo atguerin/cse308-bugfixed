@@ -2,6 +2,7 @@ package com.maple.cse308.repository;
 
 import com.maple.cse308.entity.Episode;
 import com.maple.cse308.entity.EpisodeIdentity;
+import com.maple.cse308.entity.SeasonIdentity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +13,7 @@ public interface EpisodeRepository extends CrudRepository<Episode, EpisodeIdenti
 
     Episode save(Episode episode);
 
-    List<Episode> findAllByTvIdAndSeason(int tvId, int season);
+    List<EpisodeIdentity> findAllByEpisodeIdSeasonId(SeasonIdentity seasonIdentity);
+
+    Episode findByEpisodeId(EpisodeIdentity episodeId);
 }

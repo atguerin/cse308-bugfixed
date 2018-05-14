@@ -164,9 +164,5 @@ public class TvServiceImpl implements TvService {
         return userMovieReview;
     }
 
-    public List<Season> getTvSeasons(int id){return seasonRepository.findAllByTvId(id);}
 
-    public List<Episode> getTvEpisodes(int tvId, int season) {
-        return episodeRepository.findAllByTvIdAndSeason(tvId, season);
-    }
 }

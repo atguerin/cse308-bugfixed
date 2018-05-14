@@ -12,5 +12,7 @@ public interface SeasonRepository extends CrudRepository<Season, SeasonIdentity>
 
     Season save(Season season);
 
-    List<Season> findAllByTvId(int tvId);
+    List<SeasonIdentity> findAllBySeasonTvId(Integer tvId);
+
+    Season findBySeason(SeasonIdentity season);
 }

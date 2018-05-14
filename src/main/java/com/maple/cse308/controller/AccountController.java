@@ -27,6 +27,11 @@ public class AccountController {
         return "index";
     }
 
+    @GetMapping("/loginFailed")
+    public String loginFailed() {
+        return "login_failed";
+    }
+
     @GetMapping("/logout")
     public String logout(Model model) {
         model.addAttribute("comingSoonList", movieService.getMoviesComingSoon());

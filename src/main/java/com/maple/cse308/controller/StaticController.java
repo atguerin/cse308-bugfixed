@@ -31,6 +31,14 @@ public class StaticController {
     private EmailServiceImpl emailService;
 
 
+    @RequestMapping("/")
+    public String defaultPage(Model model) {
+        model.addAttribute("comingSoonList", movieService.getMoviesComingSoon());
+        model.addAttribute("outNowList", movieService.getMoviesOutNow());
+        model.addAttribute("topBoxOfficeList", movieService.getTopBoxOffice());
+        return "index";
+    }
+
     @RequestMapping("/index")
     public String index(Model model) {
         model.addAttribute("comingSoonList", movieService.getMoviesComingSoon());
