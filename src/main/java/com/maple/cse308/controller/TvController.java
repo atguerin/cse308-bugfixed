@@ -1,4 +1,181 @@
 package com.maple.cse308.controller;
 
+import com.maple.cse308.entity.TvReviewUser;
+import com.maple.cse308.entity.User;
+import com.maple.cse308.entity.TvShow;
+import com.maple.cse308.service.TvServiceImpl;
+import com.maple.cse308.service.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/")
 public class TvController {
+
+    @Autowired
+    private TvServiceImpl tvService;
+
+    @Autowired
+    private UserServiceImpl userService;
+
+    @GetMapping("/tv")
+    public String tv(Model model) {
+        model.addAttribute("listType", "NEW TV TONIGHT");
+        model.addAttribute("selectedList", tvService.getOpenThisWeek());
+        return "tv";
+    }
+
+    @GetMapping("/tv/open")
+    public String tvsopen(Model model) {
+        model.addAttribute("listType", "NEW TV TONIGHT");
+        model.addAttribute("selectedList", tvService.getOpenThisWeek());
+        return "tv";
+    }
+
+    @GetMapping("/tv/popular")
+    public String tvsPopular(Model model){
+        model.addAttribute("listType", "MOST POPULAR MOVIE");
+        model.addAttribute("selectedList", tvService.getPopularTv());
+        return "tv";
+    }
+
+    @RequestMapping("/tv_details")
+    public String tvDetails(@RequestParam(value = "id", required = false) int id, Model model) {
+        model.addAttribute("popularList", tvService.getPopularTv());
+        model.addAttribute("outNowList", tvService.getOpenThisWeek());
+        TvReviewUser review = null;
+        try {
+            User user = userService.getCurrentUser();
+            List<TvReviewUser> l = tvService.getUserTvReviewsByUserAndTv(user.getUserId(), id);
+            if (!l.isEmpty()) {
+                review = l.get(0);
+            }
+        } catch (Exception e) {
+
+        }
+        model.addAttribute("tv", tvService.getTvShowDetails(id));
+        //model.addAttribute("seasons", tvService.getTvSeasons(id));
+        //model.addAttribute("episodes", tvService.getTvEpisodes(id, 1));
+        model.addAttribute("review", review);
+        model.addAttribute("criticReviews", tvService.getCriticTvReviewsByTvShow(id));
+        model.addAttribute("userReviews", tvService.getUserTvReviewsByTvShow(id));
+        model.addAttribute("screenshots", tvService.getTvScreenshots(id));
+        model.addAttribute("actors", tvService.getTvActors(id));
+        return "tv_details";
+    }
+
+
+    @PostMapping("/postTvReview")
+    public String postReviewTv(@ModelAttribute TvReviewUser reviewUser, Model model) throws Exception {
+        reviewUser.setUserId(userService.getCurrentUser().getUserId());
+        tvService.addUserTvReview(reviewUser);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully posted your review!");
+        return "tv_details :: serverResponseModalContent";
+    }
+
+    @PostMapping("/editTvReview")
+    public String editReviewTv(@ModelAttribute TvReviewUser reviewUser, Model model) throws Exception {
+        int userId = userService.getCurrentUser().getUserId();
+        TvReviewUser review = tvService.getUserTvReviewsByUserAndTv(userId, reviewUser.getTvId()).get(0);
+        review.setRating(reviewUser.getRating());
+        review.setReview(reviewUser.getReview());
+        tvService.editUserTvReview(review);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully edited your review!");
+        return "tv_details :: serverResponseModalContent";
+    }
+
+    @GetMapping("/tv/reviewForm")
+    public String updatetvReviewFormTv(@RequestParam(value = "tvId") int tvId, Model model) {
+        model.addAttribute("tv", tvService.getTvShowDetails(tvId));
+        int userId = userService.getCurrentUser().getUserId();
+        model.addAttribute("review", tvService.getUserTvReviewsByUserAndTv(userId, tvId).get(0));
+        return "tv_details :: reviewForm";
+    }
+
+    @GetMapping("/tv/reviews")
+    public String updatetvReviewsTv(@RequestParam(value = "tvId") int tvId, Model model) {
+        model.addAttribute("tv", tvService.getTvShowDetails(tvId));
+        model.addAttribute("criticReviews", tvService.getCriticTvReviewsByTvShow(tvId));
+        model.addAttribute("userReviews", tvService.getUserTvReviewsByTvShow(tvId));
+        return "tv_details :: reviews";
+    }
+
+
+    @PostMapping("/tv/addToWantToSeeList")
+    public String addToWantToSeeListTv(@RequestParam(value = "tvId") int tvId, Model model) throws Exception {
+        TvShow tv = tvService.getTvShowDetails(tvId);
+        userService.addToWantToSeeListTv(tv);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully added to your Want To See List!");
+        return "tv_details :: serverResponseModalContent";
+    }
+
+    @PostMapping("/tv/addToDontWantToSeeList")
+    public String addToDontWantToSeeListTv(@RequestParam(value = "tvId") int tvId, Model model) throws Exception {
+        TvShow tv = tvService.getTvShowDetails(tvId);
+        userService.addToDontWantToSeeListTv(tv);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully added to your Not Interested List!");
+        return "tv_details :: serverResponseModalContent";
+    }
+
+    @PostMapping("/tv/deleteFromWantToSeeList")
+    public String deleteFromWantToSeeListTv(@RequestParam(value = "id") int tvId, Model model) throws Exception {
+        TvShow tv = tvService.getTvShowDetails(tvId);
+        userService.removeFromWantToSeeListTv(tv);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully deleted from your Want To See List!");
+        return "profile :: serverResponseModalContent";
+    }
+
+    @PostMapping("/tv/deleteFromNotInterestedList")
+    public String deleteFromNotInterestListTv(@RequestParam(value = "id") int tvId, Model model) throws Exception {
+        TvShow tv = tvService.getTvShowDetails(tvId);
+        userService.removeFromDontWantToSeeListTv(tv);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully deleted from your Not Interest List!");
+        return "profile :: serverResponseModalContent";
+    }
+
+    @PostMapping("/tv/deleteTvUserReview")
+    public String deletetvUserReviewTv(@RequestParam(value = "id") int reviewId, Model model) throws Exception {
+        tvService.deleteUserTvReview(reviewId);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully deleted your review!");
+        return "profile :: serverResponseModalContent";
+    }
+
+    @GetMapping("/tv/wantToSeeList")
+    public String getWantToSeeTv(Model model) {
+        model.addAttribute("user", userService.getCurrentUser());
+        return "profile :: wantToSeeTv";
+    }
+
+    @GetMapping("/tv/notInterestedList")
+    public String getNotInterestTv(Model model) {
+        model.addAttribute("user", userService.getCurrentUser());
+        return "profile :: notInterestedTv";
+    }
+
+    @GetMapping("/tv/userTvReviews")
+    public String getUserTvReviews(Model model) {
+        User user = userService.getCurrentUser();
+        List<TvReviewUser> tvReviews = tvService.getUserTvReviewsByUser(user.getUserId());
+        model.addAttribute("tvReviews", tvReviews);
+        return "profile :: tvReviews";
+    }
+
+    @RequestMapping("/tv_all_critics")
+    public String allTvCriticReviews(@RequestParam(value = "id", required = false) int id, Model model) {
+        model.addAttribute("tv", tvService.getTvShowDetails(id));
+        model.addAttribute("criticReviews", tvService.getCriticTvReviewsByTvShow(id));
+        return "tv_all_critics";
+    }
+
 }

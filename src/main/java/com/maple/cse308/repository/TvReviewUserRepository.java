@@ -12,4 +12,10 @@ public interface TvReviewUserRepository extends CrudRepository<TvReviewUser, Int
     HashSet<TvReviewUser> findAllByTvId(int tvId);
 
     HashSet<TvReviewUser> findAllByUserId(int userId);
+
+    TvReviewUser findByReviewId(int reviewId);
+
+    HashSet<TvReviewUser> findByUserIdAndTvId(int userId, int tvId);
+
+
 }

@@ -17,4 +17,8 @@ public interface TvShowRepository extends CrudRepository<TvShow, Integer> {
     TvShow save(TvShow tvShow);
 
     boolean existsByTitleAndPremierDate(String title, Date premierDate);
+
+    List<TvShow> findTop12ByOrderByPremierDateDesc();
+
+    List<TvShow> findTop12ByOrderByRatingDesc();
 }

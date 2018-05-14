@@ -23,6 +23,18 @@ public class TvActor {
     @Column(name = "needsChecking")
     private Boolean needsChecking;
 
+    @OneToOne
+    @JoinColumn(name = "actorId", insertable = false, updatable = false)
+    private Actor actor;
+
+    public Actor getActor() {
+        return actor;
+    }
+
+    public void setActor(Actor actor) {
+        this.actor = actor;
+    }
+
     public Integer getTvActorId() {
         return tvActorId;
     }

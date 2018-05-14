@@ -22,6 +22,9 @@ public class TvShow {
     @Column(name = "poster")
     private String poster;
 
+    @Column(name = "rating")
+    private Float rating;
+
     @Column(name = "overview", length = 2048)
     private String overview;
 
@@ -51,6 +54,14 @@ public class TvShow {
     @ManyToMany(mappedBy = "dontWatchListTV")
     private Set<User> usersDontWatchTV;
 
+    public Float getRating() {
+        return rating;
+    }
+
+    public Set<TvReviewCritic> getCriticReviews() {
+        return criticReviews;
+    }
+
     public Integer getTvId() {
         return tvId;
     }
@@ -76,9 +87,21 @@ public class TvShow {
     }
 
     public String getDateString() {
-        SimpleDateFormat dataFormat = new SimpleDateFormat("MM/dd/yy");
+        SimpleDateFormat dataFormat = new SimpleDateFormat("MMM dd, yyyy");
         String date = dataFormat.format(premierDate);
         return date;
+    }
+
+    public String getDateForList() {
+        SimpleDateFormat dataFormat = new SimpleDateFormat("MMM dd");
+        String date = dataFormat.format(premierDate);
+        return date;
+    }
+
+    public String getReleaseYear() {
+        SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy");
+        String year = dataFormat.format(premierDate);
+        return year;
     }
 
     public String getPoster() {

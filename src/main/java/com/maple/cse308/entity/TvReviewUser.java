@@ -31,6 +31,18 @@ public class TvReviewUser implements Serializable {
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
 
+    @OneToOne
+    @JoinColumn(name = "tvId", insertable = false, updatable = false)
+    private TvShow tv;
+
+    public TvShow getTv() {
+        return tv;
+    }
+
+    public void setTv(TvShow tv) {
+        this.tv = tv;
+    }
+
     public int getUserId() {
         return userId;
     }

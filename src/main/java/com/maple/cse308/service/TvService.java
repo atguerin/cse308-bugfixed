@@ -20,7 +20,7 @@ public interface TvService {
 
     void editUserTvReview(TvReviewUser TvReviewUser);
 
-    void deleteUserTvReview(TvReviewUser TvReviewUser);
+    void deleteUserTvReview(int reviewId);
 
     List<TvReviewCritic> getCriticTvReviewsByTvShow(int tvId) throws Exception;
 
@@ -33,4 +33,5 @@ public interface TvService {
     List<TvShow> findAllByTitleContainingIgnoreCase(String search);
 
     List<TvShow> tvSearch(String search);
+
 }

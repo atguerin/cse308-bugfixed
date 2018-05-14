@@ -20,6 +20,8 @@ public class StaticController {
     @Autowired
     private MovieServiceImpl movieService;
     @Autowired
+    private TvServiceImpl tvService;
+    @Autowired
     private ActorServiceImpl actorService;
     @Autowired
     private UserServiceImpl userService;
@@ -35,16 +37,6 @@ public class StaticController {
         model.addAttribute("outNowList", movieService.getMoviesOutNow());
         model.addAttribute("topBoxOfficeList", movieService.getTopBoxOffice());
         return "index";
-    }
-
-    @RequestMapping("/tv")
-    public String tv(Model model) {
-        return "tv";
-    }
-
-    @RequestMapping("/tv_details")
-    public String tvDetails(Model model) {
-        return "tv_details";
     }
 
     @RequestMapping("/actor_details")
@@ -64,6 +56,8 @@ public class StaticController {
         model.addAttribute("user", user);
         List<MovieReviewUser> movieReviews = movieService.getUserMovieReviewsByUser(user.getUserId());
         model.addAttribute("movieReviews", movieReviews);
+        List<TvReviewUser> tvReviews = tvService.getUserTvReviewsByUser(user.getUserId());
+        model.addAttribute("tvReviews", tvReviews);
         //model.addAttribute("blockList", userService.getBlockList(user.getUserId()));
         return "profile";
     }

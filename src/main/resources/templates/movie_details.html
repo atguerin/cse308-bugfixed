@@ -33,56 +33,12 @@
     <div class="row">
         <div class="col-sm-12 col-md-7 col-lg-4 mb-3">
             <div class="jumbotron-side">
-                <h5>Out Now</h5>
-                <table class="table table-sm table-dark mb-5">
-                    <tbody>
-                    <tr th:each="movie : ${outNowList}">
-                        <td>
-                            <a th:text="${movie.ratingAvg}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Not rated</a>
-                        </td>
-                        <td>
-                            <a th:text="${movie.title}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Title</a>
-                        </td>
-                        <td>
-                            <a th:text="${movie.getDateForList()}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Date</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <h5>Top Box Office</h5>
-                <table class="table table-sm table-dark mb-5">
-                    <tbody>
-                        <tr th:each="movie : ${topBoxOfficeList}">
-                            <td>
-                                <a th:href="@{/movie_details(id=${movie.movieId})}" th:text="${movie.ratingAvg}" style="color: white;">Not rated</a>
-                            </td>
-                            <td>
-                                <a th:href="@{/movie_details(id=${movie.movieId})}" th:text="${movie.title}" style="color: white;">Title</a>
-                            </td>
-                            <td>
-                                <a th:href="@{/movie_details(id=${movie.movieId})}" th:text="|$${movie.getRevenue()}|" style="color: white;">Revenue</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h5>Coming Soon</h5>
-                <table class="table table-sm table-dark mb-5">
-                    <tbody>
-                        <tr th:each="movie : ${comingSoonList}">
-                            <td>
-                                <a th:text="${movie.ratingAvg}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Not rated</a>
-                            </td>
-                            <td>
-                                <a th:text="${movie.title}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Title</a>
-                            </td>
-                            <td>
-                                <a th:text="${movie.getDateForList()}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Date</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <h6><strong>IN THEATERS</strong></h6>
+                <nav class="nav flex-column w-100">
+                    <a class="nav-link side active text-white" th:href="@{/movies/opening}">Opeining This Week</a>
+                    <a class="nav-link side text-white" th:href="@{/movies/topbox}">Top Box Office</a>
+                    <a class="nav-link side text-white" th:href="@{/movies/coming}">Coming Soon</a>
+                </nav>
             </div>
         </div>
 

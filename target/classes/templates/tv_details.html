@@ -31,22 +31,12 @@
     <div class="row">
         <!-- TV detail colum -->
         <div class="col-sm-12 col-md-12 col-lg-8">
-            <h5 class="mr-2">THE X-FILES: SEASON 11 (2018)</h5>
+            <h5 th:text="${tv.title}" class="mr-2">THE X-FILES: SEASON 11 (2018)</h5>
             <form class="form-inline">
-                <div class="form-group mb-2">
+                <div th:if="${seasons}" class="form-group mb-2">
                     <label class="mr-3" for="season">Season:</label>
                     <select class="form-control form-control-sm" id="season">
-                            <option>Season 11</option>
-                            <option>Season 10</option>
-                            <option>Season 9</option>
-                            <option>Season 8</option>
-                            <option>Season 7</option>
-                            <option>Season 6</option>
-                            <option>Season 5</option>
-                            <option>Season 4</option>
-                            <option>Season 3</option>
-                            <option>Season 2</option>
-                            <option>Season 1</option>
+                            <option th:each="seaon,iterStat : ${seasons}" th:value="${iterStat.index+1}" th:text="'Season'+${iterStat.index+1}">Season 1</option>
                     </select>
                 </div>
             </form>
@@ -54,182 +44,146 @@
             <!-- TV details -->
             <div class="card detail-card flex-md-row mb-4 mt-2">
                 <div class="card-poster-container align-items-center">
-                    <img class="card-detail-poster" alt="poster" src="img/poster1.jpg"/>
+                    <img class="card-detail-poster" alt="poster" th:src="@{${tv.poster}}"/>
                 </div>
                 <div class="card-body d-flex flex-column align-items-start">
                     <h5 class="mb-0">
-                        <a class="detail-title">TV Title</a>
+                        <a class="detail-title" th:text="${tv.title}">TV Title</a>
                     </h5>
-                    <div class="mb-1 text-muted">2018</div>
+                    <div class="mb-1 text-muted" th:text="${tv.getReleaseYear()}">2018</div>
                     <div class="row w-100 ratings">
                         <div class="d-flex w-100">
                             <div class="p-2">Critic Score: </div>
-                            <div class="p-2"><span class="ion-android-star"></span> 3.4</div>
+                            <div class="p-2"><span class="ion-android-star"></span>no score</div>
                             <div class="ml-auto p-2">Audience Score: </div>
-                            <div class="p-2"><span class="ion-android-star"></span> 4.0</div>
+                            <div class="p-2">
+                                <span class="ion-android-star"></span>
+                                <span th:text="${tv.rating}">score</span>
+                            </div>
                         </div>
                     </div>
                     <div class="d-flex w-100 mt-3 pl-3" >
                         <div style="font-size: 20px;">Add Your Rating</div>
-                        <button type="button" class="btn btn-danger btn-sm ml-auto mr-1">+ Not Interested</button>
-                        <button type="button" class="btn btn-primary btn-sm">+ Want To See List</button>
+                        <form th:action="@{/}" method="post" id="addToNotInterestedForm" class="ml-auto">
+                            <input name="tvId" type="hidden" th:value="${tv.tvId}"/>
+                            <button sec:authorize="isAuthenticated()" type="button" id="addToNotInterested" class="btn btn-danger btn-sm mr-1">+ Not Interested</button>
+                            <button sec:authorize="isAnonymous()" data-toggle="modal" data-target="#login_modal" type="button" class="btn btn-danger btn-sm ml-auto mr-1">+ Not Interested</button>
+                        </form>
+                        <form th:action="@{/}" method="post" id="addToWantToSeeListForm">
+                            <input name="tvId" type="hidden" th:value="${tv.tvId}"/>
+                            <button sec:authorize="isAuthenticated()" type="button" id="addToWantToSee" class="btn btn-primary btn-sm">+ Want To See List</button>
+                            <button sec:authorize="isAnonymous()" data-toggle="modal" data-target="#login_modal" type="button" class="btn btn-primary btn-sm">+ Want To See List</button>
+                        </form>
                     </div>
-                    <form class="w-100">
-                        <input id="rating" class="rating rating-loading" value="0" data-min="0" data-size="xxs"/>
-                        <textarea class="form-control" id="review" rows="3" style="resize: none;"></textarea>
-                        <div class="d-flex w-100 mt-1"><button type="submit" class="btn btn-primary btn-sm ml-auto">POST</button></div>
-                    </form>
+
+                    <div id="reviewForm" class="w-100">
+                        <form th:action="@{/postTvReview}" method="post" class="w-100" id="postReviewForm" th:fragment="reviewForm">
+                            <input name="tvId" type="hidden" th:value="${tv.tvId}"/>
+                            <input name="rating" id="rating" class="rating rating-loading" th:value="${review}?${review.rating}:'0'" data-min="0" data-size="xxs"/>
+                            <textarea name="review" class="form-control" id="review" rows="3" style="resize: none;" th:text="${review}?${review.review}:''"></textarea>
+                            <div class="d-flex w-100 mt-1">
+                                <button sec:authorize="isAuthenticated()" th:unless="${review}" type="button" id="postReview" class="btn btn-primary btn-sm ml-auto">POST</button>
+                                <button sec:authorize="isAuthenticated()" th:if="${review}" type="button" id="editReview" class="btn btn-primary btn-sm ml-auto">EDIT</button>
+                                <button sec:authorize="isAnonymous()" data-toggle="modal" data-target="#login_modal" type="button" class="btn btn-primary btn-sm ml-auto">POST</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
+
+                <!-- Server response modal -->
+                <div class="modal fade" id="serverResponseModal" tabindex="-1" role="dialog" aria-labelledby="serverResponseModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div th:fragment="serverResponseModalContent" class="modal-content" id="serverResponseModalContent" style="color: black;">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel" th:text="${title}?: 'Processing'"></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" th:text="${body}?: 'Processing your request...'"></div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
+
+            <!-- movie info -->
+            <div class="jumbotron details-jumbotron">
+                <h6 class="border-bottom border-gray pb-2 mb-0">TV INFO</h6>
+                <dl class="row mt-4">
+                    <dt class="col-sm-3">Genre:</dt>
+                    <dd class="col-sm-9" th:if="${tv.genre.isEmpty()}">N/A</dd>
+                    <dd class="col-sm-9" th:unless="${tv.genre.isEmpty()}">
+                        <th:block th:each="genre,iterStat : ${tv.genre}" th:if="${iterStat.index<5}">
+                            <span th:text="${genre.genre}"></span>
+                            <span th:if="${iterStat.index < tv.genre.size()-1 and iterStat.index < 4}" class="mr-1">,</span>
+                        </th:block>
+                    </dd>
+
+                    <dt class="col-sm-3">Premiere Date:</dt>
+                    <dd class="col-sm-9" th:text="${tv.getDateString()}">N/A</dd>
+
+                    <dt class="col-sm-3">Created by:</dt>
+                    <dd class="col-sm-9" th:if="${tv.creators.isEmpty()}">N/A</dd>
+                    <dd class="col-sm-9" th:unless="${tv.creators.isEmpty()}">
+                        <th:block th:each="creator,iterStat : ${tv.creators}" th:if="${iterStat.index<5}">
+                            <span th:text="${creator.creator}"></span>
+                            <span th:if="${iterStat.index < tv.creators.size()-1 and iterStat.index < 4}" class="mr-1">,</span>
+                        </th:block>
+                    </dd>
+
+                </dl>
+                <p class="text-justify" th:text="${tv.overview}">
+                    N/A
+                </p>
+            </div>
+
 
             <!-- TV photos -->
-            <div id="detail-photo-carousel">
-            <div id="carousel-details-photo" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                    <img class="d-block w-100" src="img/photo/titanic1.jpg" alt="First slide"/>
-                    </div>
-                    <div class="carousel-item">
-                    <img class="d-block w-100" src="img/photo/titanic2.jpg" alt="Second slide"/>
-                    </div>
-                    <div class="carousel-item">
-                    <img class="d-block w-100" src="img/photo/titanic3.jpg" alt="Third slide"/>
-                    </div>
-                    <div class="carousel-item">
-                    <img class="d-block w-100" src="img/photo/titanic4.jpg" alt="Third slide"/>
-                    </div>
-                    <div class="carousel-item">
-                    <img class="d-block w-100" src="img/photo/titanic5.jpg" alt="Third slide"/>
-                    </div>
-                    <div class="carousel-item">
-                    <img class="d-block w-100" src="img/photo/titanic6.jpg" alt="Third slide"/>
-                    </div>
-                    <div class="carousel-item">
-                    <img class="d-block w-100" src="img/photo/titanic7.jpg" alt="Third slide"/>
-                    </div>
-                    <div class="carousel-item">
-                    <img class="d-block w-100" src="img/photo/titanic8.jpg" alt="Third slide"/>
-                    </div>
-                    <div class="carousel-item">
-                    <img class="d-block w-100" src="img/photo/titanic9.jpg" alt="Third slide"/>
+            <div th:if="${screenshots.size()>0}" id="detail-photo-carousel">
+                <!-- <h6 class="pl-4 pb-2 mb-0">PHOTOS</h6> -->
+                <div id="carousel-details-photo" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div th:each="photo,iterStat : ${screenshots}" th:class="${iterStat.index==0}?'carousel-item active':'carousel-item'">
+                            <img class="d-block w-100" th:src="@{${photo.screenshot}}" alt="..."/>
+                        </div>
+
+                        <!-- buttons -->
+                        <a class="carousel-control-prev" href="#carousel-details-photo" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-details-photo" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
                     </div>
 
-                    <!-- buttons -->
-                    <a class="carousel-control-prev" href="#carousel-details-photo" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carousel-details-photo" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                    </a>
+                    <!-- Indicators -->
+                    <ol class='carousel-indicators'>
+                        <li th:each="photo,iterStat : ${screenshots}" data-target='#carousel-details-photo' th:attr="data-slide-to=${iterStat.index}" th:class="${iterStat.index==0}?'active'">
+                            <img th:src="@{${photo.screenshot}}" alt='' />
+                        </li>
+                    </ol>
                 </div>
-                
-                <!-- Indicators -->
-                <ol class='carousel-indicators'>
-                    <li data-target='#carousel-details-photo' data-slide-to='0' class='active'><img src='img/photo/titanic1.jpg' alt='' /></li>
-                    <li data-target='#carousel-details-photo' data-slide-to='1'><img src='img/photo/titanic2.jpg' alt='' /></li>
-                    <li data-target='#carousel-details-photo' data-slide-to='2'><img src='img/photo/titanic3.jpg' alt='' /></li>
-                    <li data-target='#carousel-details-photo' data-slide-to='3'><img src='img/photo/titanic4.jpg' alt='' /></li>
-                    <li data-target='#carousel-details-photo' data-slide-to='4'><img src='img/photo/titanic5.jpg' alt='' /></li>
-                    <li data-target='#carousel-details-photo' data-slide-to='5'><img src='img/photo/titanic6.jpg' alt='' /></li>
-                    <li data-target='#carousel-details-photo' data-slide-to='6'><img src='img/photo/titanic7.jpg' alt='' /></li>
-                    <li data-target='#carousel-details-photo' data-slide-to='7'><img src='img/photo/titanic8.jpg' alt='' /></li>
-                    <li data-target='#carousel-details-photo' data-slide-to='8'><img src='img/photo/titanic9.jpg' alt='' /></li>
-                </ol>                
-            </div>
-            </div>     
-
-
-            <!-- TV season info -->
-            <div class="jumbotron details-jumbotron">
-                <h6 class="border-bottom border-gray pb-2 mb-0">Tv Season Info</h6>
-                <dl class="row mt-4">
-                    <dt class="col-sm-3">Network:</dt>
-                    <dd class="col-sm-9">FOX</dd>
-                    
-                    <dt class="col-sm-3">Premiere Date:</dt>
-                    <dd class="col-sm-9">
-                        <p>Jan 3, 2018</p>
-                    </dd>
-                </dl>
-                <p class="text-justify">Ambitioni dedisse scripsisse iudicaretur. Cras mattis iudicium purus sit amet fermentum. Donec sed odio operae, eu vulputate felis rhoncus. Praeterea iter est quasdam res quas ex communi. At nos hinc posthac, sitientis piros Afros. Petierunt uti sibi concilium totius Galliae in diem certam indicere. Cras mattis iudicium purus sit amet fermentum.</p>
             </div>
 
-            <!-- Cast Info -->           
-            <div class="jumbotron details-jumbotron">
-                <h6 class="border-bottom border-gray pb-2 mb-0">Cast info</h6>
+
+            <!-- Cast Info -->
+            <div th:if="${actors.size()>0}" class="jumbotron details-jumbotron">
+                <h6 class="border-bottom border-gray pb-2 mb-0">CAST INFO</h6>
                 <div id="cast-card-deck" class="card-deck mt-5">
-                    <div class="col-auto col-lg-3 mb-3">
+                    <div class="col-sm-4 col-md-3 col-lg-3 mb-3" th:each="actor,iterStat : ${actors}" th:unless="${iterStat.index>7}">
                         <div class="card">
-                            <a href="actor_details.html"><img class="card-img-top" src="img/cast/titanic_cast1.jpg" alt="Card image cap"/></a>
+                            <a th:href="@{/actor_details(id=${actor.actorId})}">
+                                <img class="card-img-top" th:src="@{${actor.actor.headshot}}" alt="Card image cap"/>
+                            </a>
                             <div class="card-body">
-                            <p class="card-title">Name</p>
-                            <p class="card-subtitle">role</p>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div class="col-auto col-lg-3 mb-3">
-                        <div class="card">
-                            <a href="actor_details.html"><img class="card-img-top" src="img/cast/titanic_cast2.jpg" alt="Card image cap"/></a>
-                            <div class="card-body">
-                            <p class="card-title">Name</p>
-                            <p class="card-subtitle">role</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-auto col-lg-3 mb-3">
-                        <div class="card">
-                            <a href="actor_details.html"><img class="card-img-top" src="img/cast/titanic_cast3.jpg" alt="Card image cap"/></a>
-                            <div class="card-body">
-                            <p class="card-title">Name</p>
-                            <p class="card-subtitle">role</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-auto col-lg-3 mb-3">
-                        <div class="card">
-                            <a href="actor_details.html"><img class="card-img-top" src="img/cast/titanic_cast4.jpg" alt="Card image cap"/></a>
-                            <div class="card-body">
-                            <p class="card-title">Name</p>
-                            <p class="card-subtitle">role</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-auto col-lg-3 mb-3">
-                        <div class="card">
-                            <a href="actor_details.html"><img class="card-img-top" src="img/cast/titanic_cast5.jpg" alt="Card image cap"/></a>
-                            <div class="card-body">
-                            <p class="card-title">Name</p>
-                            <p class="card-subtitle">role</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-auto col-lg-3 mb-3">
-                        <div class="card">
-                                <a href="actor_details.html"><img class="card-img-top" src="img/cast/titanic_cast6.jpg" alt="Card image cap"/></a>
-                            <div class="card-body">
-                            <p class="card-title">Name</p>
-                            <p class="card-subtitle">role</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-auto col-lg-3 mb-3">
-                        <div class="card">
-                            <a href="actor_details.html"><img class="card-img-top" src="img/cast/titanic_cast7.jpg" alt="Card image cap"/></a>
-                            <div class="card-body">
-                            <p class="card-title">Name</p>
-                            <p class="card-subtitle">role</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-auto col-lg-3 mb-3">
-                        <div class="card">
-                            <a href="actor_details.html"><img class="card-img-top" src="img/cast/titanic_cast8.jpg" alt="Card image cap"/></a>
-                            <div class="card-body">
-                            <p class="card-title">Name</p>
-                            <p class="card-subtitle">role</p>
+                                <p class="card-title" th:text="${actor.actor.firstName+' '+actor.actor.lastName}">Name</p>
+                                <!--<p class="card-subtitle" th:text="${}">role</p>-->
                             </div>
                         </div>
                     </div>
@@ -238,41 +192,73 @@
             </div>
 
             <!-- Reviews -->
-            <div class="jumbotron details-jumbotron">
-                <h6 class="border-bottom border-gray pb-2 mb-0">Reviews</h6>
-                <div class="media flex-md-row text-muted pt-3">
-                    <div class="review-thumbnail-container">
-                        <img src="img/slide1.png" alt="..." class="review-img-thumbnail"/>
+            <div id="reviews">
+                <div class="jumbotron details-jumbotron" th:fragment="reviews">
+                    <div th:unless="${criticReviews.size()>0 or userReviews.size()>0}">
+                        <h6 class="border-bottom border-gray pb-2 mb-2">REVIEWS</h6>
+                        <span>No review yet.</span>
                     </div>
-                    <div class="d-flex flex-column align-items-start">
-                        <div class="d-flex w-100 mb-1" style="color: #ffff;">
-                            <div>@User Name</div>
-                            <div class="ml-auto mr-1">Critic score:</div>
-                            <div><span class="ion-android-star"></span> 3.4</div>
+                    <!-- Critic Reviews -->
+                    <h6 th:if="${criticReviews.size()>0}" class="border-bottom border-gray pb-2 mb-0">CRITIC REVIEWS</h6>
+                    <div th:each="criticReview,iterStat : ${criticReviews}" th:if="${iterStat.index<10}" class="media flex-md-row pt-3">
+                        <div class="review-thumbnail-container">
+                            <a th:href="@{/criticHome(criticId=${criticReview.critic.criticId})}">
+                                <img th:src="@{(${criticReview.critic.photo}?: '/img/default.gif')}" alt="..." class="review-img-thumbnail"/>
+                            </a>
                         </div>
-                        <p class="media-body pb-3 mb-0 small lh-125 border-bottom">
-                            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-                        </p>
-                    </div>
-                </div>
-                <div class="media flex-md-row text-muted pt-3">
-                    <div class="review-thumbnail-container">
-                        <img src="img/slide3.png" alt="..." class="review-img-thumbnail"/>
-                    </div>
-                    <div class="d-flex flex-column align-items-start">
-                        <div class="d-flex w-100 mb-1" style="color: #ffff;">
-                            <div>@User Name</div>
-                            <div class="ml-auto mr-1">Audience score:</div>
-                            <div><span class="ion-android-star"></span> 3.4</div>
+                        <div class="d-flex flex-column align-items-start w-100">
+                            <div class="d-flex w-100 mb-1">
+                                <div>
+                                    <span class="ml-2">@</span>
+                                    <a th:href="@{/criticHome(criticId=${criticReview.critic.criticId})}" style="color: white;">
+                                        <span th:text="|${criticReview.critic.firstName} ${criticReview.critic.lastName}|">@User Name</span>
+                                    </a>
+                                </div>
+                                <div class="ml-auto mr-1">Critic score:</div>
+                                <div class="mr-2">
+                                    <span th:text="${criticReview.rating==''?'no score':criticReview.rating}">score</span>
+                                </div>
+                                <a href="#" th:attr="data-id=${criticReview.reviewId}" class="report critic-review ion-alert-circled"></a>
+                            </div>
+                            <p class="media-body pb-3 mb-0 small lh-125 border-bottom w-100" th:text="${criticReview.review}">
+                                Review
+                            </p>
                         </div>
-                        <p class="media-body pb-3 mb-0 small lh-125 border-bottom">
-                            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-                        </p>
                     </div>
+                    <small class="d-block text-right mt-3">
+                        <a th:href="@{/tv_all_critics(id=${tv.tvId})}">All Critic Reviews</a>
+                    </small>
+
+                    <!-- User(Audience) Reviews -->
+                    <h6 th:if="${userReviews.size()>0}" class="border-bottom border-gray pb-2 mb-0 mt-4">USER REVIEWS</h6>
+                    <div th:each="userReview,iterStat : ${userReviews}" th:if="${iterStat.index<6}" class="media flex-md-row pt-3">
+                        <div class="review-thumbnail-container">
+                            <a th:href="@{/userInformation(userName=${userReview.user.username})}">
+                                <img th:src="@{(${userReview.user.photo}?: '/img/default.gif')}" alt="..." class="review-img-thumbnail"/>
+                            </a>
+                        </div>
+                        <div class="d-flex flex-column align-items-start w-100">
+                            <div class="d-flex w-100 mb-1">
+                                <div>
+                                    <a th:href="@{/userInformation(userName=${userReview.user.username})}" style="color: white;">
+                                        <span class="ml-2">@</span>
+                                        <span th:text="${userReview.user.username}">User Name</span>
+                                    </a>
+                                </div>
+                                <div class="ml-auto mr-1">Score:</div>
+                                <div class="d-flex">
+                                    <input class="rating rating-loading score p-0" th:value="${userReview.rating}" data-stars="5" data-min="0" data-max="5" data-size="xxxs" disabled=true data-show-clear="false" data-show-caption="false"/>
+                                    <span th:text="${userReview.rating==''?'score':userReview.rating}" class="mr-2">score</span>
+                                    <a href="#" th:attr="data-id=${userReview.reviewId}" class="report user-review ion-alert-circled"></a>
+                                </div>
+                            </div>
+                            <p class="media-body pb-3 mb-0 small lh-125 border-bottom w-100" th:text="${userReview.review}" style="min-height: 3rem;">
+                                Review
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
-                <small class="d-block text-right mt-3">
-                    <a href="#">All reviews</a>
-                </small>
             </div>
 
         </div>
@@ -280,62 +266,11 @@
         <!-- Side chart -->
         <div class="col-sm-12 col-md-7 col-lg-4 md-3">
             <div class="jumbotron-side" style="height: 98%;">
-                <h5>Most Poppular TV</h5>
-                <table class="table table-sm table-dark mb-5">
-                    <thead>
-                        <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        </tr>
-                        <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        </tr>
-                        <tr>
-                        <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        </tr>
-                    </tbody>
-                    </table>
-
-
-                <h5>New TV Tonight</h5>
-                <table class="table table-sm table-dark mb-5">
-                    <thead>
-                        <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        </tr>
-                        <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        </tr>
-                        <tr>
-                        <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <h6><strong>TV</strong></h6>
+                <nav class="nav flex-column w-100">
+                    <a class="nav-link side active text-white" th:href="@{/tv/open}">New TV Tonight</a>
+                    <a class="nav-link side text-white" th:href="@{/tv/popular}">Most Popular TV</a>
+                </nav>
             </div>
         </div>
 
@@ -352,15 +287,79 @@
 <script src="../../js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
 <script src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
 <script src="../../js/star-rating.js" th:src="@{/js/star-rating.js}"></script>
-<script>
-    $("#show-more-btn").click(function () {
-            $("#show-less-btn").show();
-            $("#show-more-btn").hide();
+<script th:inline="javascript">
+    $(document).on("click", "#addToWantToSee", function () {
+        $.ajax({
+            method: "POST",
+            url: "/tv/addToWantToSeeList",
+            data: $('#addToWantToSeeListForm').serialize(),
+            success: function(data){
+                $('#serverResponseModalContent').replaceWith(data);
+                $("#serverResponseModal").modal('show');
+            }
+        });
+    });
+
+    $(document).on("click", "#addToNotInterested", function () {
+        $.ajax({
+            method: "POST",
+            url: "/tv/addToDontWantToSeeList",
+            data: $('#addToNotInterestedForm').serialize(),
+            success: function(data){
+                $('#serverResponseModalContent').replaceWith(data);
+                $("#serverResponseModal").modal('show');
+            }
+        });
+    });
+
+    $(document).on("click", "#postReview", function () {
+        value = $("#rating").val();
+        if (!(value)){
+            $("#serverResponseModal").find('.modal-title').text("Select score");
+            $("#serverResponseModal").find('.modal-body').text("Please select a score.");
+            $("#serverResponseModal").modal('show');
+        } else{
+            $.ajax({
+                method: "POST",
+                url: "/postTvReview",
+                data: $('#postReviewForm').serialize(),
+                success: function(data){
+                    $("#serverResponseModalContent").replaceWith(data);
+                    $("#serverResponseModal").modal('show');
+                    url1 = /*[[@{/tv/reviewForm(tvId=${tv.tvId})}]]*/ '';
+                    url2 = /*[[@{/tv/reviews(tvId=${tv.tvId})}]]*/ '';
+                    $("#reviewForm").load(url1)
+                    $("#reviews").load(url2);
+                }
+            });
         }
-    );
-    $("#show-less-btn").click(function () {
-        $("#show-more-btn").show();
-        $("#show-less-btn").hide();
+    });
+
+    $(document).on("click", "#editReview", function () {
+        value = $("#rating").val();
+        if (!(value)){
+            $("#serverResponseModal").find('.modal-title').text("Select score");
+            $("#serverResponseModal").find('.modal-body').text("Please select a score.");
+            $("#serverResponseModal").modal('show');
+        } else{
+            $.ajax({
+                method: "POST",
+                url: "/editTvReview",
+                data: $('#postReviewForm').serialize(),
+                success: function(data){
+                    $("#serverResponseModalContent").replaceWith(data);
+                    $("#serverResponseModal").modal('show');
+                    url1 = /*[[@{/tv/reviewForm(tvId=${tv.tvId})}]]*/ '';
+                    url2 = /*[[@{/tv/reviews(tvId=${tv.tvId})}]]*/ '';
+                    $("#reviewForm").load(url1)
+                    $("#reviews").load(url2);
+                }
+            });
+        }
+    });
+
+    $( document ).ajaxComplete(function( event, xhr, settings ) {
+        $(".rating").rating({});
     });
 </script>
 

@@ -13,6 +13,9 @@ public class Season {
     @EmbeddedId
     private SeasonIdentity season;
 
+    @Column(name = "tvId", insertable = false, updatable = false)
+    private int tvId;
+
     @Column(name = "poster")
     private String poster;
 
@@ -27,6 +30,14 @@ public class Season {
 
     @Column(name = "ratingCount")
     private Integer ratingCount;
+
+    public int getTvId() {
+        return tvId;
+    }
+
+    public void setTvId(int tvId) {
+        this.tvId = tvId;
+    }
 
     public SeasonIdentity getSeason() {
         return season;
