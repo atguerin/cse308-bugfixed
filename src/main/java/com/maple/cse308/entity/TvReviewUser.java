@@ -80,7 +80,11 @@ public class TvReviewUser implements Serializable {
         this.user = user;
     }
 
-    public int getReviewId() {return reviewId;}
+    public int getReviewId() {
+        return reviewId;
+    }
 
-    public void setReviewId(int reviewId) {this.reviewId = reviewId; }
+    public void setReviewId(int reviewId) {
+        this.reviewId = reviewId;
+    }
 }

@@ -3,7 +3,7 @@ package com.maple.cse308.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name="TvActor")
+@Table(name = "TvActor")
 public class TvActor {
 
     @Id
@@ -17,10 +17,10 @@ public class TvActor {
     @Column(name = "actorId")
     private Integer actorId;
 
-    @Column(name = "role", length=128)
+    @Column(name = "role", length = 128)
     private String role;
 
-    @Column(name="needsChecking")
+    @Column(name = "needsChecking")
     private Boolean needsChecking;
 
     public Integer getTvActorId() {

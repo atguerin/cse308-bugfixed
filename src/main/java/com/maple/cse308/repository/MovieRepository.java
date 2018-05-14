@@ -20,7 +20,7 @@ public interface MovieRepository extends CrudRepository<Movie, Integer> {
 
     List<Movie> findTop10ByRatingAvg(List<Movie> movieList);
 
-     Movie save(Movie m);
+    Movie save(Movie m);
 
     boolean existsByTitleAndReleaseDate(String title, Date releaseDate);
 

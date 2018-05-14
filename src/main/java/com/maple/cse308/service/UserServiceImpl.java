@@ -184,7 +184,7 @@ public class UserServiceImpl implements UserService {
                 tvReviewCriticRepository.delete(tvReviewUser);
                 }*/
         }
-            userRepository.delete(user);
+        userRepository.delete(user);
     }
 
     @Override
@@ -325,7 +325,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void banUser(User user) throws Exception {
 
-        if (confirmCurrentRole("ROLE_DMIN")) {
+        if (confirmCurrentRole("ROLE_ADMIN")) {
             user.setRoles(roleRepository.findByRole("ROLE_BANNED"));
             userRepository.save(user);
         } else {
@@ -383,12 +383,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addToWantToSeeList(Movie movie) throws Exception {
         User user = getCurrentUser();
-        if(!user.getDontWatchList().contains(movie)) {
+        if (!user.getDontWatchList().contains(movie)) {
             user.getWatchList().add(movie);
             userRepository.save(user);
             updateUser();
-        }
-        else{
+        } else {
             throw new Exception("Error: Cannot add a movie that is already on your ignore list");
         }
     }
@@ -397,8 +396,8 @@ public class UserServiceImpl implements UserService {
     public void removeFromWantToSeeList(Movie movie) throws Exception {
         User user = getCurrentUser();
         Movie m = new Movie();
-        for (Movie mv : user.getWatchList()){
-            if(mv.getMovieId() == movie.getMovieId()){
+        for (Movie mv : user.getWatchList()) {
+            if (mv.getMovieId().intValue() == movie.getMovieId().intValue()) {
                 m = mv;
                 break;
             }
@@ -423,24 +422,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addToDontWantToSeeList(Movie movie) throws Exception{
+    public void addToDontWantToSeeList(Movie movie) throws Exception {
         User user = getCurrentUser();
-        if(!user.getWatchList().contains(movie)) {
+        if (!user.getWatchList().contains(movie)) {
             user.getDontWatchList().add(movie);
             userRepository.save(user);
             updateUser();
-        }
-        else{
+        } else {
             throw new Exception("Error: Cannot add a movie that is already on your watch list");
         }
     }
 
     @Override
-    public void removeFromDontWantToSeeList(Movie movie) throws Exception{
+    public void removeFromDontWantToSeeList(Movie movie) throws Exception {
         User user = getCurrentUser();
         Movie m = new Movie();
-        for (Movie mv : user.getDontWatchList()){
-            if(mv.getMovieId() == movie.getMovieId()){
+        for (Movie mv : user.getDontWatchList()) {
+            if (mv.getMovieId().intValue() == movie.getMovieId().intValue()) {
                 m = mv;
                 break;
             }
@@ -462,31 +460,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addMovie(Movie movie) throws Exception {
-        if(movieRepository.existsByTitleAndReleaseDate(movie.getTitle(), movie.getReleaseDate())){
+        if (movieRepository.existsByTitleAndReleaseDate(movie.getTitle(), movie.getReleaseDate())) {
             throw new Exception("Error: This movie already exists in the database");
-        }else if(!confirmCurrentRole("ROLE_ADMIN")){
+        } else if (!confirmCurrentRole("ROLE_ADMIN")) {
             throw new Exception("Error: You are not an administrator");
-        }else{
+        } else {
             movieRepository.save(movie);
         }
     }
 
     @Override
     public void editMovie(Movie movie) throws Exception {
-        if(confirmCurrentRole("ROLE_ADMIN")) {
+        if (confirmCurrentRole("ROLE_ADMIN")) {
             movieRepository.save(movie);
-        }else{
+        } else {
             throw new Exception("Error: You are not an administrator");
         }
     }
 
     @Override
     public void addTvShow(TvShow tvShow) throws Exception {
-        if(tvShowRepository.existsByTitleAndPremierDate(tvShow.getTitle(),tvShow.getPremierDate())){
+        if (tvShowRepository.existsByTitleAndPremierDate(tvShow.getTitle(), tvShow.getPremierDate())) {
             throw new Exception("Error: This TV show already exists in the database.");
-        }else if(!confirmCurrentRole("ROLE_ADMIN")){
+        } else if (!confirmCurrentRole("ROLE_ADMIN")) {
             throw new Exception("Error: You are not an administrator");
-        }else{
+        } else {
             tvShowRepository.save(tvShow);
         }
     }
@@ -535,23 +533,23 @@ public class UserServiceImpl implements UserService {
     }
     */
 
-     public void resetPasswordToken(String email, HttpServletRequest request) throws Exception{
-         User user = userRepository.findByEmail(email);
-         if(user == null){
+    public void resetPasswordToken(String email, HttpServletRequest request) throws Exception {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
             throw new Exception("Error: This user does not exist");
-         }else{
-             String token = UUID.randomUUID().toString();
-             user.setResetToken(token);
-             userRepository.save(user);
+        } else {
+            String token = UUID.randomUUID().toString();
+            user.setResetToken(token);
+            userRepository.save(user);
 
-             String resetUrl = request.getScheme() + "://" + request.getServerName();
-             emailService.sendSimpleMessage(user.getEmail(),"Rotten Tomatoes: Passsword Reset Request","To reset your password, click the link below:\n" + resetUrl
-                     + ":8080/resetPassword?token=" + user.getResetToken());
-         }
-     }
+            String resetUrl = request.getScheme() + "://" + request.getServerName();
+            emailService.sendSimpleMessage(user.getEmail(), "Rotten Tomatoes: Passsword Reset Request", "To reset your password, click the link below:\n" + resetUrl
+                    + ":8080/resetPassword?token=" + user.getResetToken());
+        }
+    }
 
     public void resetPassword(String token, String newPass) throws Exception {
-            User user = userRepository.findByResetToken(token);
+        User user = userRepository.findByResetToken(token);
         if(user == null){
             throw new Exception("Error: This user does not exist");
         }else{

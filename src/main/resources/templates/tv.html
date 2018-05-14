@@ -21,9 +21,10 @@
 
 <body>
 <!-- Navbar -->
-<div sec:authorize="isAnonymous()"><div th:replace="fragments/navbar">>Navbar</div></div>
-<div sec:authorize="hasRole('ROLE_USER')"><div th:replace="fragments/user_navbar">>Navbar</div></div>
-<div sec:authorize="hasRole('ROLE_ADMIN')"><div th:replace="fragments/admin_navbar">>Navbar</div></div>
+<div sec:authorize="isAnonymous()"><div th:replace="fragments/navbar">Navbar</div></div>
+<div sec:authorize="hasRole('ROLE_USER')"><div th:replace="fragments/user_navbar">Navbar</div></div>
+<div sec:authorize="hasRole('ROLE_CRITIC')"><div th:replace="fragments/user_navbar">Navbar</div></div>
+<div sec:authorize="hasRole('ROLE_ADMIN')"><div th:replace="fragments/admin_navbar">Navbar</div></div>
 
 
 <!-- Details body -->
@@ -222,7 +223,7 @@
 
 
 <!-- footer -->
-<div th:replace="fragments/footer">>Navbar</div>
+<div th:replace="fragments/footer">Navbar</div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

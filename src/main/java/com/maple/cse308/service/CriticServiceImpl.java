@@ -15,6 +15,11 @@ public class CriticServiceImpl implements CriticService {
     CriticRepository criticRepository;
 
     @Override
+    public Critic getCriticById(int criticId) {
+        return criticRepository.findByCriticId(criticId);
+    }
+
+    @Override
     public List<Critic> criticSearch(String search) {
         //String needs to be parsed, and removed for duplcates.
         String[] searchString;

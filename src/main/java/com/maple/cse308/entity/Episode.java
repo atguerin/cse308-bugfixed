@@ -6,16 +6,16 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Episode")
+@Table(name = "Episode")
 public class Episode {
 
     @EmbeddedId
     private EpisodeIdentity episodeId;
 
-    @Column(name="title")
+    @Column(name = "title")
     private String title;
 
-    @Column(name="overview", length=2048)
+    @Column(name = "overview", length = 2048)
     private String overview;
 
     public EpisodeIdentity getEpisodeId() {

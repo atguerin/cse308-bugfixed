@@ -28,6 +28,7 @@ public class TvServiceImpl implements TvService {
         TvShow tvShow = tvShowRepository.findTvShowByTvId(tvId);
         return tvShow;
     }
+
     @Override
     public void addCriticTvReview(TvReviewCritic tvReviewCritic) {
         tvReviewCriticRepository.save(tvReviewCritic);
@@ -51,6 +52,7 @@ public class TvServiceImpl implements TvService {
     @Override
     public void editUserTvReview(TvReviewUser tvReviewUser) {
         tvReviewUserRepository.save(tvReviewUser);
+
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.maple.cse308.entity.Movie;
 import com.maple.cse308.entity.MovieReviewCritic;
 import com.maple.cse308.entity.MovieReviewUser;
 
+import java.text.ParseException;
 import java.util.List;
 
 public interface MovieService {
@@ -17,6 +18,8 @@ public interface MovieService {
     List<MovieReviewUser> getUserMovieReviewsByMovie(int movieId) throws Exception;
 
     List<MovieReviewUser> getUserMovieReviewsByUser(int userId) throws Exception;
+
+    List<MovieReviewUser> getUserMovieReviewsByUserAndMovie(int userId, int movieId);
 
     List<Movie> getMoviesComingSoon();
 
@@ -34,7 +37,7 @@ public interface MovieService {
 
     void editUserMovieReview(MovieReviewUser movieReviewUser);
 
-    void deleteUserMovieReview(MovieReviewUser movieReviewUser);
+    void deleteUserMovieReview(int reviewId);
 
     List<Movie> movieSearch(String search);
 
@@ -43,5 +46,9 @@ public interface MovieService {
     List<Movie> getAllTimeHighestRated();
 
     float getAverageUserRating(int movieId);
+
+    List<Movie> movieAdvancedSearch(String search, String[] genre, String start, String end) throws ParseException;
+
+    List<Movie> getCertifiedFresh();
 }
 
