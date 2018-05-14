@@ -7,10 +7,13 @@ import com.maple.cse308.repository.TvReviewCriticRepository;
 import com.maple.cse308.repository.TvReviewUserRepository;
 import com.maple.cse308.repository.TvShowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+@Service
 public class TvServiceImpl implements TvService {
 
     @Autowired
@@ -48,7 +51,6 @@ public class TvServiceImpl implements TvService {
     @Override
     public void editUserTvReview(TvReviewUser tvReviewUser) {
         tvReviewUserRepository.save(tvReviewUser);
-
     }
 
     @Override
@@ -58,41 +60,49 @@ public class TvServiceImpl implements TvService {
 
     @Override
     public List<TvReviewCritic> getCriticTvReviewsByTvShow(int tvId) throws Exception {
-        List<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByTvId(tvId);
-        if (tvReviewCritics.isEmpty()) {
+        HashSet<TvReviewCritic> set = tvReviewCriticRepository.findAllByTvId(tvId);
+        if (set.isEmpty()) {
             throw new Exception("Error: There are no reviews for this tv show");
         } else {
-            return tvReviewCritics;
+            List<TvReviewCritic> list = new LinkedList();
+            list.addAll(set);
+            return list;
         }
     }
 
     @Override
     public List<TvReviewCritic> getCriticTvReviewsByCritic(int criticId) throws Exception {
-        List<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByTvId(criticId);
-        if (tvReviewCritics.isEmpty()) {
+        HashSet<TvReviewCritic> set = tvReviewCriticRepository.findAllByCriticId(criticId);
+        if (set.isEmpty()) {
             throw new Exception("Error: There are no reviews for this tv show");
         } else {
-            return tvReviewCritics;
+            List<TvReviewCritic> list = new LinkedList();
+            list.addAll(set);
+            return list;
         }
     }
 
     @Override
     public List<TvReviewUser> getUserTvReviewsByTvShow(int tvId) throws Exception {
-        List<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByTvId(tvId);
-        if (tvReviewUsers.isEmpty()) {
+        HashSet<TvReviewUser> set = tvReviewUserRepository.findAllByTvId(tvId);
+        if (set.isEmpty()) {
             throw new Exception("Error: There are no reviews for this tv show");
         } else {
-            return tvReviewUsers;
+            List<TvReviewUser> list = new LinkedList();
+            list.addAll(set);
+            return list;
         }
     }
 
     @Override
     public List<TvReviewUser> getUserTvReviewsByUser(int userId) throws Exception {
-        List<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByTvId(userId);
-        if (tvReviewUsers.isEmpty()) {
+        HashSet<TvReviewUser> set = tvReviewUserRepository.findAllByUserId(userId);
+        if (set.isEmpty()) {
             throw new Exception("Error: There are no reviews for this tv show");
         } else {
-            return tvReviewUsers;
+            List<TvReviewUser> list = new LinkedList();
+            list.addAll(set);
+            return list;
         }
     }
 

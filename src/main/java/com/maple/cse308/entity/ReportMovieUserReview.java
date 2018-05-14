@@ -2,12 +2,14 @@ package com.maple.cse308.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="report_movie_user_review")
 public class ReportMovieUserReview {
 
+    @Id
     @Column(name="reviewId")
     private Integer reviewId;
 

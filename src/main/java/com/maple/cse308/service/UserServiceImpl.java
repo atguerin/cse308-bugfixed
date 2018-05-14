@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,22 +26,30 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
-    MovieRepository movieRepository;
-
-    @Autowired
-    TvShowRepository tvShowRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private CriticRepository criticRepository;
-
-    @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private MovieRepository movieRepository;
+    @Autowired
+    private TvShowRepository tvShowRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private CriticRepository criticRepository;
+    @Autowired
+    private MovieReviewUserRepository movieReviewUserRepository;
+    @Autowired
+    private MovieReviewCriticRepository movieReviewCriticRepository;
+    @Autowired
+    private EmailServiceImpl emailService;
+
+   /* @Autowired
+    private TvReviewUserRepository tvReviewUserRepository;
+
+    @Autowired
+    private TvReviewCriticRepository tvReviewCriticRepository;
+    */
 
     @Override
     public String changePhoto(String photo) {
@@ -127,31 +136,61 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser() {
         User user = getCurrentUser();
+
+        if (confirmCurrentRole("ROLE_USER")) {
+            Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
+            for (MovieReviewUser movieReviewUser : movieReviewUsers) {
+                movieReviewUserRepository.delete(movieReviewUser);
+            }
+      /*  Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
+        for (TvReviewUser tvReviewUser : tvReviewUsers) {
+            tvReviewUserRepository.delete(tvReviewUser);
+        }*/
+        } else if (confirmCurrentRole("ROLE_CRITIC")) {
+            Critic critic = criticRepository.findByUser(user);
+            Set<MovieReviewCritic> movieReviewCritics = movieReviewCriticRepository.findAllByCriticId(critic.getCriticId());
+            for (MovieReviewCritic movieReviewCritic : movieReviewCritics) {
+                movieReviewCriticRepository.delete(movieReviewCritic);
+            }
+      /*  Set<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByCriticId(critic.getCriticId());
+        for (TvReviewCritic tvReviewCritic : tvReviewCritics) {
+            tvReviewCriticRepository.delete(tvReviewUser);
+        }*/
+        }
         userRepository.delete(user);
     }
 
     //allows administrator to delete a user account
-    public void deleteUser(String username) throws Exception {
-        if (userRepository.existsByUsername(username)) {
-            User user = findByUsername(username);
-            userRepository.delete(user);
-        } else {
-            throw new Exception("Error: User doesn't exist");
-        }
-    }
+    public void deleteUser(String username) {
 
-    private void updateUser(){
-        User user = findByUsername(getCurrentUser().getUsername());
-        UserDetailsImpl userDetails = new UserDetailsImpl(user);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails,userDetails.getPassword(),userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        User user = findByUsername(username);
+        if (user.getRoles().contains("ROLE_USER")) {
+            Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
+            for (MovieReviewUser movieReviewUser : movieReviewUsers) {
+                movieReviewUserRepository.delete(movieReviewUser);
+            }
+            /*  Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
+                for (TvReviewUser tvReviewUser : tvReviewUsers) {
+                    tvReviewUserRepository.delete(tvReviewUser);
+                }*/
+        } else if (user.getRoles().contains("ROLE_CRITIC")) {
+            Critic critic = criticRepository.findByUser(user);
+            Set<MovieReviewCritic> movieReviewCritics = movieReviewCriticRepository.findAllByCriticId(critic.getCriticId());
+            for (MovieReviewCritic movieReviewCritic : movieReviewCritics) {
+                movieReviewCriticRepository.delete(movieReviewCritic);
+            }
+                /* Set<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByCriticId(critic.getCriticId());
+                for (TvReviewCritic tvReviewCritic : tvReviewCritics) {
+                tvReviewCriticRepository.delete(tvReviewUser);
+                }*/
+        }
+            userRepository.delete(user);
     }
 
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
-
 
     //get current user from security context singleton
     @Override
@@ -161,6 +200,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //confirm current authorization level of user
+    @Override
     public boolean confirmCurrentRole(String role) {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
@@ -169,6 +209,14 @@ public class UserServiceImpl implements UserService {
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public void updateUser() {
+        User user = findByUsername(getCurrentUser().getUsername());
+        UserDetailsImpl userDetails = new UserDetailsImpl(user);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     @Override
@@ -253,8 +301,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addEmployee(User user) throws Exception {
 
-        if (confirmCurrentRole("ADMIN")) {
-            user.setRoles(roleRepository.findByRole("ADMIN"));
+        if (confirmCurrentRole("ROLE_ADMIN")) {
+            user.setRoles(roleRepository.findByRole("ROLE_ADMIN"));
             userRepository.save(user);
         } else {
             throw new Exception("Error: Currently logged in user is not an administrator and can not add employee");
@@ -265,8 +313,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void removeEmployee(User user) throws Exception {
 
-        if (confirmCurrentRole("ADMIN")) {
-            user.setRoles(roleRepository.findByRole("USER"));
+        if (confirmCurrentRole("ROLE_ADMIN")) {
+            user.setRoles(roleRepository.findByRole("ROLE_USER"));
             userRepository.save(user);
         } else {
             throw new Exception("Error: Currently logged in user is not an administrator and can not demote an employee");
@@ -277,8 +325,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void banUser(User user) throws Exception {
 
-        if (confirmCurrentRole("ADMIN")) {
-            user.setRoles(roleRepository.findByRole("BANNED"));
+        if (confirmCurrentRole("ROLE_DMIN")) {
+            user.setRoles(roleRepository.findByRole("ROLE_BANNED"));
             userRepository.save(user);
         } else {
             throw new Exception("Error: Currently logged in user is not an administrator and can not ban user");
@@ -289,8 +337,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void suspendUser(User user, Calendar calendar) throws Exception {
 
-        if (confirmCurrentRole("ADMIN")) {
-            user.setRoles(roleRepository.findByRole("SUSPENDED"));
+        if (confirmCurrentRole("ROLE_ADMIN")) {
+            user.setRoles(roleRepository.findByRole("ROLE_SUSPENDED"));
             user.setSuspendDate(calendar);
             userRepository.save(user);
         } else {
@@ -416,7 +464,7 @@ public class UserServiceImpl implements UserService {
     public void addMovie(Movie movie) throws Exception {
         if(movieRepository.existsByTitleAndReleaseDate(movie.getTitle(), movie.getReleaseDate())){
             throw new Exception("Error: This movie already exists in the database");
-        }else if(!confirmCurrentRole("ADMIN")){
+        }else if(!confirmCurrentRole("ROLE_ADMIN")){
             throw new Exception("Error: You are not an administrator");
         }else{
             movieRepository.save(movie);
@@ -425,7 +473,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editMovie(Movie movie) throws Exception {
-        if(confirmCurrentRole("ADMIN")) {
+        if(confirmCurrentRole("ROLE_ADMIN")) {
             movieRepository.save(movie);
         }else{
             throw new Exception("Error: You are not an administrator");
@@ -436,7 +484,7 @@ public class UserServiceImpl implements UserService {
     public void addTvShow(TvShow tvShow) throws Exception {
         if(tvShowRepository.existsByTitleAndPremierDate(tvShow.getTitle(),tvShow.getPremierDate())){
             throw new Exception("Error: This TV show already exists in the database.");
-        }else if(!confirmCurrentRole("ADMIN")){
+        }else if(!confirmCurrentRole("ROLE_ADMIN")){
             throw new Exception("Error: You are not an administrator");
         }else{
             tvShowRepository.save(tvShow);
@@ -445,7 +493,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editTvShow(TvShow tvShow) throws Exception {
-        if (confirmCurrentRole("ADMIN")) {
+        if (confirmCurrentRole("ROLE_ADMIN")) {
             tvShowRepository.save(tvShow);
         } else {
             throw new Exception("Error: You are not an administrator");
@@ -487,5 +535,31 @@ public class UserServiceImpl implements UserService {
     }
     */
 
+     public void resetPasswordToken(String email, HttpServletRequest request) throws Exception{
+         User user = userRepository.findByEmail(email);
+         if(user == null){
+            throw new Exception("Error: This user does not exist");
+         }else{
+             String token = UUID.randomUUID().toString();
+             user.setResetToken(token);
+             userRepository.save(user);
+
+             String resetUrl = request.getScheme() + "://" + request.getServerName();
+             emailService.sendSimpleMessage(user.getEmail(),"Rotten Tomatoes: Passsword Reset Request","To reset your password, click the link below:\n" + resetUrl
+                     + ":8080/resetPassword?token=" + user.getResetToken());
+         }
+     }
+
+    public void resetPassword(String token, String newPass) throws Exception {
+            User user = userRepository.findByResetToken(token);
+        if(user == null){
+            throw new Exception("Error: This user does not exist");
+        }else{
+            System.out.println("\n" + user.getUsername()+ "\n");
+            user.setPassword(passwordEncoder.encode(newPass));
+            user.setResetToken(null);
+            userRepository.save(user);
+        }
+    }
 
 }

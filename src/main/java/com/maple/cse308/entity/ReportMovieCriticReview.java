@@ -2,11 +2,19 @@ package com.maple.cse308.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="report_movie_critic_review")
 public class ReportMovieCriticReview {
+
+    @Id
+    @Column(name="reviewId")
+    private Integer reviewId;
+
+    @Column(name="reason")
+    private String reason;
 
     public Integer getReviewId() {
         return reviewId;
@@ -23,12 +31,6 @@ public class ReportMovieCriticReview {
     public void setReason(String reason) {
         this.reason = reason;
     }
-
-    @Column(name="reviewId")
-    private Integer reviewId;
-
-    @Column(name="reason")
-    private String reason;
 
 
 }

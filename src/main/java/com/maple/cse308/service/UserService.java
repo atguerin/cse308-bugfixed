@@ -7,7 +7,6 @@ import com.maple.cse308.enums.Visibility;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.Set;
 
 public interface UserService extends UserDetailsService {
@@ -26,11 +25,16 @@ public interface UserService extends UserDetailsService {
 
     void deleteUser();
 
-    void deleteUser(String username) throws Exception;
+    void deleteUser(String username);
 
     User findByUsername(String username);
 
     User getCurrentUser();
+
+    //confirm current authorization level of user
+    boolean confirmCurrentRole(String role);
+
+    void updateUser();
 
     void registerUser(User user) throws Exception;
 
