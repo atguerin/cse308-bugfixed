@@ -69,6 +69,31 @@ public class AccountController {
         model.addAttribute("response", "Changes are saved!");
         return "manage_account :: hometownSetting";
     }
+        @PostMapping("/changePhoto")
+        public String changePhoto(@RequestParam String photo, Model model) {
+            try {
+                userService.changePhoto(photo);
+            } catch (Exception e) {
+                return "manage_account";
+            }
+            model.addAttribute("user", userService.getCurrentUser());
+            model.addAttribute("response", "Changes are saved!");
+            return "manage_account :: photoSetting";
+        }
+
+
+    @PostMapping("/applyCritic")
+    public String applyCritic(@RequestParam String website, @RequestParam String groups, @RequestParam String publications, Model model) {
+        try {
+            userService.criticApplication(website,groups,publications);
+        } catch (Exception e) {
+            return "manage_account";
+        }
+        model.addAttribute("user", userService.getCurrentUser());
+        model.addAttribute("response", "Changes are saved!");
+        return "manage_account :: applyCritic";
+    }
+
 
     @PostMapping("/changeBio")
     public String changeBio(@RequestParam String bio, Model model) {
