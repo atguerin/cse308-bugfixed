@@ -60,12 +60,6 @@ public class Movie {
     @JoinTable(name = "movieGenre", joinColumns = @JoinColumn(name = "movieId"), inverseJoinColumns = @JoinColumn(name = "genreId"))
     private Set<Genre> genre = new HashSet();
 
-    @ManyToMany(mappedBy = "watchList")
-    private Set<User> usersWatch;
-
-    @ManyToMany(mappedBy = "dontWatchList")
-    private Set<User> usersDontWatch;
-
     public Integer getMovieId() {
         return movieId;
     }
@@ -210,22 +204,6 @@ public class Movie {
 
     public void setGenre(Set<Genre> genre) {
         this.genre = genre;
-    }
-
-    public Set<User> getUsersWatch() {
-        return usersWatch;
-    }
-
-    public void setUsersWatch(Set<User> usersWatch) {
-        this.usersWatch = usersWatch;
-    }
-
-    public Set<User> getUsersDontWatch() {
-        return usersDontWatch;
-    }
-
-    public void setUsersDontWatch(Set<User> usersDontWatch) {
-        this.usersDontWatch = usersDontWatch;
     }
 
 }

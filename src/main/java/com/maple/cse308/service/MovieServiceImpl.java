@@ -31,6 +31,10 @@ public class MovieServiceImpl implements MovieService {
     MovieActorRepository movieActorRepository;
     @Autowired
     GenreRepository genreRepository;
+    @Autowired
+    AcademyAwardRepository academyAwardRepository;
+    @Autowired
+    GroupsRepository groupsRepository;
 
     @Override
     public Movie getMovieDetails(int movieId) {
@@ -265,4 +269,20 @@ public class MovieServiceImpl implements MovieService {
     public List<Genre> getGenres(){
         return genreRepository.findAll();
     }
+
+    @Override
+    public List<AcademyAward> getAwardByYear(Integer year){
+        return academyAwardRepository.findAllByYear(year);
+    }
+
+    @Override
+    public List<Groups> getAllGroups(){
+        return groupsRepository.findAll();
+    }
+
+    @Override
+    public List<Critic> getCriticsByGroup(Integer groupId){
+        return groupsRepository.findAllCriticByGroupId(groupId);
+    }
+
 }

@@ -1,9 +1,6 @@
 package com.maple.cse308.service;
 
-import com.maple.cse308.entity.Genre;
-import com.maple.cse308.entity.Movie;
-import com.maple.cse308.entity.MovieReviewCritic;
-import com.maple.cse308.entity.MovieReviewUser;
+import com.maple.cse308.entity.*;
 
 import java.text.ParseException;
 import java.util.List;
@@ -53,5 +50,11 @@ public interface MovieService {
     List<Movie> getCertifiedFresh();
 
     List<Genre> getGenres();
+
+    List<AcademyAward> getAwardByYear(Integer year);
+
+    List<Groups> getAllGroups();
+
+    List<Critic> getCriticsByGroup(Integer groupId);
 }
 

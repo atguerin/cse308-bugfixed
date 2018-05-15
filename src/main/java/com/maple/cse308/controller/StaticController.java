@@ -331,4 +331,11 @@ public class StaticController {
         return "genres";
     }
 
+    @RequestMapping("/academy_awards")
+    public String getAcademyAwards(@RequestParam("year") Integer year, Model model) {
+        model.addAttribute("awardList", movieService.getAwardByYear(year));
+        return "academy_awards";
+    }
+
+
 }

@@ -37,15 +37,7 @@ public class Actor {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "actorId")
-    private Set<ActorScreenshot> actorScreenshots = new HashSet();
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "movieActor", joinColumns = @JoinColumn(name = "actorId"), inverseJoinColumns = @JoinColumn(name = "movieId"))
-    private Set<Movie> movies = new HashSet();
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "actorId")
-    private Set<MovieActor> movieActor = new HashSet();
+    private Set<ActorScreenshot> actorScreenshots = new HashSet();;
 
     public Integer getActorId() {
         return actorId;
@@ -117,21 +109,5 @@ public class Actor {
 
     public void setActorScreenshots(Set<ActorScreenshot> actorScreenshots) {
         this.actorScreenshots = actorScreenshots;
-    }
-
-    public Set<Movie> getMovies() {
-        return movies;
-    }
-
-    public void setMovies(Set<Movie> movies) {
-        this.movies = movies;
-    }
-
-    public Set<MovieActor> getMovieActor() {
-        return movieActor;
-    }
-
-    public void setMovieActor(Set<MovieActor> movieActor) {
-        this.movieActor = movieActor;
     }
 }
