@@ -1,9 +1,6 @@
 package com.maple.cse308.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name="report_user")
@@ -15,6 +12,18 @@ public class ReportUser {
 
     @Column(name="reason")
     private String reason;
+
+    @OneToOne
+    @JoinColumn(name = "userId", insertable = false, updatable = false)
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Integer getUserId() {
         return userId;

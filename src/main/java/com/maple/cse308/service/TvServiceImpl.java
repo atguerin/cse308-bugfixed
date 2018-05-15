@@ -1,11 +1,7 @@
 package com.maple.cse308.service;
 
-import com.maple.cse308.entity.TvReviewCritic;
-import com.maple.cse308.entity.TvReviewUser;
-import com.maple.cse308.entity.TvShow;
-import com.maple.cse308.repository.TvReviewCriticRepository;
-import com.maple.cse308.repository.TvReviewUserRepository;
-import com.maple.cse308.repository.TvShowRepository;
+import com.maple.cse308.entity.*;
+import com.maple.cse308.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +18,17 @@ public class TvServiceImpl implements TvService {
     TvReviewUserRepository tvReviewUserRepository;
     @Autowired
     private TvShowRepository tvShowRepository;
+    @Autowired
+    private TvScreenshotRepository tvScreenshotRepository;
+    @Autowired
+    private TvActorRepository tvActorRepository;
+    @Autowired
+    private CreatorRepository creatorRepository;
+    @Autowired
+    private SeasonRepository seasonRepository;
+    @Autowired
+    private EpisodeRepository episodeRepository;
+
 
     @Override
     public TvShow getTvShowDetails(int tvId) {
@@ -40,8 +47,8 @@ public class TvServiceImpl implements TvService {
     }
 
     @Override
-    public void deleteCriticTvReview(TvReviewCritic tvReviewCritic) {
-        tvReviewCriticRepository.delete(tvReviewCritic);
+    public void deleteCriticTvReview(int reviewId) {
+        tvReviewCriticRepository.deleteByReviewId(reviewId);
     }
 
     @Override
@@ -56,56 +63,42 @@ public class TvServiceImpl implements TvService {
     }
 
     @Override
-    public void deleteUserTvReview(TvReviewUser tvReviewUser) {
-        tvReviewUserRepository.save(tvReviewUser);
+    public void deleteUserTvReview(int reviewId) {
+        tvReviewUserRepository.deleteByReviewId(reviewId);
     }
 
     @Override
-    public List<TvReviewCritic> getCriticTvReviewsByTvShow(int tvId) throws Exception {
+    public List<TvReviewCritic> getCriticTvReviewsByTvShow(int tvId) {
         HashSet<TvReviewCritic> set = tvReviewCriticRepository.findAllByTvId(tvId);
-        if (set.isEmpty()) {
-            throw new Exception("Error: There are no reviews for this tv show");
-        } else {
-            List<TvReviewCritic> list = new LinkedList();
-            list.addAll(set);
-            return list;
-        }
+
+        List<TvReviewCritic> list = new LinkedList();
+        list.addAll(set);
+        return list;
+
     }
 
     @Override
-    public List<TvReviewCritic> getCriticTvReviewsByCritic(int criticId) throws Exception {
+    public List<TvReviewCritic> getCriticTvReviewsByCritic(int criticId) {
         HashSet<TvReviewCritic> set = tvReviewCriticRepository.findAllByCriticId(criticId);
-        if (set.isEmpty()) {
-            throw new Exception("Error: There are no reviews for this tv show");
-        } else {
-            List<TvReviewCritic> list = new LinkedList();
-            list.addAll(set);
-            return list;
-        }
+        List<TvReviewCritic> list = new LinkedList();
+        list.addAll(set);
+        return list;
     }
 
     @Override
-    public List<TvReviewUser> getUserTvReviewsByTvShow(int tvId) throws Exception {
+    public List<TvReviewUser> getUserTvReviewsByTvShow(int tvId) {
         HashSet<TvReviewUser> set = tvReviewUserRepository.findAllByTvId(tvId);
-        if (set.isEmpty()) {
-            throw new Exception("Error: There are no reviews for this tv show");
-        } else {
-            List<TvReviewUser> list = new LinkedList();
-            list.addAll(set);
-            return list;
-        }
+        List<TvReviewUser> list = new LinkedList();
+        list.addAll(set);
+        return list;
     }
 
     @Override
-    public List<TvReviewUser> getUserTvReviewsByUser(int userId) throws Exception {
+    public List<TvReviewUser> getUserTvReviewsByUser(int userId) {
         HashSet<TvReviewUser> set = tvReviewUserRepository.findAllByUserId(userId);
-        if (set.isEmpty()) {
-            throw new Exception("Error: There are no reviews for this tv show");
-        } else {
-            List<TvReviewUser> list = new LinkedList();
-            list.addAll(set);
-            return list;
-        }
+        List<TvReviewUser> list = new LinkedList();
+        list.addAll(set);
+        return list;
     }
 
     @Override
@@ -144,4 +137,31 @@ public class TvServiceImpl implements TvService {
         }
         return resultList;
     }
+
+    public List<TvShow> getOpenThisWeek(){
+        return tvShowRepository.findTop12ByOrderByPremierDateDesc();
+    }
+
+    public List<TvShow> getPopularTv(){
+        return tvShowRepository.findTop12ByOrderByRatingDesc();
+    }
+
+    public List<TvScreenshot> getTvScreenshots(int id){
+        return tvScreenshotRepository.findAllByTvId(id);
+    }
+
+    public List<TvActor> getTvActors(int id){
+        return tvActorRepository.findAllByTvId(id);
+    }
+
+    public List<Creator> getTvCreator(int id){return creatorRepository.findAllByCreatorId(id);}
+
+    public List<TvReviewUser> getUserTvReviewsByUserAndTv(int userId, int tvId) {
+        HashSet<TvReviewUser> set = tvReviewUserRepository.findByUserIdAndTvId(userId, tvId);
+        List<TvReviewUser> userMovieReview = new LinkedList();
+        userMovieReview.addAll(set);
+        return userMovieReview;
+    }
+
+
 }

@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().anyRequest().permitAll().and().formLogin().
-                loginPage("/login").failureUrl("/index").permitAll().and().
+                loginPage("/login").failureUrl("/loginFailed").permitAll().and().
                 logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll();
 
         /*http.authorizeRequests()

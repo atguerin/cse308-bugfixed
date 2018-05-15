@@ -23,7 +23,10 @@
 <!-- Navbar -->
 <div sec:authorize="isAnonymous()"><div th:replace="fragments/navbar">Navbar</div></div>
 <div sec:authorize="hasRole('ROLE_USER')"><div th:replace="fragments/user_navbar">Navbar</div></div>
+<<<<<<< HEAD
 <div sec:authorize="hasRole('ROLE_CRITIC')"><div th:replace="fragments/user_navbar">Navbar</div></div>
+=======
+>>>>>>> origin/ki
 <div sec:authorize="hasRole('ROLE_ADMIN')"><div th:replace="fragments/admin_navbar">Navbar</div></div>
 
 
@@ -71,13 +74,17 @@
                 <h6 th:if="${criticReviews.size()>0}" class="border-bottom border-gray pb-2 mb-0">All CRITIC REVIEWS</h6>
                 <div th:each="criticReview,iterStat : ${criticReviews}" class="media flex-md-row pt-3">
                     <div class="review-thumbnail-container">
-                        <img th:src="@{(${criticReview.critic.photo}?: '/img/default.gif')}" alt="..." class="review-img-thumbnail"/>
+                        <a th:href="@{/criticHome(criticId=${criticReview.critic.criticId})}">
+                            <img th:src="@{(${criticReview.critic.photo}?: '/img/default.gif')}" alt="..." class="review-img-thumbnail"/>
+                        </a>
                     </div>
                     <div class="d-flex flex-column align-items-start w-100">
                         <div class="d-flex w-100 mb-1">
                             <div>
                                 <span class="ml-2">@</span>
-                                <span th:text="|${criticReview.critic.firstName} ${criticReview.critic.lastName}|">@User Name</span>
+                                <a th:href="@{/criticHome(criticId=${criticReview.critic.criticId})}" style="color: white;">
+                                    <span th:text="|${criticReview.critic.firstName} ${criticReview.critic.lastName}|">@User Name</span>
+                                </a>
                             </div>
                             <div class="ml-auto mr-1">Critic score:</div>
                             <div class="mr-2">

@@ -35,14 +35,14 @@
             <div class="jumbotron-side">
                 <h6><strong>TV</strong></h6>
                 <nav class="nav flex-column w-100">
-                    <a class="nav-link active text-white" href="#">New TV Tonight</a>
-                    <a class="nav-link text-white" href="#">Most Popular TV</a>
+                    <a class="nav-link side active text-white" th:href="@{/tv/open}">New TV Tonight</a>
+                    <a class="nav-link side text-white" th:href="@{/tv/popular}">Most Popular TV</a>
                 </nav>
             </div>
         </div>
         <div class="col-lg-8">
             <!-- search options bar -->
-            <h5><strong>NEW TV TONIGHT</strong></h5>
+            <h5><strong th:text="${listType}">OPENING THIS WEEK</strong></h5>
             <div class="row sort-option mt-4">
                 <div class="col-auto mr-auto"><input type="range"/></div>
                 <div class="col-auto">
@@ -69,154 +69,71 @@
                 </div>
             </div>
 
-            <!-- populated results -->
-            <div class="row justify-content-center mt-4">
-                <div class="search-result-container">
-                    <div class="search-result-small">
-                        <div class="search-result-small-poster-container">
-                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster3.jpg"/></a>
-                        </div>
-                        <div class="flex-colums text-center">
-                            <div class="search-result-text">
-                                TV title
-                            </div>
-                            <div class="search-result-text">
-                                50%
-                            </div>
-                        </div>
-                    </div>
-                    <div class="search-result-small">
-                        <div class="search-result-small-poster-container">
-                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster4.jpg"/></a>
-                        </div>
-                        <div class="flex-colums text-center">
-                            <div class="search-result-text">
-                                TV title
-                            </div>
-                            <div class="search-result-text">
-                                50%
-                            </div>
-                        </div>
-                    </div>
-                    <div class="search-result-small">
-                        <div class="search-result-small-poster-container">
-                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster5.jpg"/></a>
-                        </div>
-                        <div class="flex-colums text-center">
-                            <div class="search-result-text">
-                                TV title
-                            </div>
-                            <div class="search-result-text">
-                                50%
+            <!-- Grid style option buttons -->
+            <ul class="nav nav-pills mb-3 mt-3" id="pills-tab" role="tablist">
+                <li class="nav-item ml-auto">
+                    <a class="nav-link active" id="small-grid" data-toggle="pill" href="#pills-small" role="tab" aria-controls="pills-small" aria-selected="true"><i class="icon ion-grid"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="large-gird" data-toggle="pill" href="#pills-large" role="tab" aria-controls="pills-large" aria-selected="false"><i class="icon ion-navicon-round"></i></a>
+                </li>
+            </ul>
+
+            <!-- populated result -->
+            <div class="tab-content" id="pills-tabContent">
+                <!-- small grid -->
+                <div class="tab-pane fade show active" id="pills-small" role="tabpanel" aria-labelledby="pills-small-tab">
+                    <div class="row justify-content-center mt-4">
+                        <div class="search-result-container">
+                            <div th:each="tv,iterStat : ${selectedList}" th:if="${iterStat.current.poster}" class="search-result-small">
+                                <div class="search-result-small-poster-container">
+                                    <a th:href="@{/tv_details(id=${tv.tvId})}">
+                                        <img th:src="@{${tv.poster}}" class="search-result-small-poster" alt="poster"/>
+                                    </a>
+                                </div>
+                                <div class="flex-colums text-center text-truncate">
+                                    <div th:text="${tv.title}" class="search-result-text text-truncate p-1">
+                                        Movie title
+                                    </div>
+                                    <div th:text="${tv.rating}" class="search-result-text">
+                                        no score
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="search-result-small">
-                        <div class="search-result-small-poster-container">
-                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster6.jpg"/></a>
+                </div>
+
+                <!-- large grid -->
+                <div class="tab-pane fade" id="pills-large" role="tabpanel" aria-labelledby="pills-large-tab">
+                    <div th:each="tv,iterStat : ${selectedList}" th:if="${iterStat.current.poster}" class="search-result-large d-flex">
+                        <div class="search-result-large-poster-container">
+                            <a th:href="@{/tv_details(id=${tv.tvId})}">
+                                <img th:src="@{${tv.poster}}" class="search-result-large-poster" alt="poster">
+                            </a>
                         </div>
-                        <div class="flex-colums text-center">
-                            <div class="search-result-text">
-                                TV title
+                        <div class="d-flex flex-column align-items-start ml-3">
+                            <h5 class="mb-0">
+                                <span th:text="${tv.title}" class="detail-title">Movie Title</span>
+                            </h5>
+                            <div>
+                                <strong class="mr-3">Date:</strong>
+                                <span th:text="${tv.getDateString()}">date</span>
                             </div>
-                            <div class="search-result-text">
-                                50%
+                            <div>
+                                <span class="mr-2">Score:</span>
+                                <span th:text="${tv.rating}">no score</span>
                             </div>
-                        </div>
-                    </div>
-                    <div class="search-result-small">
-                        <div class="search-result-small-poster-container">
-                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster7.jpg"/></a>
-                        </div>
-                        <div class="flex-colums text-center">
-                            <div class="search-result-text">
-                                TV title
+                            <div th:text="${tv.overview}" class="search-result-large_description">
+                                Made his first advertisement for Matchbox cars at age 14. Met long-time friend Tobey Maguire when both were auditioning for the 1990-91 sitcom Parenthood (DiCaprio won the part). Portrayed homeless Luke Brower, who was taken in by the Seaver family, on the ABC series Growing Pains from 1991 to 1992. Made a brief appearance as "First Guy" in Drew Barrymore's 1992 film Poison Ivy. Sued Playgirl magazine in 1998 to stop publication of nude photos of him; the case was settled out of court. An ardent environmentalist, established the Leonardo DiCaprio Foundation in 1998 to champion his favorite conservation causes. In 2007, he received Golden Globe and SAG nominations for his performances in The Departedand Blood Diamond. Produced and narratedthe documentary The 11th Hour tohelpraise awareness abouttheeffect of human impact on the planet. Reunited with Titanic co-star Kate Winslet for Revolutionary Road (2008), their second film together.
                             </div>
-                            <div class="search-result-text">
-                                50%
-                            </div>
-                        </div>
-                    </div>
-                    <div class="search-result-small">
-                        <div class="search-result-small-poster-container">
-                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster8.jpg"/></a>
-                        </div>
-                        <div class="flex-colums text-center">
-                            <div class="search-result-text">
-                                TV title
-                            </div>
-                            <div class="search-result-text">
-                                50%
-                            </div>
-                        </div>
-                    </div>
-                    <div class="search-result-small">
-                        <div class="search-result-small-poster-container">
-                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster9.jpg"/></a>
-                        </div>
-                        <div class="flex-colums text-center">
-                            <div class="search-result-text">
-                                TV title
-                            </div>
-                            <div class="search-result-text">
-                                50%
-                            </div>
-                        </div>
-                    </div>
-                    <div class="search-result-small">
-                        <div class="search-result-small-poster-container">
-                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster1.jpg"/></a>
-                        </div>
-                        <div class="flex-colums text-center">
-                            <div class="search-result-text">
-                                TV title
-                            </div>
-                            <div class="search-result-text">
-                                50%
-                            </div>
-                        </div>
-                    </div>
-                    <div class="search-result-small">
-                        <div class="search-result-small-poster-container">
-                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster2.jpg"/></a>
-                        </div>
-                        <div class="flex-colums text-center">
-                            <div class="search-result-text">
-                                TV title
-                            </div>
-                            <div class="search-result-text">
-                                50%
-                            </div>
-                        </div>
-                    </div>
-                    <div class="search-result-small">
-                        <div class="search-result-small-poster-container">
-                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster6.jpg"/></a>
-                        </div>
-                        <div class="flex-colums text-center">
-                            <div class="search-result-text">
-                                TV title
-                            </div>
-                            <div class="search-result-text">
-                                50%
-                            </div>
-                        </div>
-                    </div>
-                    <div class="search-result-small">
-                        <div class="search-result-small-poster-container">
-                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster3.jpg"/></a>
-                        </div>
-                        <div class="flex-colums text-center">
-                            <div class="search-result-text">
-                                TV title
-                            </div>
-                            <div class="search-result-text">
-                                50%
+                            <div class=" w-100 text-right mt-2">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

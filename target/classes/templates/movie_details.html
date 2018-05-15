@@ -34,56 +34,12 @@
     <div class="row">
         <div class="col-sm-12 col-md-7 col-lg-4 mb-3">
             <div class="jumbotron-side">
-                <h5>Out Now</h5>
-                <table class="table table-sm table-dark mb-5">
-                    <tbody>
-                    <tr th:each="movie : ${outNowList}">
-                        <td>
-                            <a th:text="${movie.ratingAvg}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Not rated</a>
-                        </td>
-                        <td>
-                            <a th:text="${movie.title}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Title</a>
-                        </td>
-                        <td>
-                            <a th:text="${movie.getDateForList()}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Date</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <h5>Top Box Office</h5>
-                <table class="table table-sm table-dark mb-5">
-                    <tbody>
-                        <tr th:each="movie : ${topBoxOfficeList}">
-                            <td>
-                                <a th:href="@{/movie_details(id=${movie.movieId})}" th:text="${movie.ratingAvg}" style="color: white;">Not rated</a>
-                            </td>
-                            <td>
-                                <a th:href="@{/movie_details(id=${movie.movieId})}" th:text="${movie.title}" style="color: white;">Title</a>
-                            </td>
-                            <td>
-                                <a th:href="@{/movie_details(id=${movie.movieId})}" th:text="|$${movie.getRevenue()}|" style="color: white;">Revenue</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h5>Coming Soon</h5>
-                <table class="table table-sm table-dark mb-5">
-                    <tbody>
-                        <tr th:each="movie : ${comingSoonList}">
-                            <td>
-                                <a th:text="${movie.ratingAvg}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Not rated</a>
-                            </td>
-                            <td>
-                                <a th:text="${movie.title}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Title</a>
-                            </td>
-                            <td>
-                                <a th:text="${movie.getDateForList()}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Date</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <h6><strong>IN THEATERS</strong></h6>
+                <nav class="nav flex-column w-100">
+                    <a class="nav-link side active text-white" th:href="@{/movies/opening}">Opeining This Week</a>
+                    <a class="nav-link side text-white" th:href="@{/movies/topbox}">Top Box Office</a>
+                    <a class="nav-link side text-white" th:href="@{/movies/coming}">Coming Soon</a>
+                </nav>
             </div>
         </div>
 
@@ -108,7 +64,8 @@
                         <div class="d-flex w-100">
                             <div class="p-2">Critic Score:</div>
                             <div class="p-2"><span class="ion-android-star">
-                                <span th:text="${criticRating}"></span></div>
+                                <span th:text="${criticRating}"></span></span>
+                            </div>
                             <div class="ml-auto p-2">Audience Score: </div>
                             <div class="p-2">
                                 <span class="ion-android-star"></span>
@@ -257,17 +214,17 @@
                         </li>
                     </ol>
                 </div>
-            </div>     
+            </div>
 
 
-            <!-- Cast Info -->           
+            <!-- Cast Info -->
             <div th:if="${actors.size()>0}" class="jumbotron details-jumbotron">
                 <h6 class="border-bottom border-gray pb-2 mb-0">CAST INFO</h6>
                 <div id="cast-card-deck" class="card-deck mt-5">
                     <div class="col-sm-4 col-md-3 col-lg-3 mb-3" th:each="actor,iterStat : ${actors}" th:unless="${iterStat.index>7}">
                         <div class="card">
                             <a th:href="@{/actor_details(id=${actor.actorId})}">
-                                <img class="card-img-top" th:src="@{${actor.actor.headshot}}" alt="Card image cap"/>
+                                <img class="card-img-top" th:src="@{(${actor.actor.headshot==''}?'/img/default.gif':${actor.actor.headshot})}" alt="Card image cap"/>
                             </a>
                             <div class="card-body">
                             <p class="card-title" th:text="${actor.actor.firstName+' '+actor.actor.lastName}">Name</p>
@@ -276,7 +233,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-4"><a href="#"><p class="text-right">See more</p></a></div>
+                <div class="mt-4"><a th:href="@{/movie_all_actors(id=${movie.movieId})}"><p class="text-right">See all actors</p></a></div>
             </div>
 
             <!-- Reviews -->
@@ -298,7 +255,7 @@
                             <div class="d-flex w-100 mb-1">
                                 <div>
                                     <span class="ml-2">@</span>
-                                    <a th:href="@{/criticHome(criticId=${criticReview.critic.criticId})}">
+                                    <a th:href="@{/criticHome(criticId=${criticReview.critic.criticId})}" style="color: white;">
                                         <span th:text="|${criticReview.critic.firstName} ${criticReview.critic.lastName}|">@User Name</span>
                                     </a>
                                 </div>
@@ -306,7 +263,7 @@
                                 <div class="mr-2">
                                     <span th:text="${criticReview.rating==''?'no score':criticReview.rating}">score</span>
                                 </div>
-                                <a href="#" th:attr="data-id=${criticReview.reviewId}" class="report critic-review ion-alert-circled"></a>
+                                <a href="#" sec:authorize="isAuthenticated()" th:attr="data-id=${criticReview.reviewId}" class="report report-movie-critic-review ion-alert-circled"></a>
                             </div>
                             <p class="media-body pb-3 mb-0 small lh-125 border-bottom w-100" th:text="${criticReview.review}">
                                 Review
@@ -337,7 +294,8 @@
                                 <div class="d-flex">
                                     <input class="rating rating-loading score p-0" th:value="${userReview.rating}" data-stars="5" data-min="0" data-max="5" data-size="xxxs" disabled=true data-show-clear="false" data-show-caption="false"/>
                                     <span th:text="${userReview.rating==''?'score':userReview.rating}" class="mr-2">score</span>
-                                    <a href="#" th:attr="data-id=${userReview.reviewId}" class="report user-review ion-alert-circled"></a>
+                                    <a href="#" sec:authorize="isAuthenticated()" th:attr="data-id=${userReview.reviewId}" class="report report-movie-user-review ion-alert-circled"></a>
+
                                 </div>
                             </div>
                             <p class="media-body pb-3 mb-0 small lh-125 border-bottom w-100" th:text="${userReview.review}" style="min-height: 3rem;">
@@ -349,6 +307,34 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+</div>
+
+
+<!-- Report confirmation modal -->
+<div class="modal fade" id="reportConfirmModal" tabindex="-1" role="dialog" aria-labelledby="reportConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="deleteConfirmModalContent" style="color: black;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="report-modal-title">Report</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <input name="reportType" id="reportType" type="hidden"/>
+            <form th:action="@{/}" method="post" id="report-form">
+                <div class="modal-body" id="report-modal-body">
+                    <h6>Do you want to report?</h6>
+                    <span class="mt-2">Reason:</span>
+                    <input name="id" id="reportId" type="hidden"/>
+                    <textarea name="reason" class="form-control" id="reason" rows="3" style="resize: none;"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="confirm-report" type="button" class="btn btn-danger" data-dismiss="modal">Report</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -461,6 +447,45 @@
 
     $( document ).ajaxComplete(function( event, xhr, settings ) {
         $(".rating").rating({});
+    });
+
+
+
+    $(document).on('click', '.report-movie-user-review', function(){
+        var id =  $(this).data("id");
+        $('#reportType').val('movie-user-review');
+        $('#reportId').val(id);
+        $('#report-modal-title').text('Report User Review');
+        $("#reportConfirmModal").modal('show');
+    });
+
+    $(document).on('click', '.report-movie-critic-review', function(){
+        var id =  $(this).data("id");
+        $('#reportType').val('movie-critic-review');
+        $('#reportId').val(id);
+        $('#report-modal-title').text('Report Critic Review');
+        $("#reportConfirmModal").modal('show');
+    });
+
+    $("#confirm-report").on("click", function () {
+        var url = '';
+        var report_type = $('#reportType').val();
+        if(report_type == 'movie-user-review'){
+            url = '/movie/reportUserReview';
+        } else if (report_type == 'movie-critic-review'){
+            url = '/movie/reportCriticReview';
+        }
+        console.log($('#reportId').val());
+        $.ajax({
+            method: "POST",
+            url: url,
+            data: $('#report-form').serialize(),
+            success: function(data){
+                $('#serverResponseModalContent').replaceWith(data);
+                $("#serverResponseModal").modal('show');
+                $('#reason').val('');
+            }
+        });
     });
 
 </script>

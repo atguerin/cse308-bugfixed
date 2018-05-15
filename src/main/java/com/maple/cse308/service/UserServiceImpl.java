@@ -343,6 +343,10 @@ public class UserServiceImpl implements UserService {
         return getCurrentUser().getWatchList();
     }
 
+    public Set<TvShow> getWantToSeeListTv() {
+        return getCurrentUser().getWatchListTV();
+    }
+
     @Override
     public void addToWantToSeeList(Movie movie) throws Exception {
         User user = getCurrentUser();
@@ -355,33 +359,46 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+    public void addToWantToSeeListTv(TvShow tv) throws Exception {
+        User user = getCurrentUser();
+        user.getWatchListTV().add(tv);
+        userRepository.save(user);
+        updateUser();
+    }
+
     @Override
     public void removeFromWantToSeeList(Movie movie) throws Exception {
         User user = getCurrentUser();
-        Movie m = new Movie();
         for (Movie mv : user.getWatchList()) {
             if (mv.getMovieId().intValue() == movie.getMovieId().intValue()) {
-                m = mv;
+                user.getWatchList().remove(mv);
                 break;
             }
         }
-        user.getWatchList().remove(m);
         userRepository.save(user);
         updateUser();
-        /*
-        if(user.getWatchList().contains(movie)) {
-            user.getWatchList().remove(movie);
-            userRepository.save(user);
-            updateUser();
-        }else{
-            throw new Exception("Error: Movie is not on your watch list");
+    }
+
+    public void removeFromWantToSeeListTv(TvShow tv) throws Exception {
+        User user = getCurrentUser();
+        for (TvShow tt : user.getWatchListTV()) {
+            if (tt.getTvId().intValue() == tv.getTvId().intValue()) {
+                user.getWatchListTV().remove(tt);
+                break;
+            }
         }
-        */
+        userRepository.save(user);
+        updateUser();
     }
 
     @Override
     public Set<Movie> getDontWantToSeeList() {
         return getCurrentUser().getDontWatchList();
+    }
+
+    public Set<TvShow> getDontWantToSeeListTv() {
+        return getCurrentUser().getDontWatchListTV();
     }
 
     @Override
@@ -396,17 +413,22 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public void addToDontWantToSeeListTv(TvShow tv) throws Exception {
+        User user = getCurrentUser();
+        user.getDontWatchListTV().add(tv);
+        userRepository.save(user);
+        updateUser();
+    }
+
     @Override
     public void removeFromDontWantToSeeList(Movie movie) throws Exception {
         User user = getCurrentUser();
-        Movie m = new Movie();
         for (Movie mv : user.getDontWatchList()) {
             if (mv.getMovieId().intValue() == movie.getMovieId().intValue()) {
-                m = mv;
+                user.getDontWatchList().remove(mv);
                 break;
             }
         }
-        user.getDontWatchList().remove(m);
         userRepository.save(user);
         updateUser();
 
@@ -419,6 +441,19 @@ public class UserServiceImpl implements UserService {
             throw new Exception("Error: Movie is not on your ignore list");
         }
         */
+    }
+
+    public void removeFromDontWantToSeeListTv(TvShow tv) throws Exception {
+        User user = getCurrentUser();
+        for (TvShow tt : user.getDontWatchListTV()) {
+            if (tt.getTvId().intValue() == tv.getTvId().intValue()) {
+                user.getDontWatchListTV().remove(tt);
+                break;
+            }
+        }
+        userRepository.save(user);
+        updateUser();
+
     }
 
     @Override
@@ -513,14 +548,15 @@ public class UserServiceImpl implements UserService {
 
     public void resetPassword(String token, String newPass) throws Exception {
         User user = userRepository.findByResetToken(token);
-        if(user == null){
+        if (user == null) {
             throw new Exception("Error: This user does not exist");
-        }else{
-            System.out.println("\n" + user.getUsername()+ "\n");
+        } else {
+            System.out.println("\n" + user.getUsername() + "\n");
             user.setPassword(passwordEncoder.encode(newPass));
             user.setResetToken(null);
             userRepository.save(user);
         }
+
     }
 
     public void addFollow(Integer userId){
@@ -558,6 +594,5 @@ public class UserServiceImpl implements UserService {
         return followersList;
 
     }
-
 
 }

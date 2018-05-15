@@ -5,6 +5,7 @@ import com.maple.cse308.entity.MovieReviewCritic;
 import com.maple.cse308.entity.MovieReviewUser;
 import com.maple.cse308.entity.User;
 import com.maple.cse308.service.MovieServiceImpl;
+import com.maple.cse308.service.ReportServiceImpl;
 import com.maple.cse308.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,9 @@ public class MovieController {
 
     @Autowired
     private UserServiceImpl userService;
+
+    @Autowired
+    private ReportServiceImpl reportService;
 
     @GetMapping("/movies")
     public String movies(Model model) {
@@ -45,23 +49,23 @@ public class MovieController {
         } catch (Exception e) {
 
         }
-        List<MovieReviewCritic> mrcList = movieService.getCriticMovieReviewsByMovie(id);
-        List<MovieReviewUser> mruList = movieService.getUserMovieReviewsByMovie(id);
 
+        List<MovieReviewCritic> mrcList = movieService.getCriticMovieReviewsByMovie(id);
         Float criticRating = 0F;
         for(MovieReviewCritic mrc : mrcList){
             if(mrc.getRating() != null) {
                 criticRating += mrc.getRating();
             }
         }
-
+        criticRating = mrcList.size() > 0 ? criticRating/mrcList.size() : 0F;
+        List<MovieReviewUser> mruList = movieService.getUserMovieReviewsByMovie(id);
         Float userRating = 0F;
         for(MovieReviewUser mru : mruList){
             if(mru.getRating() != null) {
                 userRating += mru.getRating();
             }
         }
-
+        userRating = mruList.size() > 0 ? userRating/mruList.size() : 0F;
         model.addAttribute("movie", movieService.getMovieDetails(id));
         model.addAttribute("review", review);
         model.addAttribute("criticReviews", mrcList);
@@ -76,7 +80,7 @@ public class MovieController {
 
     @GetMapping("/movies/opening")
     public String moviesOpeningSoon(Model model) {
-        model.addAttribute("listType", "OUT NOW");
+        model.addAttribute("listType", "OPENING THIS WEEK");
         model.addAttribute("selectedList", movieService.getMoviesOutNow());
         return "movies";
     }
@@ -99,8 +103,17 @@ public class MovieController {
     public String postReview(@ModelAttribute MovieReviewUser reviewUser, Model model) throws Exception {
         reviewUser.setUserId(userService.getCurrentUser().getUserId());
         movieService.addUserMovieReview(reviewUser);
+        List<MovieReviewUser> mruList = movieService.getUserMovieReviewsByMovie(reviewUser.getMovieId());
+        Float userRating = 0F;
+        for(MovieReviewUser mru : mruList){
+            if(mru.getRating() != null) {
+                userRating += mru.getRating();
+            }
+        }
+        userRating = mruList.size() > 0 ? userRating/mruList.size() : 0F;
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully posted your review!");
+        model.addAttribute("userRating", userRating);
         return "movie_details :: serverResponseModalContent";
     }
 
@@ -109,7 +122,7 @@ public class MovieController {
         model.addAttribute("certifiedFresh", movieService.getCertifiedFresh());
         return "movies";
     }
-    
+
     @PostMapping("/editMovieReview")
     public String editReview(@ModelAttribute MovieReviewUser reviewUser, Model model) throws Exception {
         int userId = userService.getCurrentUser().getUserId();
@@ -217,6 +230,29 @@ public class MovieController {
         return "movie_all_critics";
     }
 
+    @RequestMapping("/movie_all_actors")
+    public String allMovieActors(@RequestParam(value = "id", required = false) int id, Model model) {
+        model.addAttribute("movie", movieService.getMovieDetails(id));
+        model.addAttribute("actors", movieService.getMovieActors(id));
+        return "movie_all_actors";
+    }
+
+
+    @PostMapping("/movie/reportUserReview")
+    public String reportMovieUserReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) throws Exception {
+        reportService.addUserMovieReport(reviewId, reason);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully reported the user review!");
+        return "movie_details :: serverResponseModalContent";
+    }
+
+    @PostMapping("/movie/reportCriticReview")
+    public String reportMovieCriticReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) throws Exception {
+        reportService.addCriticMovieReport(reviewId, reason);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully reported the critic review!");
+        return "movie_details :: serverResponseModalContent";
+    }
 
 }
 

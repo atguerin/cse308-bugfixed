@@ -1,6 +1,7 @@
 package com.maple.cse308.controller;
 
 import com.maple.cse308.entity.*;
+import com.maple.cse308.repository.UserRepository;
 import com.maple.cse308.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.ParseException;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -20,6 +20,8 @@ public class StaticController {
 
     @Autowired
     private MovieServiceImpl movieService;
+    @Autowired
+    private TvServiceImpl tvService;
     @Autowired
     private ActorServiceImpl actorService;
     @Autowired
@@ -30,34 +32,26 @@ public class StaticController {
     private EmailServiceImpl emailService;
     @Autowired
     private ReportServiceImpl reportService;
+    @Autowired
+    private UserRepository userRepository;
 
+
+    @RequestMapping("/")
+    public String defaultPage(Model model) {
+        model.addAttribute("comingSoonList", movieService.getMoviesComingSoon());
+        model.addAttribute("outNowList", movieService.getMoviesOutNow());
+        model.addAttribute("topBoxOfficeList", movieService.getTopBoxOffice());
+        model.addAttribute("certifiedFreshList", movieService.getCertifiedFresh());
+        return "index";
+    }
 
     @RequestMapping("/index")
     public String index(Model model) {
         model.addAttribute("comingSoonList", movieService.getMoviesComingSoon());
         model.addAttribute("outNowList", movieService.getMoviesOutNow());
         model.addAttribute("topBoxOfficeList", movieService.getTopBoxOffice());
-        model.addAttribute("certifiedFreshList", movieService.getCertifiedFresh());
         return "index";
-    }
 
-    @RequestMapping("/")
-    public String mainIndex(Model model) {
-        model.addAttribute("comingSoonList", movieService.getMoviesComingSoon());
-        model.addAttribute("outNowList", movieService.getMoviesOutNow());
-        model.addAttribute("topBoxOfficeList", movieService.getTopBoxOffice());
-        model.addAttribute("certifiedFreshList", movieService.getCertifiedFresh());
-        return "index";
-    }
-
-    @RequestMapping("/tv")
-    public String tv(Model model) {
-        return "tv";
-    }
-
-    @RequestMapping("/tv_details")
-    public String tvDetails(Model model) {
-        return "tv_details";
     }
 
     @RequestMapping("/actor_details")
@@ -67,6 +61,7 @@ public class StaticController {
         model.addAttribute("topBoxOfficeList", movieService.getTopBoxOffice());
         model.addAttribute("actor", actorService.getActorDetails(id));
         model.addAttribute("movies", actorService.getActorMovies(id));
+        model.addAttribute("tvs", actorService.getActorTVs(id));
         model.addAttribute("screenshots", actorService.getActorScreenshots(id));
         return "actor_details";
     }
@@ -77,6 +72,9 @@ public class StaticController {
         model.addAttribute("user", user);
         List<MovieReviewUser> movieReviews = movieService.getUserMovieReviewsByUser(user.getUserId());
         model.addAttribute("movieReviews", movieReviews);
+
+        List<TvReviewUser> tvReviews = tvService.getUserTvReviewsByUser(user.getUserId());
+        model.addAttribute("tvReviews", tvReviews);
         //model.addAttribute("blockList", userService.getBlockList(user.getUserId()));
         return "profile";
     }
@@ -92,7 +90,7 @@ public class StaticController {
         List<Movie> movieList = movieService.findAllByTitleContainingIgnoreCase(search);
         model.addAttribute("search", search);
         model.addAttribute("movieList", movieList);
-        List<Movie> tvList = new ArrayList<>(); // We don't have TV data currently
+        List<TvShow> tvList = tvService.tvSearch(search);
         model.addAttribute("tvList", tvList);
         model.addAttribute("celebList", actorService.actorSearch(search));
         return "search";
@@ -125,7 +123,7 @@ public class StaticController {
     @GetMapping("/search/tv")
     public String searchTV(@RequestParam(value = "search") String search, Model model) {
         model.addAttribute("search", search);
-        List<Movie> tvList = new ArrayList<>(); // We don't have TV data currently
+        List<TvShow> tvList = tvService.tvSearch(search);
         model.addAttribute("tvList", tvList);
         return "search :: tvList";
     }
@@ -161,6 +159,8 @@ public class StaticController {
         model.addAttribute("critic", critic);
         List<MovieReviewCritic> movieReviews = movieService.getCriticMovieReviewsByCritic(criticId);
         model.addAttribute("movieReviews", movieReviews);
+        List<TvReviewCritic> tvReviews = tvService.getCriticTvReviewsByCritic(criticId);
+        model.addAttribute("tvReviews", tvReviews);
         return "critic_home";
     }
 
@@ -169,20 +169,11 @@ public class StaticController {
         return "about";
     }
 
-    @GetMapping("/contactUs")
-    public String contactUs(Model model) {
-        return "contact_us_form";
-    }
 
     @PostMapping("/contactUs")
     public String contactUs(@RequestParam(value = "name") String name, @RequestParam(value = "email") String email, @RequestParam(value = "subject") String subject, @RequestParam(value = "message") String message) {
         emailService.sendSimpleMessage("cse308teammaple@gmail.com", "Contact Form Submission: "+ subject, "Name: " + name + "\nEmail: " + email + "\n\nMessage: " + message);
         return "index";
-    }
-
-    @GetMapping("/forgotPassword")
-    public String forgotPassword(Model model) {
-        return "forgot_password";
     }
 
     @PostMapping("/forgotPassword")
@@ -193,12 +184,6 @@ public class StaticController {
 
         }
         return "forgot_password";
-    }
-
-    @GetMapping("/resetPassword")
-    public String resetPassword(Model model, @RequestParam("token") String token) {
-        model.addAttribute("token", token);
-        return "reset_password";
     }
 
     @PostMapping("/resetPassword")
@@ -212,20 +197,175 @@ public class StaticController {
         return "index";
     }
 
-    @PostMapping("/reportCritic")
-    public String reportCritic(Model model, @RequestParam("criticId") Integer criticId,
-                               @RequestParam("reason") String reason){
-        reportService.addCriticReport(criticId, reason);
-        model.addAttribute("success", true);
-        return "criticReport";
+    @RequestMapping("/reports")
+    public String reports(Model model) {
+        model.addAttribute("reportedCritics", reportService.getCriticReports());
+        model.addAttribute("reportedUsers", reportService.getUserReports());
+        model.addAttribute("movieCriticReviews", reportService.getCriticMovieReports());
+        model.addAttribute("movieUserReviews", reportService.getUserMovieReports());
+        model.addAttribute("tvCriticReviews", reportService.getCriticTvReports());
+        model.addAttribute("tvUserReviews", reportService.getUserTvReports());
+        return "reports";
     }
 
     @PostMapping("/reportUser")
-    public String reportUser(Model model, @RequestParam("userId") Integer userId,
-                             @RequestParam("reason") String reason){
-        reportService.addUserReport(userId, reason);
-        model.addAttribute("success", true);
-        return "userReport";
+    public String reportUser(@RequestParam(value = "id") int id, @RequestParam(value = "reason") String reason, Model model) throws Exception {
+        reportService.addUserReport(id, reason);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully reported the user!");
+        return "user_info :: serverResponseModalContent";
+    }
+
+    @PostMapping("/reportCritic")
+    public String reportCritic(@RequestParam(value = "id") int id, @RequestParam(value = "reason") String reason, Model model) throws Exception {
+        reportService.addCriticReport(id, reason);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully reported the critic!");
+        return "critic_home :: serverResponseModalContent";
+    }
+
+    // All the backend stuff have to be handled, currently it just deletes the reports form reported lists
+    @PostMapping("/deleteCritic")
+    public String deleteCritic(@RequestParam(value = "id") int id, Model model) throws Exception {
+        reportService.deleteCriticReport(id);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully deleted the critic!");
+        return "reports :: serverResponseModalContent";
+    }
+
+    @PostMapping("/deleteUser")
+    public String deleteUser(@RequestParam(value = "id") int id, Model model) throws Exception {
+        User user = userRepository.findByUserId(id);
+        reportService.deleteUserReport(id);
+        userService.deleteUser(user.getUsername());
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully deleted the user!");
+        return "reports :: serverResponseModalContent";
+    }
+
+    @PostMapping("/deleteMovieCriticReview")
+    public String deleteMovieCriticReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+        reportService.deleteCriticMovieReport(id);
+        movieService.deleteUserMovieReview(id);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully deleted the review!");
+        return "reports :: serverResponseModalContent";
+    }
+
+    @PostMapping("/deleteMovieUserReview")
+    public String deleteMovieUserReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+        reportService.deleteUserMovieReport(id);
+        movieService.deleteUserMovieReview(id);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully deleted the review!");
+        return "reports :: serverResponseModalContent";
+    }
+
+    @PostMapping("/deleteTvCriticReview")
+    public String deleteTvCriticReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+        reportService.deleteCriticTvReport(id);
+        tvService.deleteCriticTvReview(id);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully deleted the review!");
+        return "reports :: serverResponseModalContent";
+    }
+
+    @PostMapping("/deleteTvUserReview")
+    public String deleteTvUserReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+        reportService.deleteUserTvReport(id);
+        tvService.deleteUserTvReview(id);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully deleted the review!");
+        return "reports :: serverResponseModalContent";
+    }
+
+    @GetMapping("/reportedCritic")
+    public String reportedCritics(Model model) {
+        model.addAttribute("reportedCritics", reportService.getCriticReports());
+        return "reports :: critics";
+    }
+
+    @GetMapping("/reportedUser")
+    public String reportedUsers(Model model) {
+        model.addAttribute("reportedUsers", reportService.getUserReports());
+        return "reports :: users";
+    }
+
+    @GetMapping("/reportedMovieCriticReview")
+    public String reportedMovieCriticReviews(Model model) {
+        model.addAttribute("movieCriticReviews", reportService.getCriticMovieReports());
+        return "reports :: movieCriticReviews";
+    }
+
+    @GetMapping("/reportedMovieUserReview")
+    public String reportedMovieUserReviews(Model model) {
+        model.addAttribute("movieUserReviews", reportService.getUserMovieReports());
+        return "reports :: movieUserReviews";
+    }
+
+    @GetMapping("/reportedTvCriticReview")
+    public String reportedTvCriticReviews(Model model) {
+        model.addAttribute("tvCriticReviews", reportService.getCriticTvReports());
+        return "reports :: movieCriticReviews";
+    }
+
+    @GetMapping("/reportedTvUserReview")
+    public String reportedTvUserReviews(Model model) {
+        model.addAttribute("tvUserReviews", reportService.getUserTvReports());
+        return "reports :: movieUserReviews";
+    }
+
+
+
+
+    //dismiss reports
+
+    @PostMapping("/dismissCritic")
+    public String dismissCritic(@RequestParam(value = "id") int id, Model model) throws Exception {
+        reportService.deleteCriticReport(id);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully dismissed the critic!");
+        return "reports :: serverResponseModalContent";
+    }
+
+    @PostMapping("/dismissUser")
+    public String dismissUser(@RequestParam(value = "id") int id, Model model) throws Exception {
+        reportService.deleteUserReport(id);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully dismissed the user!");
+        return "reports :: serverResponseModalContent";
+    }
+
+    @PostMapping("/dismissMovieCriticReview")
+    public String dismissMovieCriticReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+        reportService.deleteCriticMovieReport(id);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully dismissed the review!");
+        return "reports :: serverResponseModalContent";
+    }
+
+    @PostMapping("/dismissMovieUserReview")
+    public String dismissMovieUserReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+        reportService.deleteUserMovieReport(id);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully dismissed the review!");
+        return "reports :: serverResponseModalContent";
+    }
+
+    @PostMapping("/dismissTvCriticReview")
+    public String dismissTvCriticReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+        reportService.deleteCriticTvReport(id);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully dismissed the review!");
+        return "reports :: serverResponseModalContent";
+    }
+
+    @PostMapping("/dismissTvUserReview")
+    public String dismissTvUserReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+        reportService.deleteUserTvReport(id);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully dismissed the review!");
+        return "reports :: serverResponseModalContent";
     }
 
     @PostMapping("/reportMovieCriticReview")

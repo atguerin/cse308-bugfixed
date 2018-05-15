@@ -271,6 +271,7 @@
                 <form th:action="@{/applyCritic}" method="post" id="applyCriticForm">
                     <div class="modal-body">
                         <span class="response" th:text="${response}"></span>
+<<<<<<< HEAD
                         <div class="form-group">
                             <label for="website">Website</label>
                             <input type="text" name="website" class="form-control" id="website"
@@ -286,6 +287,9 @@
                             <input type="text" name="publications" class="form-control" id="publications"
                                    placeholder="publications"/>
                         </div>
+=======
+                        <label>Do you want to button your application?</label>
+>>>>>>> origin/ki
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -363,6 +367,7 @@
             });
         });
 
+<<<<<<< HEAD
         $(document).on("click", "#photoButton", function () {
             $('.response').text('');
             $.ajax({
@@ -375,6 +380,8 @@
             });
         });
 
+=======
+>>>>>>> origin/ki
         $(document).on("click", "#bioButton", function () {
             $('.response').text('');
             $.ajax({

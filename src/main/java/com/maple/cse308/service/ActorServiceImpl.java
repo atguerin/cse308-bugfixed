@@ -3,9 +3,11 @@ package com.maple.cse308.service;
 import com.maple.cse308.entity.Actor;
 import com.maple.cse308.entity.ActorScreenshot;
 import com.maple.cse308.entity.MovieActor;
+import com.maple.cse308.entity.TvActor;
 import com.maple.cse308.repository.ActorRepository;
 import com.maple.cse308.repository.ActorScreenshotRepository;
 import com.maple.cse308.repository.MovieActorRepository;
+import com.maple.cse308.repository.TvActorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,9 @@ public class ActorServiceImpl implements ActorService {
 
     @Autowired
     MovieActorRepository movieActorRepository;
+
+    @Autowired
+    TvActorRepository tvActorRepository;
 
     @Override
     public Actor getActorDetails(int actorId) {
@@ -83,6 +88,10 @@ public class ActorServiceImpl implements ActorService {
 
     public List<MovieActor> getActorMovies(int actorId) {
         return movieActorRepository.findAllByActorId(actorId);
+    }
+
+    public List<TvActor> getActorTVs(int actorId) {
+        return tvActorRepository.findAllByActorId(actorId);
     }
 
 

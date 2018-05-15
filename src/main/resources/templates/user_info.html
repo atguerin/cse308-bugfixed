@@ -37,7 +37,7 @@
             <div class="jumbotron-side">
                 <div class="d-flex">
                     <h5 class="mb-4"><strong>User Information</strong></h5>
-                    <a href="#" th:attr="data-id=${user.userId}" class="report user ion-alert-circled ml-auto"></a>
+                    <a href="#" th:attr="data-id=${user.userId}" class="report report-user ion-alert-circled ml-auto"></a>
                 </div>
                 <div class="nav flex-column justify-content-center">
                     <div class="profile-thumbnail-container">
@@ -250,6 +250,32 @@
     </div>
 </div>
 
+<!-- Report confirmation modal -->
+<div class="modal fade" id="reportConfirmModal" tabindex="-1" role="dialog" aria-labelledby="reportConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="deleteConfirmModalContent" style="color: black;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="report-modal-title">Report</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <input name="reportType" id="reportType" type="hidden"/>
+            <form th:action="@{/}" method="post" id="report-form">
+                <div class="modal-body" id="report-modal-body">
+                    <h6>Do you want to report?</h6>
+                    <span class="mt-2">Reason:</span>
+                    <input name="id" id="reportId" type="hidden"/>
+                    <textarea name="reason" class="form-control" id="reason" rows="3" style="resize: none;"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="confirm-report" type="button" class="btn btn-danger" data-dismiss="modal">Report</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <!-- footer -->
 <div th:replace="fragments/footer">Navbar</div>
@@ -260,7 +286,33 @@
 <script src="../../js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
 <script src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
 <script src="../../js/star-rating.js" th:src="@{/js/star-rating.js}"></script>
+<script th:inline="javascript">
+    $( document ).ajaxComplete(function( event, xhr, settings ) {
+        $(".rating").rating({});
+    });
 
+    $(document).on('click', '.report-user', function(){
+        var id =  $(this).data("id");
+        $('#reportId').val(id);
+        $('#report-modal-title').text('Report User');
+        $("#reportConfirmModal").modal('show');
+    });
+
+    $("#confirm-report").on("click", function () {
+        console.log($('#reportId').val());
+        $.ajax({
+            method: "POST",
+            url: '/reportUser',
+            data: $('#report-form').serialize(),
+            success: function(data){
+                $('#serverResponseModalContent').replaceWith(data);
+                $("#serverResponseModal").modal('show');
+                $('#reason').val('');
+            }
+        });
+    });
+
+</script>
 
 </body>
 </html>

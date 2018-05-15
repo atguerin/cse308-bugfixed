@@ -145,9 +145,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void deleteUserMovieReview(int reviewId) {
-        MovieReviewUser movieReviewUser = movieReviewUserRepository.findByReviewId(reviewId);
-        movieReviewUserRepository.delete(movieReviewUser);
-
+        movieReviewUserRepository.deleteByReviewId(reviewId);
     }
 
     @Override
@@ -258,12 +256,14 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+
     public List<MovieReviewUser> getUserMovieReviewsByUserAndMovie(int userId, int movieId) {
         HashSet<MovieReviewUser> set = movieReviewUserRepository.findByUserIdAndMovieId(userId, movieId);
         List<MovieReviewUser> userMovieReview = new LinkedList();
         userMovieReview.addAll(set);
         return userMovieReview;
     }
+
 
     @Override
     public List<Genre> getGenres(){

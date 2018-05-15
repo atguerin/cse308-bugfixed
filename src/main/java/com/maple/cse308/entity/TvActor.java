@@ -23,6 +23,30 @@ public class TvActor {
     @Column(name = "needsChecking")
     private Boolean needsChecking;
 
+    @OneToOne
+    @JoinColumn(name = "actorId", insertable = false, updatable = false)
+    private Actor actor;
+
+    @OneToOne
+    @JoinColumn(name = "tvId", insertable = false, updatable = false)
+    private TvShow tv;
+
+    public TvShow getTv() {
+        return tv;
+    }
+
+    public void setTv(TvShow tv) {
+        this.tv = tv;
+    }
+
+    public Actor getActor() {
+        return actor;
+    }
+
+    public void setActor(Actor actor) {
+        this.actor = actor;
+    }
+
     public Integer getTvActorId() {
         return tvActorId;
     }

@@ -1,9 +1,6 @@
 package com.maple.cse308.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name="report_movie_critic_review")
@@ -15,6 +12,19 @@ public class ReportMovieCriticReview {
 
     @Column(name="reason")
     private String reason;
+
+
+    @OneToOne
+    @JoinColumn(name = "reviewId", insertable = false, updatable = false)
+    private MovieReviewCritic movieReviewCritic;
+
+    public MovieReviewCritic getMovieReviewCritic() {
+        return movieReviewCritic;
+    }
+
+    public void setMovieReviewCritic(MovieReviewCritic movieReviewCritic) {
+        this.movieReviewCritic = movieReviewCritic;
+    }
 
     public Integer getReviewId() {
         return reviewId;

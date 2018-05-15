@@ -23,7 +23,10 @@
 <!-- Navbar -->
 <div sec:authorize="isAnonymous()"><div th:replace="fragments/navbar">Navbar</div></div>
 <div sec:authorize="hasRole('ROLE_USER')"><div th:replace="fragments/user_navbar">Navbar</div></div>
+<<<<<<< HEAD
 <div sec:authorize="hasRole('ROLE_CRITIC')"><div th:replace="fragments/user_navbar">Navbar</div></div>
+=======
+>>>>>>> origin/ki
 <div sec:authorize="hasRole('ROLE_ADMIN')"><div th:replace="fragments/admin_navbar">Navbar</div></div>
 
 
