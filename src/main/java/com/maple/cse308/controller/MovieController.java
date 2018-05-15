@@ -153,18 +153,25 @@ public class MovieController {
 
 
     @PostMapping("/movie/addToWantToSeeList")
-    public String addToWantToSeeList(@RequestParam(value = "movieId") int movieId, Model model) throws Exception {
+    public String addToWantToSeeList(@RequestParam(value = "movieId") int movieId, Model model){
         Movie movie = movieService.getMovieDetails(movieId);
-        userService.addToWantToSeeList(movie);
+        try {
+            userService.addToWantToSeeList(movie);
+        } catch (Exception e) {
+
+        }
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully added to your Want To See List!");
         return "movie_details :: serverResponseModalContent";
     }
 
     @PostMapping("/movie/addToDontWantToSeeList")
-    public String addToDontWantToSeeList(@RequestParam(value = "movieId") int movieId, Model model) throws Exception {
+    public String addToDontWantToSeeList(@RequestParam(value = "movieId") int movieId, Model model){
         Movie movie = movieService.getMovieDetails(movieId);
-        userService.addToDontWantToSeeList(movie);
+        try {
+            userService.addToDontWantToSeeList(movie);
+        } catch (Exception e) {
+        }
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully added to your Not Interested List!");
         return "movie_details :: serverResponseModalContent";
