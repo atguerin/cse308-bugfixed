@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface TvActorRepository extends CrudRepository<TvActor, Integer> {
     public List<TvActor> findAllByTvId(int id);
+    public List<TvActor> findAllByActorId(int id);
 }

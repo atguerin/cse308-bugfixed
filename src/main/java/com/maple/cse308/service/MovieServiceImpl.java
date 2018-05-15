@@ -136,8 +136,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void deleteUserMovieReview(int reviewId) {
-        MovieReviewUser movieReviewUser = movieReviewUserRepository.findByReviewId(reviewId);
-        movieReviewUserRepository.delete(movieReviewUser);
+        movieReviewUserRepository.deleteByReviewId(reviewId);
 
     }
 

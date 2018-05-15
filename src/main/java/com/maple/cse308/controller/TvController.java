@@ -5,6 +5,7 @@ import com.maple.cse308.entity.TvShow;
 import com.maple.cse308.entity.User;
 import com.maple.cse308.repository.EpisodeRepository;
 import com.maple.cse308.repository.SeasonRepository;
+import com.maple.cse308.service.ReportServiceImpl;
 import com.maple.cse308.service.TvServiceImpl;
 import com.maple.cse308.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class TvController {
 
     @Autowired
     EpisodeRepository episodeRepository;
+
+    @Autowired
+    private ReportServiceImpl reportService;
 
     @GetMapping("/tv")
     public String tv(Model model) {
@@ -204,6 +208,22 @@ public class TvController {
         model.addAttribute("tv", tvService.getTvShowDetails(id));
         model.addAttribute("criticReviews", tvService.getCriticTvReviewsByTvShow(id));
         return "tv_all_critics";
+    }
+
+    @PostMapping("/tv/reportUserReview")
+    public String reportMovieUserReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) throws Exception {
+        reportService.addUserTvReport(reviewId, reason);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully reported the user review!");
+        return "movie_details :: serverResponseModalContent";
+    }
+
+    @PostMapping("/tv/reportCriticReview")
+    public String reportMovieCriticReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) throws Exception {
+        reportService.addCriticTvReport(reviewId, reason);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully reported the critic review!");
+        return "movie_details :: serverResponseModalContent";
     }
 
 }

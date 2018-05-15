@@ -218,7 +218,7 @@
                                 <div class="mr-2">
                                     <span th:text="${criticReview.rating==''?'no score':criticReview.rating}">score</span>
                                 </div>
-                                <a href="#" th:attr="data-id=${criticReview.reviewId}" class="report critic-review ion-alert-circled"></a>
+                                <a href="#" sec:authorize="isAuthenticated()" th:attr="data-id=${criticReview.reviewId}" class="report report-tv-critic-review ion-alert-circled"></a>
                             </div>
                             <p class="media-body pb-3 mb-0 small lh-125 border-bottom w-100" th:text="${criticReview.review}">
                                 Review
@@ -249,7 +249,7 @@
                                 <div class="d-flex">
                                     <input class="rating rating-loading score p-0" th:value="${userReview.rating}" data-stars="5" data-min="0" data-max="5" data-size="xxxs" disabled=true data-show-clear="false" data-show-caption="false"/>
                                     <span th:text="${userReview.rating==''?'score':userReview.rating}" class="mr-2">score</span>
-                                    <a href="#" th:attr="data-id=${userReview.reviewId}" class="report user-review ion-alert-circled"></a>
+                                    <a href="#" sec:authorize="isAuthenticated()" th:attr="data-id=${userReview.reviewId}" class="report report-tv-user-review ion-alert-circled"></a>
                                 </div>
                             </div>
                             <p class="media-body pb-3 mb-0 small lh-125 border-bottom w-100" th:text="${userReview.review}" style="min-height: 3rem;">
@@ -274,6 +274,34 @@
             </div>
         </div>
 
+    </div>
+</div>
+
+
+<!-- Report confirmation modal -->
+<div class="modal fade" id="reportConfirmModal" tabindex="-1" role="dialog" aria-labelledby="reportConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" id="deleteConfirmModalContent" style="color: black;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="report-modal-title">Report</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <input name="reportType" id="reportType" type="hidden"/>
+            <form th:action="@{/}" method="post" id="report-form">
+                <div class="modal-body" id="report-modal-body">
+                    <h6>Do you want to report?</h6>
+                    <span class="mt-2">Reason:</span>
+                    <input name="id" id="reportId" type="hidden"/>
+                    <textarea name="reason" class="form-control" id="reason" rows="3" style="resize: none;"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="confirm-report" type="button" class="btn btn-danger" data-dismiss="modal">Report</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -361,6 +389,47 @@
     $( document ).ajaxComplete(function( event, xhr, settings ) {
         $(".rating").rating({});
     });
+
+
+
+    $(document).on('click', '.report-tv-user-review', function(){
+        var id =  $(this).data("id");
+        $('#reportType').val('tv-user-review');
+        $('#reportId').val(id);
+        $('#report-modal-title').text('Report User Review');
+        $("#reportConfirmModal").modal('show');
+    });
+
+    $(document).on('click', '.report-tv-critic-review', function(){
+        var id =  $(this).data("id");
+        $('#reportType').val('tv-critic-review');
+        $('#reportId').val(id);
+        $('#report-modal-title').text('Report Critic Review');
+        $("#reportConfirmModal").modal('show');
+    });
+
+    $("#confirm-report").on("click", function () {
+        var url = '';
+        var report_type = $('#reportType').val();
+        if(report_type == 'tv-user-review'){
+            url = '/tv/reportUserReview';
+        } else if (report_type == 'tv-critic-review'){
+            url = '/tv/reportCriticReview';
+        }
+        console.log($('#reportId').val());
+        $.ajax({
+            method: "POST",
+            url: url,
+            data: $('#report-form').serialize(),
+            success: function(data){
+                $('#serverResponseModalContent').replaceWith(data);
+                $("#serverResponseModal").modal('show');
+                $('#reason').val('');
+            }
+        });
+    });
+
+
 </script>
 
 </body>

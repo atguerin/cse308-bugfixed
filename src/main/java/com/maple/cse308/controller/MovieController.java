@@ -4,6 +4,7 @@ import com.maple.cse308.entity.Movie;
 import com.maple.cse308.entity.MovieReviewUser;
 import com.maple.cse308.entity.User;
 import com.maple.cse308.service.MovieServiceImpl;
+import com.maple.cse308.service.ReportServiceImpl;
 import com.maple.cse308.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,9 @@ public class MovieController {
 
     @Autowired
     private UserServiceImpl userService;
+
+    @Autowired
+    private ReportServiceImpl reportService;
 
     @GetMapping("/movies")
     public String movies(Model model) {
@@ -189,6 +193,23 @@ public class MovieController {
         model.addAttribute("movie", movieService.getMovieDetails(id));
         model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(id));
         return "movie_all_critics";
+    }
+
+
+    @PostMapping("/movie/reportUserReview")
+    public String reportMovieUserReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) throws Exception {
+        reportService.addUserMovieReport(reviewId, reason);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully reported the user review!");
+        return "movie_details :: serverResponseModalContent";
+    }
+
+    @PostMapping("/movie/reportCriticReview")
+    public String reportMovieCriticReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) throws Exception {
+        reportService.addCriticMovieReport(reviewId, reason);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully reported the critic review!");
+        return "movie_details :: serverResponseModalContent";
     }
 
 

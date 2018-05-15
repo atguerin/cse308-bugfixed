@@ -43,7 +43,7 @@
                     <li class="nav-item ml-5 mr-1">
                         <a class="nav-link" href="#" style="font-size: 13px;"><div sec:authentication="name"></div></a>
                         <div class="dropdown-content right-align">
-                            <a href="#">View Reports</a>
+                            <a th:href="@{/reports}">Reports</a>
                             <a th:href="@{/logout}">Log out</a>
                         </div>
                     </li>

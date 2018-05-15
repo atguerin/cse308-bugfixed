@@ -64,8 +64,7 @@ public class TvServiceImpl implements TvService {
 
     @Override
     public void deleteUserTvReview(int reviewId) {
-        TvReviewUser tvReviewUser = tvReviewUserRepository.findByReviewId(reviewId);
-        tvReviewUserRepository.delete(tvReviewUser);
+        tvReviewUserRepository.deleteByReviewId(reviewId);
     }
 
     @Override
