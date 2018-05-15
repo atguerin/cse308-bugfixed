@@ -38,4 +38,7 @@ public interface MovieRepository extends CrudRepository<Movie, Integer> {
 
     @Query(value="SELECT * FROM movie WHERE release_date <= ?1 ORDER BY release_date DESC LIMIT 10", nativeQuery=true)
     List<Movie> findTop10OrderByReleaseDateLessThanDesc(Date date);
+
+    @Query(value="SELECT * FROM movie WHERE release_date <= ?1 ORDER BY release_date DESC LIMIT 40", nativeQuery=true)
+    List<Movie> findTop40OrderByReleaseDateLessThanDesc(Date date);
 }
