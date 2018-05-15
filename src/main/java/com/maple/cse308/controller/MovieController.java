@@ -195,6 +195,13 @@ public class MovieController {
         return "movie_all_critics";
     }
 
+    @RequestMapping("/movie_all_actors")
+    public String allMovieActors(@RequestParam(value = "id", required = false) int id, Model model) {
+        model.addAttribute("movie", movieService.getMovieDetails(id));
+        model.addAttribute("actors", movieService.getMovieActors(id));
+        return "movie_all_actors";
+    }
+
 
     @PostMapping("/movie/reportUserReview")
     public String reportMovieUserReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) throws Exception {

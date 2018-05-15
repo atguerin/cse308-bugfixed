@@ -74,9 +74,11 @@
                                     </a>
                                 </div>
                             </div>
+                            <!--
                             <small class="d-block text-right mt-3">
                                 <a href="#">see more</a>
                             </small>
+                            -->
                         </div>
 
                         <!-- TV -->
@@ -98,9 +100,11 @@
                                     </a>
                                 </div>
                             </div>
+                            <!--
                             <small class="d-block text-right mt-3">
                                 <a href="#">see more</a>
                             </small>
+                            -->
                         </div>
 
                         <!-- Celebrities -->
@@ -113,19 +117,25 @@
                                 <div th:each="celeb,iterStat : ${celebList}" th:if="${iterStat.index<10}" class="media pt-3 border-bottom pb-3">
                                     <a th:href="@{/actor_details(id=${celeb.actorId})}">
                                         <div class="search-list-actor-img-container">
-                                            <img th:src="@{${celeb.headshot}}" alt="..." class="search-list-actor-img"/>
+                                            <img th:src="@{(${celeb.headshot==''}?'/img/default.gif':${celeb.headshot})}" alt="..." class="search-list-actor-img"/>
                                         </div>
                                     </a>
                                     <a th:href="@{/actor_details(id=${celeb.actorId})}">
-                                        <p class="media-body pb-3 mb-0 small lh-125 ">
+                                        <p class="media-body mb-0 small lh-125 ">
                                             <strong th:text="|${celeb.firstName} ${celeb.lastName}|" class="d-block text-gray">Name</strong>
+                                            <br>
+                                            <label th:text="|Birthday: ${celeb.birthday}|"></label>
+                                            <br>
+                                            <label th:text="|Birthplace: ${celeb.birthPlace}|"></label>
                                         </p>
                                     </a>
                                 </div>
                             </div>
+                            <!--
                             <small class="d-block text-right mt-3">
                                 <a href="#">see more</a>
                             </small>
+                            -->
                         </div>
                     </div>
 
@@ -186,12 +196,16 @@
                                 <div th:each="celeb,iterStat : ${celebList}" th:if="${iterStat.index<30}" class="media pt-3 border-bottom pb-3">
                                     <a th:href="@{/actor_details(id=${celeb.actorId})}">
                                         <div class="search-list-actor-img-container">
-                                            <img th:src="@{${celeb.headshot}}" alt="..." class="search-list-actor-img"/>
+                                            <img th:src="@{(${celeb.headshot==''}?'/img/default.gif':${celeb.headshot})}" alt="..." class="search-list-actor-img"/>
                                         </div>
                                     </a>
                                     <a th:href="@{/actor_details(id=${celeb.actorId})}">
-                                        <p class="media-body pb-3 mb-0 small lh-125 ">
+                                        <p class="media-body mb-0 small lh-125 ">
                                             <strong th:text="|${celeb.firstName} ${celeb.lastName}|" class="d-block text-gray">Name</strong>
+                                            <br>
+                                            <label th:text="|Birthday: ${celeb.birthday}|"></label>
+                                            <br>
+                                            <label th:text="|Birthplace: ${celeb.birthPlace}|"></label>
                                         </p>
                                     </a>
                                 </div>

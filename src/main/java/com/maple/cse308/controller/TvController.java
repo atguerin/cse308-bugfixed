@@ -210,6 +210,13 @@ public class TvController {
         return "tv_all_critics";
     }
 
+    @RequestMapping("/tv_all_actors")
+    public String allTvActors(@RequestParam(value = "id", required = false) int id, Model model) {
+        model.addAttribute("tv", tvService.getTvShowDetails(id));
+        model.addAttribute("actors", tvService.getTvActors(id));
+        return "tv_all_actors";
+    }
+
     @PostMapping("/tv/reportUserReview")
     public String reportMovieUserReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) throws Exception {
         reportService.addUserTvReport(reviewId, reason);
