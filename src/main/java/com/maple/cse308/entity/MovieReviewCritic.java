@@ -19,7 +19,7 @@ public class MovieReviewCritic implements Serializable {
     private Integer movieId;
 
     @Column(name = "rating")
-    private String rating;
+    private Float rating;
 
     @Column(name = "review", length = 2048)
     private String review;
@@ -51,11 +51,11 @@ public class MovieReviewCritic implements Serializable {
         this.movieId = movieId;
     }
 
-    public String getRating() {
+    public Float getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 

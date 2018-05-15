@@ -106,12 +106,13 @@
                     <div class="mb-1 text-muted" th:text="${movie.getReleaseYear()}">2018</div>
                     <div class="row w-100 ratings">
                         <div class="d-flex w-100">
-                            <div class="p-2">Critic Score: </div>
-                            <div class="p-2"><span class="ion-android-star"></span>0.0</div>
+                            <div class="p-2">Critic Score:</div>
+                            <div class="p-2"><span class="ion-android-star">
+                                <span th:text="${criticRating}"></span></div>
                             <div class="ml-auto p-2">Audience Score: </div>
                             <div class="p-2">
                                 <span class="ion-android-star"></span>
-                                <span th:text="${movie.ratingAvg}">0.0</span>
+                                <span th:text="${userRating}">0.0</span>
                             </div>
                         </div>
                     </div>

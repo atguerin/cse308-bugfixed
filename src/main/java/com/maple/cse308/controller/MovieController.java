@@ -1,6 +1,7 @@
 package com.maple.cse308.controller;
 
 import com.maple.cse308.entity.Movie;
+import com.maple.cse308.entity.MovieReviewCritic;
 import com.maple.cse308.entity.MovieReviewUser;
 import com.maple.cse308.entity.User;
 import com.maple.cse308.service.MovieServiceImpl;
@@ -44,10 +45,29 @@ public class MovieController {
         } catch (Exception e) {
 
         }
+        List<MovieReviewCritic> mrcList = movieService.getCriticMovieReviewsByMovie(id);
+        List<MovieReviewUser> mruList = movieService.getUserMovieReviewsByMovie(id);
+
+        Float criticRating = 0F;
+        for(MovieReviewCritic mrc : mrcList){
+            if(mrc.getRating() != null) {
+                criticRating += mrc.getRating();
+            }
+        }
+
+        Float userRating = 0F;
+        for(MovieReviewUser mru : mruList){
+            if(mru.getRating() != null) {
+                userRating += mru.getRating();
+            }
+        }
+
         model.addAttribute("movie", movieService.getMovieDetails(id));
         model.addAttribute("review", review);
-        model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(id));
-        model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(id));
+        model.addAttribute("criticReviews", mrcList);
+        model.addAttribute("criticRating", criticRating);
+        model.addAttribute("userReviews", mruList);
+        model.addAttribute("userRating", userRating);
         model.addAttribute("screenshots", movieService.getMovieScreenShots(id));
         model.addAttribute("trailers", movieService.getMovieTrailers(id));
         model.addAttribute("actors", movieService.getMovieActors(id));

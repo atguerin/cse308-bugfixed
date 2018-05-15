@@ -41,6 +41,15 @@ public class StaticController {
         return "index";
     }
 
+    @RequestMapping("/")
+    public String mainIndex(Model model) {
+        model.addAttribute("comingSoonList", movieService.getMoviesComingSoon());
+        model.addAttribute("outNowList", movieService.getMoviesOutNow());
+        model.addAttribute("topBoxOfficeList", movieService.getTopBoxOffice());
+        model.addAttribute("certifiedFreshList", movieService.getCertifiedFresh());
+        return "index";
+    }
+
     @RequestMapping("/tv")
     public String tv(Model model) {
         return "tv";
