@@ -14,7 +14,7 @@ public interface TvService {
 
     void editCriticTvReview(TvReviewCritic TvReviewCritic);
 
-    void deleteCriticTvReview(TvReviewCritic TvReviewCritic);
+    void deleteCriticTvReview(int reviewId);
 
     void addUserTvReview(TvReviewUser TvReviewUser);
 

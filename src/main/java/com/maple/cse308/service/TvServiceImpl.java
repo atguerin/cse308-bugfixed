@@ -47,8 +47,8 @@ public class TvServiceImpl implements TvService {
     }
 
     @Override
-    public void deleteCriticTvReview(TvReviewCritic tvReviewCritic) {
-        tvReviewCriticRepository.delete(tvReviewCritic);
+    public void deleteCriticTvReview(int reviewId) {
+        tvReviewCriticRepository.deleteByReviewId(reviewId);
     }
 
     @Override

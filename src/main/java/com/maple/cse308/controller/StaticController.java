@@ -1,6 +1,7 @@
 package com.maple.cse308.controller;
 
 import com.maple.cse308.entity.*;
+import com.maple.cse308.repository.UserRepository;
 import com.maple.cse308.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -31,6 +31,8 @@ public class StaticController {
     private EmailServiceImpl emailService;
     @Autowired
     private ReportServiceImpl reportService;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @RequestMapping("/")
@@ -84,7 +86,7 @@ public class StaticController {
         List<Movie> movieList = movieService.findAllByTitleContainingIgnoreCase(search);
         model.addAttribute("search", search);
         model.addAttribute("movieList", movieList);
-        List<Movie> tvList = new ArrayList<>(); // We don't have TV data currently
+        List<TvShow> tvList = tvService.tvSearch(search);
         model.addAttribute("tvList", tvList);
         model.addAttribute("celebList", actorService.actorSearch(search));
         return "search";
@@ -101,7 +103,7 @@ public class StaticController {
     @GetMapping("/search/tv")
     public String searchTV(@RequestParam(value = "search") String search, Model model) {
         model.addAttribute("search", search);
-        List<Movie> tvList = new ArrayList<>(); // We don't have TV data currently
+        List<TvShow> tvList = tvService.tvSearch(search);
         model.addAttribute("tvList", tvList);
         return "search :: tvList";
     }
@@ -228,7 +230,9 @@ public class StaticController {
 
     @PostMapping("/deleteUser")
     public String deleteUser(@RequestParam(value = "id") int id, Model model) throws Exception {
+        User user = userRepository.findByUserId(id);
         reportService.deleteUserReport(id);
+        userService.deleteUser(user.getUsername());
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully deleted the user!");
         return "reports :: serverResponseModalContent";
@@ -237,6 +241,7 @@ public class StaticController {
     @PostMapping("/deleteMovieCriticReview")
     public String deleteMovieCriticReview(@RequestParam(value = "id") int id, Model model) throws Exception {
         reportService.deleteCriticMovieReport(id);
+        movieService.deleteUserMovieReview(id);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully deleted the review!");
         return "reports :: serverResponseModalContent";
@@ -245,6 +250,7 @@ public class StaticController {
     @PostMapping("/deleteMovieUserReview")
     public String deleteMovieUserReview(@RequestParam(value = "id") int id, Model model) throws Exception {
         reportService.deleteUserMovieReport(id);
+        movieService.deleteUserMovieReview(id);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully deleted the review!");
         return "reports :: serverResponseModalContent";
@@ -253,6 +259,7 @@ public class StaticController {
     @PostMapping("/deleteTvCriticReview")
     public String deleteTvCriticReview(@RequestParam(value = "id") int id, Model model) throws Exception {
         reportService.deleteCriticTvReport(id);
+        tvService.deleteCriticTvReview(id);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully deleted the review!");
         return "reports :: serverResponseModalContent";
@@ -261,6 +268,7 @@ public class StaticController {
     @PostMapping("/deleteTvUserReview")
     public String deleteTvUserReview(@RequestParam(value = "id") int id, Model model) throws Exception {
         reportService.deleteUserTvReport(id);
+        tvService.deleteUserTvReview(id);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully deleted the review!");
         return "reports :: serverResponseModalContent";

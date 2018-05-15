@@ -86,14 +86,14 @@
                                 <div th:if="${tvList.isEmpty()}" class="mt-3">
                                     No result.
                                 </div>
-                                <div th:each="movie,iterStat : ${tvList}" th:if="${iterStat.index<10}" class="media pt-3 border-bottom pb-3">
-                                    <a th:href="@{/movie_details(id=${movie.movieId})}">
-                                        <img th:src="@{${movie.poster}}" alt="..." class="search-list-poster"/>
+                                <div th:each="tv,iterStat : ${tvList}" th:if="${iterStat.index<10}" class="media pt-3 border-bottom pb-3">
+                                    <a th:href="@{/tv_details(id=${tv.tvId})}">
+                                        <img th:src="@{${tv.poster}}" alt="..." class="search-list-poster"/>
                                     </a>
-                                    <a th:href="@{/movie_details(id=${movie.movieId})}">
+                                    <a th:href="@{/movie_details(id=${tv.tvId})}">
                                         <p class="media-body pb-3 mb-0 small lh-125 ">
-                                            <strong th:text="|${movie.title} (${movie.getReleaseYear()})|" class="d-block text-gray">Title (2018)</strong>
-                                            <span th:text="|Score: ${movie.ratingAvg}|">Score</span>
+                                            <strong th:text="|${tv.title} (${tv.getReleaseYear()})|" class="d-block text-gray">Title (2018)</strong>
+                                            <span th:text="|Score: ${tv.rating}|">Score</span>
                                         </p>
                                     </a>
                                 </div>
@@ -160,14 +160,14 @@
                                 <div th:if="${tvList.isEmpty()}" class="mt-3">
                                     No result.
                                 </div>
-                                <div th:each="movie,iterStat : ${tvList}" th:if="${iterStat.index<30}" class="media pt-3 border-bottom pb-3">
-                                    <a th:href="@{/movie_details(id=${movie.movieId})}">
-                                        <img th:src="@{${movie.poster}}" alt="..." class="search-list-poster"/>
+                                <div th:each="tv,iterStat : ${tvList}" th:if="${iterStat.index<30}" class="media pt-3 border-bottom pb-3">
+                                    <a th:href="@{/tv_details(id=${tv.tvId})}">
+                                        <img th:src="@{${tv.poster}}" alt="..." class="search-list-poster"/>
                                     </a>
-                                    <a th:href="@{/movie_details(id=${movie.movieId})}">
+                                    <a th:href="@{/tv_details(id=${tv.tvId})}">
                                         <p class="media-body pb-3 mb-0 small lh-125 ">
-                                            <strong th:text="|${movie.title} (${movie.getReleaseYear()})|" class="d-block text-gray">Title (2018)</strong>
-                                            <span th:text="|Score: ${movie.ratingAvg}|">Score</span>
+                                            <strong th:text="|${tv.title} (${tv.getReleaseYear()})|" class="d-block text-gray">Title (2018)</strong>
+                                            <span th:text="|Score: ${tv.rating}|">Score</span>
                                         </p>
                                     </a>
                                 </div>
