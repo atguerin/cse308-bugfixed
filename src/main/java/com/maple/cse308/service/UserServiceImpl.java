@@ -350,12 +350,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addToWantToSeeList(Movie movie) throws Exception {
         User user = getCurrentUser();
-        if (!user.getDontWatchList().contains(movie)) {
+        boolean flag = false;
+        for(Movie mv: user.getDontWatchList()){
+            if(mv.getMovieId().intValue() == movie.getMovieId().intValue()){
+                flag = true;
+            }}
+        if(flag == false){
             user.getWatchList().add(movie);
             userRepository.save(user);
             updateUser();
-        } else {
-            throw new Exception("Error: Cannot add a movie that is already on your ignore list");
+        }else{
+            throw new Exception("Error: Cannot add a movie that is on your ignore list");
         }
     }
 
@@ -404,12 +409,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addToDontWantToSeeList(Movie movie) throws Exception {
         User user = getCurrentUser();
-        if (!user.getWatchList().contains(movie)) {
+        boolean flag = false;
+        for(Movie mv: user.getWatchList()){
+            if(mv.getMovieId().intValue() == movie.getMovieId().intValue()){
+                flag = true;
+            }}
+        if(flag == false){
             user.getDontWatchList().add(movie);
             userRepository.save(user);
             updateUser();
-        } else {
-            throw new Exception("Error: Cannot add a movie that is already on your watch list");
+        }else{
+            throw new Exception("Error: Cannot add a movie that is on your watch list");
         }
     }
 

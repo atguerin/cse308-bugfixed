@@ -100,7 +100,7 @@ public class MovieController {
     }
 
     @PostMapping("/postMovieReview")
-    public String postReview(@ModelAttribute MovieReviewUser reviewUser, Model model) throws Exception {
+    public String postReview(@ModelAttribute MovieReviewUser reviewUser, Model model){
         reviewUser.setUserId(userService.getCurrentUser().getUserId());
         movieService.addUserMovieReview(reviewUser);
         List<MovieReviewUser> mruList = movieService.getUserMovieReviewsByMovie(reviewUser.getMovieId());
@@ -117,14 +117,14 @@ public class MovieController {
         return "movie_details :: serverResponseModalContent";
     }
 
-    @GetMapping("/movies/cerified")
+    @GetMapping("/movies/certfied")
     public String moviesCertifiedFresh(Model model) {
         model.addAttribute("certifiedFresh", movieService.getCertifiedFresh());
         return "movies";
     }
 
     @PostMapping("/editMovieReview")
-    public String editReview(@ModelAttribute MovieReviewUser reviewUser, Model model) throws Exception {
+    public String editReview(@ModelAttribute MovieReviewUser reviewUser, Model model){
         int userId = userService.getCurrentUser().getUserId();
         MovieReviewUser review = movieService.getUserMovieReviewsByUserAndMovie(userId, reviewUser.getMovieId()).get(0);
         review.setRating(reviewUser.getRating());
@@ -178,25 +178,32 @@ public class MovieController {
     }
 
     @PostMapping("/movie/deleteFromWantToSeeList")
-    public String deleteFromWantToSeeList(@RequestParam(value = "id") int movieId, Model model) throws Exception {
+    public String deleteFromWantToSeeList(@RequestParam(value = "id") int movieId, Model model)  {
         Movie movie = movieService.getMovieDetails(movieId);
-        userService.removeFromWantToSeeList(movie);
+        try {
+            userService.removeFromWantToSeeList(movie);
+        } catch (Exception e) {
+
+        }
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully deleted from your Want To See List!");
         return "profile :: serverResponseModalContent";
     }
 
     @PostMapping("/movie/deleteFromNotInterestedList")
-    public String deleteFromNotInterestList(@RequestParam(value = "id") int movieId, Model model) throws Exception {
+    public String deleteFromNotInterestList(@RequestParam(value = "id") int movieId, Model model) {
         Movie movie = movieService.getMovieDetails(movieId);
-        userService.removeFromDontWantToSeeList(movie);
+        try {
+            userService.removeFromDontWantToSeeList(movie);
+        } catch (Exception e) {
+        }
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully deleted from your Not Interest List!");
         return "profile :: serverResponseModalContent";
     }
 
     @PostMapping("/movie/deleteMovieUserReview")
-    public String deleteMovieUserReview(@RequestParam(value = "id") int reviewId, Model model) throws Exception {
+    public String deleteMovieUserReview(@RequestParam(value = "id") int reviewId, Model model) {
         movieService.deleteUserMovieReview(reviewId);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully deleted your review!");
@@ -246,7 +253,7 @@ public class MovieController {
 
 
     @PostMapping("/movie/reportUserReview")
-    public String reportMovieUserReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) throws Exception {
+    public String reportMovieUserReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model)  {
         reportService.addUserMovieReport(reviewId, reason);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully reported the user review!");
@@ -254,7 +261,7 @@ public class MovieController {
     }
 
     @PostMapping("/movie/reportCriticReview")
-    public String reportMovieCriticReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) throws Exception {
+    public String reportMovieCriticReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) {
         reportService.addCriticMovieReport(reviewId, reason);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully reported the critic review!");
