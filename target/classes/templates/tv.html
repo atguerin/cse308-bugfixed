@@ -1,0 +1,235 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="Content-Type" content="text/html"/>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="../../css/my_style.css" th:href="@{/css/my_style.css}"/>
+    <link rel="stylesheet" href="../../fonts/ionicons.min.css" th:href="@{/fonts/ionicons.min.css}"/>
+    <link rel="stylesheet" href="../../css/Footer-Clean.css" th:href="@{/css/Footer-Clean.css}"/>
+
+    <title>TV</title>
+</head>
+
+
+<body>
+<!-- Navbar -->
+<div sec:authorize="isAnonymous()"><div th:replace="fragments/navbar">Navbar</div></div>
+<div sec:authorize="hasRole('ROLE_USER')"><div th:replace="fragments/user_navbar">Navbar</div></div>
+<div sec:authorize="hasRole('ROLE_CRITIC')"><div th:replace="fragments/user_navbar">Navbar</div></div>
+<div sec:authorize="hasRole('ROLE_ADMIN')"><div th:replace="fragments/admin_navbar">Navbar</div></div>
+
+
+<!-- Details body -->
+<div class="container">
+    <!-- Side navbar -->
+    <div class="row">
+        <div class="col-lg-4 mb-3">
+            <div class="jumbotron-side">
+                <h6><strong>TV</strong></h6>
+                <nav class="nav flex-column w-100">
+                    <a class="nav-link active text-white" href="#">New TV Tonight</a>
+                    <a class="nav-link text-white" href="#">Most Popular TV</a>
+                </nav>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <!-- search options bar -->
+            <h5><strong>NEW TV TONIGHT</strong></h5>
+            <div class="row sort-option mt-4">
+                <div class="col-auto mr-auto"><input type="range"/></div>
+                <div class="col-auto">
+                    <div class="dropdown">
+                        <div class="d-flex">
+                            <strong class="mr-1">Sorted by:</strong>
+                            <div id="sortby"><!-- sort by option-->option</div>
+                        </div>
+                        <div class="dropdown-content">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" th:checked="true"/>
+                                <label class="form-check-label" for="exampleRadios1">
+                                    Default radio
+                                </label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2"/>
+                                <label class="form-check-label" for="exampleRadios2">
+                                    Second default radio
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- populated results -->
+            <div class="row justify-content-center mt-4">
+                <div class="search-result-container">
+                    <div class="search-result-small">
+                        <div class="search-result-small-poster-container">
+                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster3.jpg"/></a>
+                        </div>
+                        <div class="flex-colums text-center">
+                            <div class="search-result-text">
+                                TV title
+                            </div>
+                            <div class="search-result-text">
+                                50%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-result-small">
+                        <div class="search-result-small-poster-container">
+                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster4.jpg"/></a>
+                        </div>
+                        <div class="flex-colums text-center">
+                            <div class="search-result-text">
+                                TV title
+                            </div>
+                            <div class="search-result-text">
+                                50%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-result-small">
+                        <div class="search-result-small-poster-container">
+                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster5.jpg"/></a>
+                        </div>
+                        <div class="flex-colums text-center">
+                            <div class="search-result-text">
+                                TV title
+                            </div>
+                            <div class="search-result-text">
+                                50%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-result-small">
+                        <div class="search-result-small-poster-container">
+                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster6.jpg"/></a>
+                        </div>
+                        <div class="flex-colums text-center">
+                            <div class="search-result-text">
+                                TV title
+                            </div>
+                            <div class="search-result-text">
+                                50%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-result-small">
+                        <div class="search-result-small-poster-container">
+                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster7.jpg"/></a>
+                        </div>
+                        <div class="flex-colums text-center">
+                            <div class="search-result-text">
+                                TV title
+                            </div>
+                            <div class="search-result-text">
+                                50%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-result-small">
+                        <div class="search-result-small-poster-container">
+                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster8.jpg"/></a>
+                        </div>
+                        <div class="flex-colums text-center">
+                            <div class="search-result-text">
+                                TV title
+                            </div>
+                            <div class="search-result-text">
+                                50%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-result-small">
+                        <div class="search-result-small-poster-container">
+                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster9.jpg"/></a>
+                        </div>
+                        <div class="flex-colums text-center">
+                            <div class="search-result-text">
+                                TV title
+                            </div>
+                            <div class="search-result-text">
+                                50%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-result-small">
+                        <div class="search-result-small-poster-container">
+                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster1.jpg"/></a>
+                        </div>
+                        <div class="flex-colums text-center">
+                            <div class="search-result-text">
+                                TV title
+                            </div>
+                            <div class="search-result-text">
+                                50%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-result-small">
+                        <div class="search-result-small-poster-container">
+                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster2.jpg"/></a>
+                        </div>
+                        <div class="flex-colums text-center">
+                            <div class="search-result-text">
+                                TV title
+                            </div>
+                            <div class="search-result-text">
+                                50%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-result-small">
+                        <div class="search-result-small-poster-container">
+                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster6.jpg"/></a>
+                        </div>
+                        <div class="flex-colums text-center">
+                            <div class="search-result-text">
+                                TV title
+                            </div>
+                            <div class="search-result-text">
+                                50%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-result-small">
+                        <div class="search-result-small-poster-container">
+                            <a th:href="@{/tv_details}"><img class="search-result-small-poster" alt="poster" src="img/poster3.jpg"/></a>
+                        </div>
+                        <div class="flex-colums text-center">
+                            <div class="search-result-text">
+                                TV title
+                            </div>
+                            <div class="search-result-text">
+                                50%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- footer -->
+<div th:replace="fragments/footer">Navbar</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="../../js/jquery-3.3.1.min.js" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+<script src="../../js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
+<script src="../../js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+</body>
+</html>
