@@ -282,9 +282,9 @@
                                    placeholder="group"/>
                         </div>
                         <div class="form-group">
-                            <label for="publication">Publication</label>
-                            <input type="text" name="publication" class="form-control" id="publication"
-                                   placeholder="publication"/>
+                            <label for="publications">Publication</label>
+                            <input type="text" name="publications" class="form-control" id="publications"
+                                   placeholder="publications"/>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -368,7 +368,7 @@
             $.ajax({
                 method: "POST",
                 url: "/changePhoto",
-                data: $('#photoForm').serialize(),
+                data: $('#PhotoForm').serialize(),
                 success: function(data){
                     $('#photoSettingContent').replaceWith(data);
                 }

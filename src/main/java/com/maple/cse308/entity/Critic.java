@@ -30,7 +30,7 @@ public class Critic {
     @Column(name = "publication")
     private String publication;
 
-    @Column(name = "group")
+    @Column(name = "critic_group")
     private String group;
 
     @Column(name = "photo")

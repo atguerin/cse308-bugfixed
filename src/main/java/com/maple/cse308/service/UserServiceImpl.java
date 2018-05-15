@@ -243,7 +243,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    public void criticApplication(String website, String group, String publication) {
+    public void criticApplication(String website, String groups, String publications) {
 
         User user = getCurrentUser();
         user.setRoles(roleRepository.findByRole("ROLE_CRITIC"));
@@ -255,8 +255,8 @@ public class UserServiceImpl implements UserService {
         critic.setLastName(user.getLastName());
         critic.setPhoto(user.getPhoto());
         critic.setWebsite(website);
-        critic.setPublication(publication);
-        critic.setGroup(group);
+        critic.setPublication(publications);
+        critic.setGroup(groups);
         userRepository.save(user);
         criticRepository.save(critic);
     }
