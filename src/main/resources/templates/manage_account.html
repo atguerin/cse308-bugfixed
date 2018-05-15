@@ -38,6 +38,11 @@
                 <p>Edit your hometown</p>
             </div>
             <div class="account-settings-block">
+                <strong class="mr-2">Photo</strong>
+                <a href="#" data-toggle="modal" data-target="#photoSetting">Edit</a>
+                <p>Edit your Avatar</p>
+            </div>
+            <div class="account-settings-block">
                 <strong class="mr-2">Biography</strong>
                 <a href="#" data-toggle="modal" data-target="#bioSetting">Edit</a>
                 <p>Edit your biographical information.</p>
@@ -92,6 +97,33 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button id="hometownButton" type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="photoSetting" tabindex="-1" role="dialog" aria-labelledby="photoModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div th:fragment="photoSetting" id="photoSettingContent" class="modal-content dark-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">Photo Setting</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form th:action="@{/changePhoto}" method="post" id="PhotoForm">
+                    <div class="modal-body">
+                        <span class="response" th:text="${response}"></span>
+                        <div class="form-group">
+                            <label>Photo</label>
+                            <input type="text" name="photo" class="form-control" id="photo" th:value="${user.photo}?:''"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="photoButton" type="button" class="btn btn-primary">Save changes</button>
                     </div>
                 </form>
             </div>
@@ -239,7 +271,21 @@
                 <form th:action="@{/applyCritic}" method="post" id="applyCriticForm">
                     <div class="modal-body">
                         <span class="response" th:text="${response}"></span>
-                        <label>Do you want to button your application?</label>
+                        <div class="form-group">
+                            <label for="website">Website</label>
+                            <input type="text" name="website" class="form-control" id="website"
+                                   placeholder="www.yourwebsite.com"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="group">Group</label>
+                            <input type="text" name="groups" class="form-control" id="group"
+                                   placeholder="group"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="publication">Publication</label>
+                            <input type="text" name="publication" class="form-control" id="publication"
+                                   placeholder="publication"/>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -313,6 +359,18 @@
                 data: $('#hometownForm').serialize(),
                 success: function(data){
                     $('#hometownSettingContent').replaceWith(data);
+                }
+            });
+        });
+
+        $(document).on("click", "#photoButton", function () {
+            $('.response').text('');
+            $.ajax({
+                method: "POST",
+                url: "/changePhoto",
+                data: $('#photoForm').serialize(),
+                success: function(data){
+                    $('#photoSettingContent').replaceWith(data);
                 }
             });
         });

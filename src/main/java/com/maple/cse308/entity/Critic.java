@@ -1,15 +1,13 @@
 package com.maple.cse308.entity;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "Critic")
 public class Critic {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "criticId")
     private Integer criticId;
 
@@ -29,19 +27,17 @@ public class Critic {
     @Column(name = "website")
     private String website;
 
+    @Column(name = "publication")
+    private String publication;
+
+    @Column(name = "group")
+    private String group;
+
     @Column(name = "photo")
     private String photo;
 
     @Column(name = "topCritic")
-    private Boolean isTopCritic;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "criticId")
-    private Set<Publications> publishers = new HashSet();
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "criticGroupsTable", joinColumns = @JoinColumn(name = "criticId"), inverseJoinColumns = @JoinColumn(name = "groupId"))
-    private Set<Groups> groups;
+    private Boolean isTopCritic = false;
 
     public Integer getCriticId() {
         return criticId;
@@ -91,22 +87,6 @@ public class Critic {
         this.website = website;
     }
 
-    public Set<Publications> getPublisher() {
-        return publishers;
-    }
-
-    public void setPublishers(Set<Publications> publishers) {
-        this.publishers = publishers;
-    }
-
-    public Set<Groups> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(Set<Groups> groups) {
-        this.groups = groups;
-    }
-
     public Boolean getIsTopCritic() {
         return this.isTopCritic;
     }
@@ -123,4 +103,27 @@ public class Critic {
         this.photo = photo;
     }
 
+    public Boolean getTopCritic() {
+        return isTopCritic;
+    }
+
+    public void setTopCritic(Boolean topCritic) {
+        isTopCritic = topCritic;
+    }
+
+    public String getPublication() {
+        return publication;
+    }
+
+    public void setPublication(String publication) {
+        this.publication = publication;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
 }

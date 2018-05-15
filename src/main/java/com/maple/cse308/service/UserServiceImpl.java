@@ -243,12 +243,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    //No criteria for top critic
-    //Criteria to reject application?
-    //How to allow user to add multiple group?
-    //How to allow user to add multiple publications?
-    //Setting this up for administrator to approve or not approve?
-    /*public void criticApplication(String website, Set<Groups> groups, Set<Publications> publications) throws Exception {
+    public void criticApplication(String website, String group, String publication) {
 
         User user = getCurrentUser();
         user.setRoles(roleRepository.findByRole("ROLE_CRITIC"));
@@ -260,43 +255,9 @@ public class UserServiceImpl implements UserService {
         critic.setLastName(user.getLastName());
         critic.setPhoto(user.getPhoto());
         critic.setWebsite(website);
-        critic.setGroups(groups);
-        critic.setPublishers(publications);
-        criticRepository.save(critic);
-    }*/
-
-    public void criticApplication(String website, String groups, String publications) throws Exception {
-
-        User user = getCurrentUser();
-        user.setRoles(roleRepository.findByRole("ROLE_CRITIC"));
-        updateUser();
-        Critic critic = new Critic();
-        critic.setUser(user);
-        critic.setFirstName(user.getFirstName());
-        critic.setMiddleName(user.getMiddleName());
-        critic.setLastName(user.getLastName());
-        critic.setPhoto(user.getPhoto());
-        critic.setWebsite(website);
-
-        List<String> groupList = new ArrayList<String>(Arrays.asList(groups.split("\\s*,\\s*")));
-        List<String> publicationList = new ArrayList<String>(Arrays.asList(publications.split("\\s*,\\s*")));
-
-        Set<Publications> publisher = new HashSet<>();
-        Set<Groups> group = new HashSet<>();
-
-        for (int i = 0; i < publicationList.indexOf(i); i++) {
-            Publications pub = new Publications();
-            pub.setPublication(publicationList.get(i));
-            publisher.add(pub);
-        }
-
-        for (int i = 0; i < groupList.indexOf(i); i++) {
-            Groups grp = new Groups();
-            grp.setGroupName(groupList.get(i));
-            group.add(grp);
-        }
-        critic.setGroups(group);
-        critic.setPublishers(publisher);
+        critic.setPublication(publication);
+        critic.setGroup(group);
+        userRepository.save(user);
         criticRepository.save(critic);
     }
 
