@@ -75,6 +75,9 @@ public class StaticController {
 
         List<TvReviewUser> tvReviews = tvService.getUserTvReviewsByUser(user.getUserId());
         model.addAttribute("tvReviews", tvReviews);
+
+        model.addAttribute("followers", userService.getFollowers());
+        model.addAttribute("following", userService.getFollowing());
         //model.addAttribute("blockList", userService.getBlockList(user.getUserId()));
         return "profile";
     }

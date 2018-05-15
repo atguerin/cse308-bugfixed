@@ -69,6 +69,21 @@
                             bio
                         </p>
                     </div>
+                    <strong class="mt-2">FOLLOWERS</strong>
+                    <div>
+                        <p th:text="'- '+ ${followers.size()}?:'0'" style="word-wrap: break-word;">
+                            0
+                        </p>
+                    </div>
+                    <strong class="mt-2">FOLLOWING</strong>
+                    <div>
+                        <p th:text="'- '+ ${following.size()}?:'0'" style="word-wrap: break-word;">
+                            0
+                        </p>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-outline-dark">Follow</button>
+                    </div>
                 </div>
             </div>
         </div>

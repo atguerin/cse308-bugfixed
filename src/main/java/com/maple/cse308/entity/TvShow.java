@@ -143,4 +143,36 @@ public class TvShow {
     public void setTvScreenshots(Set<TvScreenshot> tvScreenshots) {
         this.tvScreenshots = tvScreenshots;
     }
+
+    public void setRating(Float rating) {
+        this.rating = rating;
+    }
+
+    public void setCriticReviews(Set<TvReviewCritic> criticReviews) {
+        this.criticReviews = criticReviews;
+    }
+
+    public Set<TvReviewUser> getUserReviews() {
+        return userReviews;
+    }
+
+    public void setUserReviews(Set<TvReviewUser> userReviews) {
+        this.userReviews = userReviews;
+    }
+
+    public Set<User> getUsersWatchTV() {
+        return usersWatchTV;
+    }
+
+    public void setUsersWatchTV(Set<User> usersWatchTV) {
+        this.usersWatchTV = usersWatchTV;
+    }
+
+    public Set<User> getUsersDontWatchTV() {
+        return usersDontWatchTV;
+    }
+
+    public void setUsersDontWatchTV(Set<User> usersDontWatchTV) {
+        this.usersDontWatchTV = usersDontWatchTV;
+    }
 }

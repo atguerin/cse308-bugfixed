@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
         if (confirmCurrentRole("ROLE_USER")) {
             Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
             for (MovieReviewUser movieReviewUser : movieReviewUsers) {
-                movieReviewUserRepository.delete(movieReviewUser);
+                movieReviewUserRepository.deleteByReviewId(movieReviewUser.getReviewId());
             }
       /*  Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
         for (TvReviewUser tvReviewUser : tvReviewUsers) {
@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
             Critic critic = criticRepository.findByUser(user);
             Set<MovieReviewCritic> movieReviewCritics = movieReviewCriticRepository.findAllByCriticId(critic.getCriticId());
             for (MovieReviewCritic movieReviewCritic : movieReviewCritics) {
-                movieReviewCriticRepository.delete(movieReviewCritic);
+                movieReviewCriticRepository.deleteByReviewId(movieReviewCritic.getReviewId());
             }
       /*  Set<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByCriticId(critic.getCriticId());
         for (TvReviewCritic tvReviewCritic : tvReviewCritics) {
@@ -166,26 +166,29 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(String username) {
 
         User user = findByUsername(username);
-        if (user.getRoles().contains("ROLE_USER")) {
+        Set<Role> roles = user.getRoles();
+        roles.forEach(role->{
+        if (role.getRole().equals("ROLE_USER")) {
             Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
             for (MovieReviewUser movieReviewUser : movieReviewUsers) {
-                movieReviewUserRepository.delete(movieReviewUser);
+                movieReviewUserRepository.deleteByReviewId(movieReviewUser.getReviewId());
             }
             /*  Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
                 for (TvReviewUser tvReviewUser : tvReviewUsers) {
                     tvReviewUserRepository.delete(tvReviewUser);
                 }*/
-        } else if (user.getRoles().contains("ROLE_CRITIC")) {
+        } else if (role.getRole().equals("ROLE_CRITIC")) {
             Critic critic = criticRepository.findByUser(user);
             Set<MovieReviewCritic> movieReviewCritics = movieReviewCriticRepository.findAllByCriticId(critic.getCriticId());
             for (MovieReviewCritic movieReviewCritic : movieReviewCritics) {
-                movieReviewCriticRepository.delete(movieReviewCritic);
+                movieReviewCriticRepository.deleteByReviewId(movieReviewCritic.getReviewId());
             }
                 /* Set<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByCriticId(critic.getCriticId());
                 for (TvReviewCritic tvReviewCritic : tvReviewCritics) {
                 tvReviewCriticRepository.delete(tvReviewUser);
                 }*/
         }
+        });
         userRepository.delete(user);
     }
 

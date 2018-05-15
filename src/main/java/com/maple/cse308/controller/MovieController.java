@@ -103,17 +103,8 @@ public class MovieController {
     public String postReview(@ModelAttribute MovieReviewUser reviewUser, Model model) throws Exception {
         reviewUser.setUserId(userService.getCurrentUser().getUserId());
         movieService.addUserMovieReview(reviewUser);
-        List<MovieReviewUser> mruList = movieService.getUserMovieReviewsByMovie(reviewUser.getMovieId());
-        Float userRating = 0F;
-        for(MovieReviewUser mru : mruList){
-            if(mru.getRating() != null) {
-                userRating += mru.getRating();
-            }
-        }
-        userRating = mruList.size() > 0 ? userRating/mruList.size() : 0F;
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully posted your review!");
-        model.addAttribute("userRating", userRating);
         return "movie_details :: serverResponseModalContent";
     }
 
@@ -146,8 +137,26 @@ public class MovieController {
     @GetMapping("/movie/reviews")
     public String updateMovieReviews(@RequestParam(value = "movieId") int movieId, Model model) {
         model.addAttribute("movie", movieService.getMovieDetails(movieId));
+        List<MovieReviewCritic> mrcList = movieService.getCriticMovieReviewsByMovie(movieId);
+        Float criticRating = 0F;
+        for(MovieReviewCritic mrc : mrcList){
+            if(mrc.getRating() != null) {
+                criticRating += mrc.getRating();
+            }
+        }
+        criticRating = mrcList.size() > 0 ? criticRating/mrcList.size() : 0F;
+        List<MovieReviewUser> mruList = movieService.getUserMovieReviewsByMovie(movieId);
+        Float userRating = 0F;
+        for(MovieReviewUser mru : mruList){
+            if(mru.getRating() != null) {
+                userRating += mru.getRating();
+            }
+        }
+        userRating = mruList.size() > 0 ? userRating/mruList.size() : 0F;
         model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(movieId));
         model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(movieId));
+        model.addAttribute("criticRating", criticRating);
+        model.addAttribute("userRating", userRating);
         return "movie_details :: reviews";
     }
 
