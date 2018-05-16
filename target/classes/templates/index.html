@@ -27,6 +27,7 @@
     <div sec:authorize="hasRole('ROLE_ADMIN')"><div th:replace="fragments/admin_navbar">Navbar</div></div>
 
     <!-- Top carousel -->
+    <div class="container">
     <div id="top_carousel" class="carousel slide" data-ride="carousel">
       <ol class="carousel-indicators">
           <li data-target="#top_carousel" data-slide-to="0" class="active"></li>
@@ -61,6 +62,7 @@
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
           <span class="sr-only">Next</span>
       </a>
+    </div>
     </div>
 
     <!-- Lists -->
