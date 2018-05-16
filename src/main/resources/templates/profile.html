@@ -37,7 +37,7 @@
             <div class="jumbotron-side">
                 <div class="nav flex-column justify-content-center">
                     <div class="profile-thumbnail-container">
-                        <img class="profile-thumbnail-img" src="img/default.gif" alt="Profile img"/>
+                        <img class="profile-thumbnail-img" th:src="@{(${user.photo}?: '/img/default.gif')}" alt="Profile img"/>
                     </div>
                     <strong class="mt-2">User Name</strong>
                     <div th:text="'- '+ ${user.username}">

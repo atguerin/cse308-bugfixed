@@ -1,8 +1,6 @@
 package com.maple.cse308.service;
 
-import com.maple.cse308.entity.TvReviewCritic;
-import com.maple.cse308.entity.TvReviewUser;
-import com.maple.cse308.entity.TvShow;
+import com.maple.cse308.entity.*;
 
 import java.util.List;
 
@@ -34,4 +32,15 @@ public interface TvService {
 
     List<TvShow> tvSearch(String search);
 
+    List<TvShow> getOpenThisWeek();
+
+    List<TvShow> getPopularTv();
+
+    List<TvScreenshot> getTvScreenshots(int id);
+
+    List<TvActor> getTvActors(int id);
+
+    List<Creator> getTvCreator(int id);
+
+    List<TvReviewUser> getUserTvReviewsByUserAndTv(int userId, int tvId);
 }

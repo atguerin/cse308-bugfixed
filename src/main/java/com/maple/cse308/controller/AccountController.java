@@ -65,11 +65,7 @@ public class AccountController {
 
     @PostMapping("/changePhoto")
     public String changePhoto(@RequestParam String photo, Model model) {
-        try {
             userService.changePhoto(photo);
-        } catch (Exception e) {
-            return "manage_account";
-        }
         model.addAttribute("user", userService.getCurrentUser());
         model.addAttribute("response", "Changes are saved!");
         return "manage_account :: photoSetting";
@@ -92,7 +88,9 @@ public class AccountController {
         try {
             userService.changeHomeTown(hometown);
         } catch (Exception e) {
-            return "manage_account";
+            model.addAttribute("user", userService.getCurrentUser());
+            model.addAttribute("response", "Warning: You have entered illegal characters");
+            return "manage_account :: hometownSetting";
         }
         model.addAttribute("user", userService.getCurrentUser());
         model.addAttribute("response", "Changes are saved!");
@@ -104,20 +102,38 @@ public class AccountController {
         try {
             userService.changeBio(bio);
         } catch (Exception e) {
-            return "manage_account";
+            model.addAttribute("user", userService.getCurrentUser());
+            model.addAttribute("response", "Warning: You have exceeded the maximum length");
+            return "manage_account :: bioSetting";
         }
         model.addAttribute("user", userService.getCurrentUser());
         model.addAttribute("response", "Changes are saved!");
         return "manage_account :: bioSetting";
     }
 
+
+    @PostMapping("/changeEmail")
+    public String changeEmail(@RequestParam String newEmail, @RequestParam String myPassword, Model model) {
+        try {
+            userService.changeEmail(newEmail, myPassword);
+        } catch (Exception e) {
+            model.addAttribute("user", userService.getCurrentUser());
+            model.addAttribute("response", "Warning: You have entered an incorrect password");
+            return "manage_account :: emailSetting";
+        }
+        model.addAttribute("user", userService.getCurrentUser());
+        model.addAttribute("response", "Changes are saved!");
+        return "manage_account :: emailSetting";
+    }
+
     @PostMapping("/changePassword")
     public String changePassword(@RequestParam String oldPassword, @RequestParam String newPassword, Model model) {
-        User user = userService.getCurrentUser();
         try {
             userService.changePassword(oldPassword, newPassword);
         } catch (Exception e) {
-            return "manage_account";
+            model.addAttribute("user", userService.getCurrentUser());
+            model.addAttribute("response", "Warning: You have entered an incorrect password");
+            return "manage_account :: passwordSetting";
         }
         model.addAttribute("user", userService.getCurrentUser());
         model.addAttribute("response", "Changes are saved!");
@@ -129,7 +145,9 @@ public class AccountController {
         try {
             userService.changeCountry(country);
         } catch (Exception e) {
-            return "manage_account";
+            model.addAttribute("user", userService.getCurrentUser());
+            model.addAttribute("response", "Warning: You have entered illegal characters");
+            return "manage_account :: changeCountry";
         }
         model.addAttribute("user", userService.getCurrentUser());
         model.addAttribute("response", "Changes are saved!");

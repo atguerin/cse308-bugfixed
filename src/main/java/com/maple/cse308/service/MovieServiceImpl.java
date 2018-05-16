@@ -6,10 +6,9 @@ import com.maple.cse308.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.sql.Date;
 import java.util.*;
 
 
@@ -77,7 +76,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<Movie> getMoviesComingSoon() {
         Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-        List<Movie> movies = movieRepository.findTop10ByReleaseDateAfter(date);
+        List<Movie> movies = movieRepository.findTop12ByReleaseDateAfter(date);
         movies.sort(Comparator.comparing(Movie::getReleaseDate));
         return movies;
     }
@@ -85,7 +84,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<Movie> getMoviesOutNow() {
         Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-        List<Movie> movies = movieRepository.findTop10OrderByReleaseDateLessThanDesc(date);
+        List<Movie> movies = movieRepository.findTop12OrderByReleaseDateLessThanDesc(date);
         movies.sort(Comparator.comparing(Movie::getReleaseDate)
                 .reversed());
         return movies;
@@ -98,7 +97,7 @@ public class MovieServiceImpl implements MovieService {
         List<Movie> movies = movieRepository.findTop40OrderByReleaseDateLessThanDesc(date);
         movies.sort(Comparator.comparingInt(Movie::getRevenueUnformatted)
                 .reversed());
-        movies = movies.subList(0,10);
+        movies = movies.subList(0,12);
         return movies;
     }
     @Override
@@ -176,14 +175,17 @@ public class MovieServiceImpl implements MovieService {
         return highestRated;
     }
 
+    @Override
     public List<MovieScreenshot> getMovieScreenShots(int movieId) {
         return movieScreenshotRepository.findAllByMovieId(movieId);
     }
 
+    @Override
     public List<MovieTrailer> getMovieTrailers(int movieId) {
         return movieTrailerRepository.findAllByMovieId(movieId);
     }
 
+    @Override
     public List<MovieActor> getMovieActors(int movieId) {
         return movieActorRepository.findAllByMovieId(movieId);
     }
@@ -203,7 +205,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<Movie> movieAdvancedSearch(String search, String[] genre, String start, String end) throws ParseException {
-        //String needs to be parsed, and removed for duplcates.
+        //String needs to be parsed, and removed for duplicates.
         String[] searchString;
         if (search.contains(" ")) {
             searchString = search.split(" ");

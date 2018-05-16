@@ -61,9 +61,9 @@ public class User {
     @JoinTable(name = "UserRole", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "roleId"))
     private Set<Role> roles;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    /*@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "UserUser", joinColumns = @JoinColumn(name = "userId1"), inverseJoinColumns = @JoinColumn(name = "userId2"))
-    private Set<User> blocklist;
+    private Set<User> blocklist;*/
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinTable(name = "WatchList", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "movieId"))
@@ -204,13 +204,13 @@ public class User {
         this.visibility = visibility;
     }
 
-    public Set<User> getBlocklist() {
+  /*  public Set<User> getBlocklist() {
         return blocklist;
     }
 
     public void setBlocklist(Set<User> blocklist) {
         this.blocklist = blocklist;
-    }
+    }*/
 
     public Set<Movie> getWatchList() {
         return watchList;

@@ -89,7 +89,7 @@
                             </form>
                         </div>
 
-                        <form th:action="@{/postMovieReview}" method="post" class="w-100" id="postReviewForm">
+                        <form th:action="@{/postMovieReview}" method="post" class="w-100" id="postReviewForm" th:fragment="reviewForm">
                             <input name="movieId" type="hidden" th:value="${movie.movieId}"/>
                             <input name="rating" id="rating" class="rating rating-loading" th:value="${review}?${review.rating}:'0'" data-min="0" data-size="xxs"/>
                             <textarea name="review" class="form-control" id="review" rows="3" style="resize: none;" th:text="${review}?${review.review}:''"></textarea>
