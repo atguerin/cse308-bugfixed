@@ -39,9 +39,16 @@
                     <div class="profile-thumbnail-container">
                         <img class="profile-thumbnail-img" th:src="@{(${user.photo}?: '/img/default.gif')}" alt="Profile img"/>
                     </div>
-                    <strong class="mt-2">User Name</strong>
+                    <strong class="mt-2">USERNAME</strong>
                     <div class="ml-3" th:text="${user.username}">
                         username
+                    </div>
+                    <strong class="mt-2">STATUS</strong>
+                    <div class="ml-3" sec:authorize="hasRole('ROLE_USER')">
+                        User
+                    </div>
+                    <div class="ml-3" sec:authorize="hasRole('ROLE_CRITIC')">
+                        Critic
                     </div>
                     <strong class="mt-2">FIRST NAME</strong>
                     <div class="ml-3" th:text="${user.firstName}">
