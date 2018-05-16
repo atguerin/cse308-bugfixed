@@ -151,26 +151,28 @@ public class UserServiceImpl implements UserService {
     public void deleteUser() {
         User user = getCurrentUser();
 
-        if (confirmCurrentRole("ROLE_USER")) {
-            Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
-            for (MovieReviewUser movieReviewUser : movieReviewUsers) {
-                movieReviewUserRepository.delete(movieReviewUser);
+        user.getRoles().forEach(role-> {
+            if (role.getRole().equals("ROLE_USER")) {
+                Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
+                for (MovieReviewUser movieReviewUser : movieReviewUsers) {
+                    movieReviewUserRepository.delete(movieReviewUser);
+                }
+            /*  Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
+                for (TvReviewUser tvReviewUser : tvReviewUsers) {
+                    tvReviewUserRepository.delete(tvReviewUser);
+                }*/
+            } else if (role.getRole().equals("ROLE_CRITIC")) {
+                Critic critic = criticRepository.findByUser(user);
+                Set<MovieReviewCritic> movieReviewCritics = movieReviewCriticRepository.findAllByCriticId(critic.getCriticId());
+                for (MovieReviewCritic movieReviewCritic : movieReviewCritics) {
+                    movieReviewCriticRepository.delete(movieReviewCritic);
+                }
+                /* Set<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByCriticId(critic.getCriticId());
+                for (TvReviewCritic tvReviewCritic : tvReviewCritics) {
+                tvReviewCriticRepository.delete(tvReviewUser);
+                }*/
             }
-      /*  Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
-        for (TvReviewUser tvReviewUser : tvReviewUsers) {
-            tvReviewUserRepository.delete(tvReviewUser);
-        }*/
-        } else if (confirmCurrentRole("ROLE_CRITIC")) {
-            Critic critic = criticRepository.findByUser(user);
-            Set<MovieReviewCritic> movieReviewCritics = movieReviewCriticRepository.findAllByCriticId(critic.getCriticId());
-            for (MovieReviewCritic movieReviewCritic : movieReviewCritics) {
-                movieReviewCriticRepository.delete(movieReviewCritic);
-            }
-      /*  Set<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByCriticId(critic.getCriticId());
-        for (TvReviewCritic tvReviewCritic : tvReviewCritics) {
-            tvReviewCriticRepository.delete(tvReviewUser);
-        }*/
-        }
+        });
         userRepository.delete(user);
     }
 
@@ -178,7 +180,8 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(String username) {
 
         User user = findByUsername(username);
-        if (user.getRoles().contains("ROLE_USER")) {
+        user.getRoles().forEach(role-> {
+        if (role.getRole().equals("ROLE_USER")) {
             Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
             for (MovieReviewUser movieReviewUser : movieReviewUsers) {
                 movieReviewUserRepository.delete(movieReviewUser);
@@ -187,7 +190,7 @@ public class UserServiceImpl implements UserService {
                 for (TvReviewUser tvReviewUser : tvReviewUsers) {
                     tvReviewUserRepository.delete(tvReviewUser);
                 }*/
-        } else if (user.getRoles().contains("ROLE_CRITIC")) {
+        } else if (role.getRole().equals("ROLE_CRITIC")) {
             Critic critic = criticRepository.findByUser(user);
             Set<MovieReviewCritic> movieReviewCritics = movieReviewCriticRepository.findAllByCriticId(critic.getCriticId());
             for (MovieReviewCritic movieReviewCritic : movieReviewCritics) {
@@ -198,6 +201,7 @@ public class UserServiceImpl implements UserService {
                 tvReviewCriticRepository.delete(tvReviewUser);
                 }*/
         }
+        });
         userRepository.delete(user);
     }
 

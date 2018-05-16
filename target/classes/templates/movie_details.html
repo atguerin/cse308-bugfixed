@@ -62,15 +62,18 @@
                     <div class="mb-1 text-muted" th:text="${movie.getReleaseYear()}">2018</div>
                     <div class="row w-100 ratings">
                         <div class="d-flex w-100">
-                            <div class="p-2">Critic Score:</div>
-                            <div class="p-2"><span class="ion-android-star">
-                                <span th:text="${criticRating}"></span></span>
+                            <div class="pt-2 pl-2 pb-2 pr-0">Critic Score:</div>
+                            <div class="pt-2 pr-0 pb-2 pl-1">
+                                <span th:if="${criticRating==0}" th:text="No scores yet."></span>
+                                <input th:unless="${criticRating==0}" class="rating rating-loading score p-0" th:value="${criticRating}" data-stars="5" data-min="0" data-max="5" data-size="xxxs" disabled=true data-show-clear="false" data-show-caption="false"/>
                             </div>
-                            <div class="ml-auto p-2">Audience Score: </div>
-                            <div class="p-2">
-                                <span class="ion-android-star"></span>
-                                <span th:text="${userRating}">0.0</span>
+                            <span class="pt-2 pr-1 pb-2 pl-0" th:unless="${criticRating==0}" th:text="${criticRating}"></span>
+                            <div class="ml-auto pt-2 pl-2 pb-2 pr-0">User Score:</div>
+                            <div class="pt-2 pr-0 pb-2 pl-1">
+                                <span th:if="${userRating==0}" th:text="No scores yet."></span>
+                                <input th:unless="${userRating==0}" class="rating rating-loading score p-0" th:value="${userRating}" data-stars="5" data-min="0" data-max="5" data-size="xxxs" disabled=true data-show-clear="false" data-show-caption="false"/>
                             </div>
+                            <span class="pt-2 pr-1 pb-2 pl-0" th:unless="${userRating==0}" th:text="${userRating}"></span>
                         </div>
                     </div>
                     <div class="d-flex w-100 mt-3 pl-3" >
@@ -259,11 +262,12 @@
                                         <span th:text="|${criticReview.critic.firstName} ${criticReview.critic.lastName}|">@User Name</span>
                                     </a>
                                 </div>
-                                <div class="ml-auto mr-1">Critic score:</div>
-                                <div class="mr-2">
-                                    <span th:text="${criticReview.rating==''?'no score':criticReview.rating}">score</span>
+                                <div class="ml-auto mr-1">Score:</div>
+                                <div class="d-flex">
+                                    <input class="rating rating-loading score p-0" th:value="${criticReview.rating}" data-stars="5" data-min="0" data-max="5" data-size="xxxs" disabled=true data-show-clear="false" data-show-caption="false"/>
+                                    <span th:text="${(criticReview.rating)?:'N/A'}" class="mr-2">score</span>
+                                    <a href="#" sec:authorize="isAuthenticated()" th:attr="data-id=${criticReview.reviewId}" class="report report-movie-user-review ion-alert-circled"></a>
                                 </div>
-                                <a href="#" sec:authorize="isAuthenticated()" th:attr="data-id=${criticReview.reviewId}" class="report report-movie-critic-review ion-alert-circled"></a>
                             </div>
                             <p class="media-body pb-3 mb-0 small lh-125 border-bottom w-100" th:text="${criticReview.review}">
                                 Review
