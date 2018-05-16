@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
+
     public void changeEmail(String newEmail, String myPassword) throws Exception {
         User user = getCurrentUser();
         if (passwordEncoder.matches(myPassword, user.getPassword())) {

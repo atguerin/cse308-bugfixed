@@ -97,7 +97,10 @@
                                     <div th:text="${movie.getTitle()}" class="search-result-text text-truncate p-1">
                                         Movie title
                                     </div>
-                                    <div th:text="${movie.getRatingAvg()}" class="search-result-text">
+                                    <div th:unless="${topbox}" th:text="${movie.getDateString()}" class="search-result-text">
+                                        no score
+                                    </div>
+                                    <div th:if="${topbox}" th:text="|$${movie.getRevenue()}|" class="search-result-text">
                                         no score
                                     </div>
                                 </div>
