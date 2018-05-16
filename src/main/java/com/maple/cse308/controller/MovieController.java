@@ -172,6 +172,8 @@ public class MovieController {
         criticRating = mrcList.size() > 0 ? criticRating/mrcList.size() : 0F;
         List<MovieReviewUser> mruList = movieService.getUserMovieReviewsByMovie(movieId);
         Float userRating = 0F;
+
+        DecimalFormat df = new DecimalFormat("#.#");
         for(MovieReviewUser mru : mruList){
             if(mru.getRating() != null) {
                 userRating += mru.getRating();
@@ -180,8 +182,8 @@ public class MovieController {
         userRating = mruList.size() > 0 ? userRating/mruList.size() : 0F;
         model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(movieId));
         model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(movieId));
-        model.addAttribute("criticRating", criticRating);
-        model.addAttribute("userRating", userRating);
+        model.addAttribute("criticRating", df.format(criticRating));
+        model.addAttribute("userRating", df.format(userRating));
         return "movie_details :: reviewForm";
     }
 
