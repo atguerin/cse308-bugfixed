@@ -101,6 +101,13 @@ public class MovieController {
         return "movies";
     }
 
+    @GetMapping("/movies/highest")
+    public String highestRated(Model model){
+        model.addAttribute("listType", "HIGHEST RATED");
+        model.addAttribute("selectedList", movieService.getAllTimeHighestRated());
+        return "movies";
+    }
+
     @PostMapping("/postMovieReview")
     public String postReview(@ModelAttribute MovieReviewUser reviewUser, Model model){
         User user = userService.getCurrentUser();

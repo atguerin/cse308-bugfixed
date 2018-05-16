@@ -41,7 +41,6 @@ public class StaticController {
         model.addAttribute("comingSoonList", movieService.getMoviesComingSoon());
         model.addAttribute("outNowList", movieService.getMoviesOutNow());
         model.addAttribute("topBoxOfficeList", movieService.getTopBoxOffice());
-        model.addAttribute("certifiedFreshList", movieService.getCertifiedFresh());
         return "index";
     }
 
