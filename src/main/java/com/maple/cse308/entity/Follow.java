@@ -12,11 +12,11 @@ public class Follow {
     @EmbeddedId
     private FollowIdentity followIdentity;
 
-    public FollowIdentity getFollowId() {
+    public FollowIdentity getFollowIdentity() {
         return followIdentity;
     }
 
-    public void setFollowId(FollowIdentity followIdentity) {
+    public void setFollowIdentity(FollowIdentity followIdentity) {
         this.followIdentity = followIdentity;
     }
 }

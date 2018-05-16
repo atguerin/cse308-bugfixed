@@ -11,7 +11,7 @@ import java.util.List;
 public interface FollowRepository extends CrudRepository<Follow, FollowIdentity>{
     Follow save(Follow follow);
     void delete(Follow follow);
-    List<FollowIdentity> findAllByFollowIdentityUserId(Integer userId);
-    List<FollowIdentity> findAllByFollowIdentityFollowingId(Integer userId);
+    List<Follow> findAllByFollowIdentityUserId(Integer userId);
+    List<Follow> findAllByFollowIdentityFollowingId(Integer userId);
     Follow findByFollowIdentity(FollowIdentity followIdentity);
 }

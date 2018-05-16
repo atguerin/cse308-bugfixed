@@ -576,7 +576,7 @@ public class UserServiceImpl implements UserService {
         Integer currentUserId = getCurrentUser().getUserId();
         FollowIdentity followId = new FollowIdentity(currentUserId, userId);
         Follow follow = new Follow();
-        follow.setFollowId(followId);
+        follow.setFollowIdentity(followId);
         followRepository.save(follow);
     }
 
@@ -587,22 +587,42 @@ public class UserServiceImpl implements UserService {
         followRepository.delete(follow);
     }
 
-    public List<User> getFollowing(){
+    public List<User> getProfileFollowing(){
         Integer userId = getCurrentUser().getUserId();
-        List<FollowIdentity> followIds = followRepository.findAllByFollowIdentityUserId(userId);
+        List<Follow> followList = followRepository.findAllByFollowIdentityUserId(userId);
         List<User> followingList = new LinkedList();
-        for(FollowIdentity followId : followIds){
-            followingList.add(userRepository.findByUserId(followId.getUserId()));
+        for(Follow follow : followList){
+            followingList.add(userRepository.findByUserId(follow.getFollowIdentity().getUserId()));
         }
         return followingList;
 
     }
-    public List<User> getFollowers(){
+    public List<User> getProfileFollowers(){
         Integer userId = getCurrentUser().getUserId();
-        List<FollowIdentity> followIds = followRepository.findAllByFollowIdentityFollowingId(userId);
+        List<Follow> followList = followRepository.findAllByFollowIdentityFollowingId(userId);
         List<User> followersList = new LinkedList();
-        for(FollowIdentity followId : followIds){
-            followersList.add(userRepository.findByUserId(followId.getUserId()));
+        for(Follow follow : followList){
+            followersList.add(userRepository.findByUserId(follow.getFollowIdentity().getUserId()));
+        }
+        return followersList;
+
+    }
+
+
+    public List<User> getUserFollowing(Integer userId){
+        List<Follow> followList = followRepository.findAllByFollowIdentityUserId(userId);
+        List<User> followingList = new LinkedList();
+        for(Follow follow : followList){
+            followingList.add(userRepository.findByUserId(follow.getFollowIdentity().getUserId()));
+        }
+        return followingList;
+
+    }
+    public List<User> getUserFollowers(Integer userId){
+        List<Follow> followList = followRepository.findAllByFollowIdentityFollowingId(userId);
+        List<User> followersList = new LinkedList();
+        for(Follow follow : followList){
+            followersList.add(userRepository.findByUserId(follow.getFollowIdentity().getUserId()));
         }
         return followersList;
 

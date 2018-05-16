@@ -131,6 +131,26 @@ public class MovieController {
         model.addAttribute("movie", movieService.getMovieDetails(movieId));
         int userId = userService.getCurrentUser().getUserId();
         model.addAttribute("review", movieService.getUserMovieReviewsByUserAndMovie(userId, movieId).get(0));
+        List<MovieReviewCritic> mrcList = movieService.getCriticMovieReviewsByMovie(movieId);
+        Float criticRating = 0F;
+        for(MovieReviewCritic mrc : mrcList){
+            if(mrc.getRating() != null) {
+                criticRating += mrc.getRating();
+            }
+        }
+        criticRating = mrcList.size() > 0 ? criticRating/mrcList.size() : 0F;
+        List<MovieReviewUser> mruList = movieService.getUserMovieReviewsByMovie(movieId);
+        Float userRating = 0F;
+        for(MovieReviewUser mru : mruList){
+            if(mru.getRating() != null) {
+                userRating += mru.getRating();
+            }
+        }
+        userRating = mruList.size() > 0 ? userRating/mruList.size() : 0F;
+        model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(movieId));
+        model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(movieId));
+        model.addAttribute("criticRating", criticRating);
+        model.addAttribute("userRating", userRating);
         return "movie_details :: reviewForm";
     }
 

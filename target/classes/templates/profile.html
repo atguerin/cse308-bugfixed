@@ -77,9 +77,6 @@
                             0
                         </p>
                     </div>
-                    <div>
-                        <button type="button" class="btn btn-outline-dark">Follow</button>
-                    </div>
                     <a class="mt-3" th:href="@{/manage_account}">Manage Account</a>
                 </div>
             </div>
@@ -96,6 +93,12 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="pills-reviews-tab" data-toggle="pill" href="#pills-reviews" role="tab" aria-controls="pills-reviews" aria-selected="false">Reviews</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-followers-tab" data-toggle="pill" href="#pills-followers" role="tab" aria-controls="pills-followers" aria-selected="false">Followers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-following-tab" data-toggle="pill" href="#pills-following" role="tab" aria-controls="pills-following" aria-selected="false">Following</a>
                 </li>
             </ul>
 
@@ -279,6 +282,45 @@
                             </div>
                         </div>
 
+                    </div>
+                </div>
+
+                <!-- Followers -->
+                <div class="tab-pane fade" id="pills-followers" role="tabpanel" aria-labelledby="pills-followers-tab">
+                    <div class="details-jumbotron pb-5">
+                        <div th:fragment="followers" th:each="follower,iterStat : ${followers}" class="media pt-3 border-bottom pb-3">
+                            <a th:href="@{/userInformation?(userName=${follower.username})}">
+                                <img th:if="${follower.photo != null}" th:src="@{${follower.photo}:img/default.gif}" alt="" class="ratings-list-poster"/>
+                                <img th:if="${follower.photo == null}" src="img/default.gif" alt="" class="ratings-list-poster"/>
+                            </a>
+                            <div class="media-body pb-3 mb-0 small lh-125 ">
+                                <div class="d-flex pr-2">
+                                    <a th:href="@{/userInformation?(userName=${follower.username})}" style="color: white;">
+                                        <strong th:text="${follower.username}" class="text-gray"></strong>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Following -->
+                <div class="tab-pane fade" id="pills-following" role="tabpanel" aria-labelledby="pills-following-tab">
+                    <div class="details-jumbotron pb-5">
+                        <div th:fragment="following" th:each="follower,iterStat : ${following}" class="media pt-3 border-bottom pb-3">
+                            <a th:href="@{/userInformation?(userName=${follower.username})}">
+                                <img th:if="${follower.photo != null}" th:src="@{${follower.photo}:img/default.gif}" alt="" class="ratings-list-poster"/>
+                                <img th:if="${follower.photo == null}" src="img/default.gif" alt="" class="ratings-list-poster"/>
+                            </a>
+                            <div class="media-body pb-3 mb-0 small lh-125 ">
+                                <div class="d-flex pr-2">
+                                    <a th:href="@{/userInformation?(userName=${follower.username})}" style="color: white;">
+                                        <strong th:text="${follower.username}" class="text-gray"></strong>
+                                    </a>
+                                    <strong th:text="${follower.username}" class="text-gray"></strong>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
