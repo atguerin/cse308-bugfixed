@@ -89,6 +89,7 @@ public class MovieController {
     public String moviesTopBoxOffice(Model model) {
         model.addAttribute("listType", "TOP BOX OFFICE");
         model.addAttribute("selectedList", movieService.getTopBoxOffice());
+        model.addAttribute("topbox","topbox");
         return "movies";
     }
 
