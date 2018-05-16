@@ -1,12 +1,8 @@
 package com.maple.cse308.controller;
 
-import com.maple.cse308.entity.Movie;
-import com.maple.cse308.entity.MovieReviewCritic;
-import com.maple.cse308.entity.MovieReviewUser;
-import com.maple.cse308.entity.User;
-import com.maple.cse308.service.MovieServiceImpl;
-import com.maple.cse308.service.ReportServiceImpl;
-import com.maple.cse308.service.UserServiceImpl;
+import com.maple.cse308.entity.*;
+import com.maple.cse308.repository.CriticRepository;
+import com.maple.cse308.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +23,9 @@ public class MovieController {
 
     @Autowired
     private ReportServiceImpl reportService;
+
+    @Autowired
+    private CriticServiceImpl criticService;
 
     @GetMapping("/movies")
     public String movies(Model model) {
@@ -111,8 +110,21 @@ public class MovieController {
 
     @PostMapping("/postMovieReview")
     public String postReview(@ModelAttribute MovieReviewUser reviewUser, Model model){
-        reviewUser.setUserId(userService.getCurrentUser().getUserId());
-        movieService.addUserMovieReview(reviewUser);
+        User user = userService.getCurrentUser();
+        if(userService.confirmCurrentRole("ROLE_CRITIC")){
+            Critic critic = criticService.getCriticByUser(user);
+            MovieReviewCritic movieReviewCritic = new MovieReviewCritic();
+            movieReviewCritic.setMovieId(reviewUser.getMovieId());
+            movieReviewCritic.setCriticId(critic.getCriticId());
+            movieReviewCritic.setMovieId(reviewUser.getMovieId());
+            movieReviewCritic.setRating(reviewUser.getRating());
+            movieReviewCritic.setReview(reviewUser.getReview());
+            movieService.addCriticMovieReview(movieReviewCritic);
+        } else {
+            reviewUser.setUserId(user.getUserId());
+            movieService.addUserMovieReview(reviewUser);
+        }
+
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully posted your review!");
         return "movie_details :: serverResponseModalContent";
@@ -176,26 +188,8 @@ public class MovieController {
     @GetMapping("/movie/reviews")
     public String updateMovieReviews(@RequestParam(value = "movieId") int movieId, Model model) {
         model.addAttribute("movie", movieService.getMovieDetails(movieId));
-        List<MovieReviewCritic> mrcList = movieService.getCriticMovieReviewsByMovie(movieId);
-        Float criticRating = 0F;
-        for(MovieReviewCritic mrc : mrcList){
-            if(mrc.getRating() != null) {
-                criticRating += mrc.getRating();
-            }
-        }
-        criticRating = mrcList.size() > 0 ? criticRating/mrcList.size() : 0F;
-        List<MovieReviewUser> mruList = movieService.getUserMovieReviewsByMovie(movieId);
-        Float userRating = 0F;
-        for(MovieReviewUser mru : mruList){
-            if(mru.getRating() != null) {
-                userRating += mru.getRating();
-            }
-        }
-        userRating = mruList.size() > 0 ? userRating/mruList.size() : 0F;
         model.addAttribute("criticReviews", movieService.getCriticMovieReviewsByMovie(movieId));
         model.addAttribute("userReviews", movieService.getUserMovieReviewsByMovie(movieId));
-        model.addAttribute("criticRating", criticRating);
-        model.addAttribute("userRating", userRating);
         return "movie_details :: reviews";
     }
 

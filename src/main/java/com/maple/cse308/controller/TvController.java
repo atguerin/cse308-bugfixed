@@ -1,10 +1,9 @@
 package com.maple.cse308.controller;
 
-import com.maple.cse308.entity.TvReviewUser;
-import com.maple.cse308.entity.TvShow;
-import com.maple.cse308.entity.User;
+import com.maple.cse308.entity.*;
 import com.maple.cse308.repository.EpisodeRepository;
 import com.maple.cse308.repository.SeasonRepository;
+import com.maple.cse308.service.CriticServiceImpl;
 import com.maple.cse308.service.ReportServiceImpl;
 import com.maple.cse308.service.TvServiceImpl;
 import com.maple.cse308.service.UserServiceImpl;
@@ -33,6 +32,9 @@ public class TvController {
 
     @Autowired
     private ReportServiceImpl reportService;
+
+    @Autowired
+    private CriticServiceImpl criticService;
 
     @GetMapping("/tv")
     public String tv(Model model) {
@@ -103,8 +105,20 @@ public class TvController {
 
     @PostMapping("/postTvReview")
     public String postReviewTv(@ModelAttribute TvReviewUser reviewUser, Model model) {
-        reviewUser.setUserId(userService.getCurrentUser().getUserId());
-        tvService.addUserTvReview(reviewUser);
+        User user = userService.getCurrentUser();
+        if(userService.confirmCurrentRole("ROLE_CRITIC")){
+            Critic critic = criticService.getCriticByUser(user);
+            TvReviewCritic tvReviewCritic = new TvReviewCritic();
+            tvReviewCritic.setTvId(reviewUser.getTvId());
+            tvReviewCritic.setCriticId(critic.getCriticId());
+            tvReviewCritic.setTvId(reviewUser.getTvId());
+            tvReviewCritic.setRating(reviewUser.getRating());
+            tvReviewCritic.setReview(reviewUser.getReview());
+            tvService.addCriticTvReview(tvReviewCritic);
+        } else {
+            reviewUser.setUserId(user.getUserId());
+            tvService.addUserTvReview(reviewUser);
+        }
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully posted your review!");
         return "tv_details :: serverResponseModalContent";
