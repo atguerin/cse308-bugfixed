@@ -75,6 +75,9 @@ public class StaticController {
 
         List<TvReviewUser> tvReviews = tvService.getUserTvReviewsByUser(user.getUserId());
         model.addAttribute("tvReviews", tvReviews);
+
+        model.addAttribute("followers", userService.getProfileFollowers());
+        model.addAttribute("following", userService.getProfileFollowing());
         //model.addAttribute("blockList", userService.getBlockList(user.getUserId()));
         return "profile";
     }
@@ -149,7 +152,23 @@ public class StaticController {
         User user = userService.findByUsername(userName);
         model.addAttribute("user", user);
         List<MovieReviewUser> movieReviews = movieService.getUserMovieReviewsByUser(user.getUserId());
+        List<User> followersList = userService.getUserFollowers(user.getUserId());
+        List<User> followingList = userService.getUserFollowing(user.getUserId());
+        Boolean inList = false;
+        try{
+            Integer currentUserId = userService.getCurrentUser().getUserId();
+            for (User check : followersList) {
+                if (check.getUserId() == currentUserId) {
+                    inList = true;
+                }
+            }
+        }catch(ClassCastException castException){
+            System.out.println("User is logged in.");
+        }
+        model.addAttribute("inList", inList);
         model.addAttribute("movieReviews", movieReviews);
+        model.addAttribute("followers", followersList);
+        model.addAttribute("following", followingList);
         return "user_info";
     }
 
@@ -456,15 +475,17 @@ public class StaticController {
     @PostMapping("/follow")
     public String follow(@RequestParam("userId") Integer userId, Model model){
         userService.addFollow(userId);
-        model.addAttribute("success", true);
-        return "nowFollowing";
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully following user.");
+        return "user_info :: serverResponseModalContent";
     }
 
     @PostMapping("/unfollow")
     public String unfollow(@RequestParam("userId") Integer userId, Model model){
         userService.removeFollow(userId);
-        model.addAttribute("success", true);
-        return "nowUnfollowing";
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully unfollowed user.");
+        return "user_info :: serverResponseModalContent";
     }
 
     @PostMapping("/followingInfo")
@@ -484,6 +505,35 @@ public class StaticController {
     public String getAcademyAwards(@RequestParam("year") Integer year, Model model) {
         model.addAttribute("awardList", movieService.getAwardByYear(year));
         return "academy_awards";
+    }
+
+    @GetMapping("/userInformation/followUpdate")
+    public String followUpdate(@RequestParam("userName") String userName, Model model){
+        User user = userRepository.findByUsername(userName);
+        List<User> followerList = userService.getUserFollowers(user.getUserId());
+        model.addAttribute("followers", followerList);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully following user.");
+        return "user_info :: followFragment";
+    }
+
+    @GetMapping("userInformation/buttonUpdate")
+    public String buttonUpdate(@RequestParam("userName") String userName, Model model){
+        User user = userRepository.findByUsername(userName);
+        List<User> followersList = userService.getUserFollowers(user.getUserId());
+        Boolean inList = false;
+        try{
+            Integer currentUserId = userService.getCurrentUser().getUserId();
+            for (User check : followersList) {
+                if (check.getUserId() == currentUserId) {
+                    inList = true;
+                }
+            }
+        }catch(ClassCastException castException){
+            System.out.println("User is logged in.");
+        }
+        model.addAttribute("inList", inList);
+        return "user_info :: buttonFragment";
     }
 
 

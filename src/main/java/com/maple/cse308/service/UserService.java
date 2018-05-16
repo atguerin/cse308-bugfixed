@@ -96,7 +96,8 @@ public interface UserService extends UserDetailsService {
 
     void removeFollow(Integer userId);
 
-    List<User> getFollowing();
-
-    List<User> getFollowers();
+    List<User> getProfileFollowing();
+    List<User> getProfileFollowers();
+    List<User> getUserFollowing(Integer userId);
+    List<User> getUserFollowers(Integer userId);
 }

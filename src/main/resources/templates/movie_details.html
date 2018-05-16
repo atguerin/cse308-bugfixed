@@ -55,6 +55,7 @@
                 <div class="card-poster-container align-items-center">
                     <img th:src="@{${movie.poster}}" class="card-detail-poster" alt="poster"/>
                 </div>
+                <div id="reviewForm" class="w-100">
                 <div class="card-body d-flex flex-column align-items-start">
                     <h5 class="mb-0">
                     <a class="detail-title" th:text="${movie.title}">Movie Title</a>
@@ -87,7 +88,7 @@
                         </form>
                     </div>
 
-                    <div id="reviewForm" class="w-100">
+
                         <form th:action="@{/postMovieReview}" method="post" class="w-100" id="postReviewForm" th:fragment="reviewForm">
                             <input name="movieId" type="hidden" th:value="${movie.movieId}"/>
                             <input name="rating" id="rating" class="rating rating-loading" th:value="${review}?${review.rating}:'0'" data-min="0" data-size="xxs"/>

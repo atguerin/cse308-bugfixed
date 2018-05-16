@@ -27,40 +27,42 @@
     <div sec:authorize="hasRole('ROLE_ADMIN')"><div th:replace="fragments/admin_navbar">Navbar</div></div>
 
     <!-- Top carousel -->
-    <div id="top_carousel" class="carousel slide" data-ride="carousel">
-      <ol class="carousel-indicators">
-          <li data-target="#top_carousel" data-slide-to="0" class="active"></li>
-          <li data-target="#top_carousel" data-slide-to="1"></li>
-          <li data-target="#top_carousel" data-slide-to="2"></li>
-      </ol>
-      <div class="carousel-inner">
-          <div class="carousel-item active">
-              <a href="#"><img class="d-block carousel-img" src="images/avengers.jpg" alt="First slide"/></a>
-              <div class="carousel-caption d-none d-md-block">
-                  <h5>Avengers: Infinity Wars</h5>
+    <div class="container">
+        <div id="top_carousel" class="carousel slide" data-ride="carousel">
+          <ol class="carousel-indicators">
+              <li data-target="#top_carousel" data-slide-to="0" class="active"></li>
+              <li data-target="#top_carousel" data-slide-to="1"></li>
+              <li data-target="#top_carousel" data-slide-to="2"></li>
+          </ol>
+          <div class="carousel-inner">
+              <div class="carousel-item active">
+                  <a href="#"><img class="d-block carousel-img" src="images/avengers.jpg" alt="First slide"/></a>
+                  <div class="carousel-caption d-none d-md-block">
+                      <h5>Avengers: Infinity Wars</h5>
+                  </div>
+              </div>
+              <div class="carousel-item">
+                  <a href="#"><img class="d-block carousel-img" src="images/blackpanther.jpg" alt="Second slide"/></a>
+                  <div class="carousel-caption d-none d-md-block">
+                      <h5>Black Panther</h5>
+                  </div>
+              </div>
+              <div class="carousel-item">
+                  <a href="#"><img class="d-block carousel-img" src="images/readyplayerone.jpg" alt="Third slide"/></a>
+                  <div class="carousel-caption d-none d-md-block">
+                      <h5>Ready Player One</h5>
+                  </div>
               </div>
           </div>
-          <div class="carousel-item">
-              <a href="#"><img class="d-block carousel-img" src="images/blackpanther.jpg" alt="Second slide"/></a>
-              <div class="carousel-caption d-none d-md-block">
-                  <h5>Black Panther</h5>
-              </div>
-          </div>
-          <div class="carousel-item">
-              <a href="#"><img class="d-block carousel-img" src="images/readyplayerone.jpg" alt="Third slide"/></a>
-              <div class="carousel-caption d-none d-md-block">
-                  <h5>Ready Player One</h5>
-              </div>
-          </div>
-      </div>
-      <a class="carousel-control-prev" href="#top_carousel" role="button" data-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="sr-only">Previous</span>
-      </a>
-      <a class="carousel-control-next" href="#top_carousel" role="button" data-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="sr-only">Next</span>
-      </a>
+          <a class="carousel-control-prev" href="#top_carousel" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#top_carousel" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+          </a>
+        </div>
     </div>
 
     <!-- Lists -->

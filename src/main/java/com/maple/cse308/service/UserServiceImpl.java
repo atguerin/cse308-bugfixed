@@ -45,6 +45,10 @@ public class UserServiceImpl implements UserService {
     private EmailServiceImpl emailService;
     @Autowired
     private FollowRepository followRepository;
+    @Autowired
+    private TvReviewUserRepository tvReviewUserRepository;
+    @Autowired
+    private TvReviewCriticRepository tvReviewCriticRepository;
 
    /* @Autowired
     private TvReviewUserRepository tvReviewUserRepository;
@@ -156,20 +160,20 @@ public class UserServiceImpl implements UserService {
             for (MovieReviewUser movieReviewUser : movieReviewUsers) {
                 movieReviewUserRepository.delete(movieReviewUser);
             }
-      /*  Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
+        Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
         for (TvReviewUser tvReviewUser : tvReviewUsers) {
-            tvReviewUserRepository.delete(tvReviewUser);
-        }*/
+            tvReviewUserRepository.deleteByReviewId(tvReviewUser.getReviewId());
+        }
         } else if (confirmCurrentRole("ROLE_CRITIC")) {
             Critic critic = criticRepository.findByUser(user);
             Set<MovieReviewCritic> movieReviewCritics = movieReviewCriticRepository.findAllByCriticId(critic.getCriticId());
             for (MovieReviewCritic movieReviewCritic : movieReviewCritics) {
                 movieReviewCriticRepository.delete(movieReviewCritic);
             }
-      /*  Set<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByCriticId(critic.getCriticId());
+       Set<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByCriticId(critic.getCriticId());
         for (TvReviewCritic tvReviewCritic : tvReviewCritics) {
-            tvReviewCriticRepository.delete(tvReviewUser);
-        }*/
+            tvReviewCriticRepository.deleteByReviewId(tvReviewCritic.getReviewId());
+        }
         }
         userRepository.delete(user);
     }
@@ -178,26 +182,29 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(String username) {
 
         User user = findByUsername(username);
-        if (user.getRoles().contains("ROLE_USER")) {
-            Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
-            for (MovieReviewUser movieReviewUser : movieReviewUsers) {
-                movieReviewUserRepository.delete(movieReviewUser);
-            }
-            /*  Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
+        Set<Role> roles = user.getRoles();
+        roles.forEach(role->{
+            if (role.getRole().equals("ROLE_USER")) {
+                Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
+                for (MovieReviewUser movieReviewUser : movieReviewUsers) {
+                    movieReviewUserRepository.deleteByReviewId(movieReviewUser.getReviewId());
+                }
+              Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
                 for (TvReviewUser tvReviewUser : tvReviewUsers) {
-                    tvReviewUserRepository.delete(tvReviewUser);
-                }*/
-        } else if (user.getRoles().contains("ROLE_CRITIC")) {
-            Critic critic = criticRepository.findByUser(user);
-            Set<MovieReviewCritic> movieReviewCritics = movieReviewCriticRepository.findAllByCriticId(critic.getCriticId());
-            for (MovieReviewCritic movieReviewCritic : movieReviewCritics) {
-                movieReviewCriticRepository.delete(movieReviewCritic);
-            }
-                /* Set<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByCriticId(critic.getCriticId());
+                    tvReviewUserRepository.deleteByReviewId(tvReviewUser.getReviewId());
+                }
+            } else if (role.getRole().equals("ROLE_CRITIC")) {
+                Critic critic = criticRepository.findByUser(user);
+                Set<MovieReviewCritic> movieReviewCritics = movieReviewCriticRepository.findAllByCriticId(critic.getCriticId());
+                for (MovieReviewCritic movieReviewCritic : movieReviewCritics) {
+                    movieReviewCriticRepository.deleteByReviewId(movieReviewCritic.getReviewId());
+                }
+                Set<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByCriticId(critic.getCriticId());
                 for (TvReviewCritic tvReviewCritic : tvReviewCritics) {
-                tvReviewCriticRepository.delete(tvReviewUser);
-                }*/
-        }
+                tvReviewCriticRepository.deleteByReviewId(tvReviewCritic.getReviewId());
+                }
+            }
+        });
         userRepository.delete(user);
     }
 
@@ -582,7 +589,7 @@ public class UserServiceImpl implements UserService {
         Integer currentUserId = getCurrentUser().getUserId();
         FollowIdentity followId = new FollowIdentity(currentUserId, userId);
         Follow follow = new Follow();
-        follow.setFollowId(followId);
+        follow.setFollowIdentity(followId);
         followRepository.save(follow);
     }
 
@@ -595,27 +602,48 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getFollowing(){
+    public List<User> getProfileFollowing(){
         Integer userId = getCurrentUser().getUserId();
-        List<FollowIdentity> followIds = followRepository.findAllByFollowIdentityUserId(userId);
+        List<Follow> followList = followRepository.findAllByFollowIdentityUserId(userId);
         List<User> followingList = new LinkedList();
-        for(FollowIdentity followId : followIds){
-            followingList.add(userRepository.findByUserId(followId.getUserId()));
+        for(Follow follow : followList){
+            followingList.add(userRepository.findByUserId(follow.getFollowIdentity().getUserId()));
         }
         return followingList;
 
     }
 
     @Override
-    public List<User> getFollowers(){
+    public List<User> getProfileFollowers(){
         Integer userId = getCurrentUser().getUserId();
-        List<FollowIdentity> followIds = followRepository.findAllByFollowIdentityFollowingId(userId);
+        List<Follow> followList = followRepository.findAllByFollowIdentityFollowingId(userId);
         List<User> followersList = new LinkedList();
-        for(FollowIdentity followId : followIds){
-            followersList.add(userRepository.findByUserId(followId.getUserId()));
+        for(Follow follow : followList){
+            followersList.add(userRepository.findByUserId(follow.getFollowIdentity().getUserId()));
         }
         return followersList;
 
     }
 
+    @Override
+    public List<User> getUserFollowing(Integer userId){
+        List<Follow> followList = followRepository.findAllByFollowIdentityUserId(userId);
+        List<User> followingList = new LinkedList();
+        for(Follow follow : followList){
+            followingList.add(userRepository.findByUserId(follow.getFollowIdentity().getUserId()));
+        }
+        return followingList;
+
+    }
+
+    @Override
+    public List<User> getUserFollowers(Integer userId){
+        List<Follow> followList = followRepository.findAllByFollowIdentityFollowingId(userId);
+        List<User> followersList = new LinkedList();
+        for(Follow follow : followList){
+            followersList.add(userRepository.findByUserId(follow.getFollowIdentity().getUserId()));
+        }
+        return followersList;
+
+    }
 }
