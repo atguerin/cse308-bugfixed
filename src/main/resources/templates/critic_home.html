@@ -50,6 +50,10 @@
                     <div th:text="|- ${movieReviews.size()} reviews|">
                         number of reviews
                     </div>
+                    <strong class="mt-2">Groups</strong>
+                    <div th:text="${critic.group}?: 'None' "></div>
+                    <strong class="mt-2">Publications</strong>
+                    <div th:text="${critic.publication}?: 'None'"></div>
                 </div>
             </div>
         </div>
