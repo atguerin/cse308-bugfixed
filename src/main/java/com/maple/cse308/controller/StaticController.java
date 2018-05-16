@@ -188,11 +188,20 @@ public class StaticController {
         return "about";
     }
 
+    @GetMapping("/contactUs")
+    public String contactUs(Model model) {
+        return "contact_us_form";
+    }
 
     @PostMapping("/contactUs")
     public String contactUs(@RequestParam(value = "name") String name, @RequestParam(value = "email") String email, @RequestParam(value = "subject") String subject, @RequestParam(value = "message") String message) {
         emailService.sendSimpleMessage("cse308teammaple@gmail.com", "Contact Form Submission: "+ subject, "Name: " + name + "\nEmail: " + email + "\n\nMessage: " + message);
         return "index";
+    }
+
+    @GetMapping("/forgotPassword")
+    public String forgotPassword(Model model) {
+        return "forgot_password";
     }
 
     @PostMapping("/forgotPassword")
@@ -203,6 +212,12 @@ public class StaticController {
 
         }
         return "forgot_password";
+    }
+
+    @GetMapping("/resetPassword")
+    public String resetPassword(Model model, @RequestParam("token") String token) {
+        model.addAttribute("token", token);
+        return "reset_password";
     }
 
     @PostMapping("/resetPassword")
@@ -333,9 +348,6 @@ public class StaticController {
         model.addAttribute("tvUserReviews", reportService.getUserTvReports());
         return "reports :: movieUserReviews";
     }
-
-
-
 
     //dismiss reports
 
