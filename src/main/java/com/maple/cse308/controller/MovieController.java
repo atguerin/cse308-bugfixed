@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 @Controller
@@ -66,12 +67,13 @@ public class MovieController {
             }
         }
         userRating = mruList.size() > 0 ? userRating/mruList.size() : 0F;
+        DecimalFormat df = new DecimalFormat("#.#");
         model.addAttribute("movie", movieService.getMovieDetails(id));
         model.addAttribute("review", review);
         model.addAttribute("criticReviews", mrcList);
-        model.addAttribute("criticRating", criticRating);
+        model.addAttribute("criticRating", df.format(criticRating));
         model.addAttribute("userReviews", mruList);
-        model.addAttribute("userRating", userRating);
+        model.addAttribute("userRating", df.format(userRating));
         model.addAttribute("screenshots", movieService.getMovieScreenShots(id));
         model.addAttribute("trailers", movieService.getMovieTrailers(id));
         model.addAttribute("actors", movieService.getMovieActors(id));
@@ -122,6 +124,15 @@ public class MovieController {
         review.setRating(reviewUser.getRating());
         review.setReview(reviewUser.getReview());
         movieService.editUserMovieReview(review);
+        List<MovieReviewUser> mruList = movieService.getUserMovieReviewsByMovie(reviewUser.getMovieId());
+        Float userRating = 0F;
+        for(MovieReviewUser mru : mruList){
+            if(mru.getRating() != null) {
+                userRating += mru.getRating();
+            }
+        }
+        userRating = mruList.size() > 0 ? userRating/mruList.size() : 0F;
+        model.addAttribute("userRating", userRating);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully edited your review!");
         return "movie_details :: serverResponseModalContent";

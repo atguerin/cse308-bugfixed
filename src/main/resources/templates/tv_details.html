@@ -54,13 +54,16 @@
                     <div class="mb-1 text-muted" th:text="${tv.getReleaseYear()}">2018</div>
                     <div class="row w-100 ratings">
                         <div class="d-flex w-100">
-                            <div class="p-2">Critic Score: </div>
-                            <div class="p-2"><span class="ion-android-star"></span>no score</div>
-                            <div class="ml-auto p-2">Audience Score: </div>
-                            <div class="p-2">
-                                <span class="ion-android-star"></span>
-                                <span th:text="${tv.rating}">score</span>
+                            <div class="pt-2 pl-2 pb-2 pr-0">Critic Score:</div>
+                            <div class="pt-2 pr-0 pb-2 pl-1">
+                                <input class="rating rating-loading score p-0" value="0" data-stars="5" data-min="0" data-max="5" data-size="xxxs" disabled=true data-show-clear="false" data-show-caption="false"/>
                             </div>
+                            <span class="pt-2 pr-1 pb-2 pl-0">0</span>
+                            <div class="ml-auto pt-2 pl-2 pb-2 pr-0">User Score:</div>
+                            <div class="pt-2 pr-0 pb-2 pl-1">
+                                <input class="rating rating-loading score p-0" value="0" data-stars="5" data-min="0" data-max="5" data-size="xxxs" disabled=true data-show-clear="false" data-show-caption="false"/>
+                            </div>
+                            <span class="pt-2 pr-1 pb-2 pl-0">0</span>
                         </div>
                     </div>
                     <div class="d-flex w-100 mt-3 pl-3" >
