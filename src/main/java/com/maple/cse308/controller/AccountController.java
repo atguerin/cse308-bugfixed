@@ -111,6 +111,21 @@ public class AccountController {
         return "manage_account :: bioSetting";
     }
 
+
+    @PostMapping("/changeEmail")
+    public String changeEmail(@RequestParam String newEmail, @RequestParam String myPassword, Model model) {
+        try {
+            userService.changeEmail(newEmail, myPassword);
+        } catch (Exception e) {
+            model.addAttribute("user", userService.getCurrentUser());
+            model.addAttribute("response", "Warning: You have entered an incorrect password");
+            return "manage_account :: emailSetting";
+        }
+        model.addAttribute("user", userService.getCurrentUser());
+        model.addAttribute("response", "Changes are saved!");
+        return "manage_account :: emailSetting";
+    }
+
     @PostMapping("/changePassword")
     public String changePassword(@RequestParam String oldPassword, @RequestParam String newPassword, Model model) {
         try {

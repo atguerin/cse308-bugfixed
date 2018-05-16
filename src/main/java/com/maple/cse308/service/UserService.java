@@ -17,6 +17,8 @@ public interface UserService extends UserDetailsService {
 
     String changeCountry(String country) throws Exception;
 
+    void changeEmail(String newEmail, String myPassword) throws Exception;
+
     String changePassword(String oldpass, String newpass) throws Exception;
 
     String changeHomeTown(String homeTown) throws Exception;

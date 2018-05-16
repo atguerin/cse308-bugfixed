@@ -435,6 +435,18 @@
             });
         });
 
+        $(document).on("click", "#emailSettingButton", function () {
+            $('.response').text('');
+            $.ajax({
+                method: "POST",
+                url: "/changeEmail",
+                data: $('#emailSettingForm').serialize(),
+                success: function(data){
+                    $('#emailSettingContent').replaceWith(data);
+                }
+            });
+        });
+
         $(document).on("click", "#passwordSettingButton", function () {
             $('.response').text('');
             $.ajax({

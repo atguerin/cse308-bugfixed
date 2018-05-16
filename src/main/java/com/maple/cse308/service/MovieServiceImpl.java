@@ -76,7 +76,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<Movie> getMoviesComingSoon() {
         Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-        List<Movie> movies = movieRepository.findTop10ByReleaseDateAfter(date);
+        List<Movie> movies = movieRepository.findTop12ByReleaseDateAfter(date);
         movies.sort(Comparator.comparing(Movie::getReleaseDate));
         return movies;
     }
@@ -84,7 +84,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<Movie> getMoviesOutNow() {
         Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-        List<Movie> movies = movieRepository.findTop10OrderByReleaseDateLessThanDesc(date);
+        List<Movie> movies = movieRepository.findTop12OrderByReleaseDateLessThanDesc(date);
         movies.sort(Comparator.comparing(Movie::getReleaseDate)
                 .reversed());
         return movies;
@@ -97,7 +97,7 @@ public class MovieServiceImpl implements MovieService {
         List<Movie> movies = movieRepository.findTop40OrderByReleaseDateLessThanDesc(date);
         movies.sort(Comparator.comparingInt(Movie::getRevenueUnformatted)
                 .reversed());
-        movies = movies.subList(0,10);
+        movies = movies.subList(0,12);
         return movies;
     }
     @Override

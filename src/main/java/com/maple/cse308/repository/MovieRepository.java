@@ -13,7 +13,7 @@ public interface MovieRepository extends CrudRepository<Movie, Integer> {
 
     Movie findMovieByMovieId(int movieId);
 
-    List<Movie> findTop10ByReleaseDateAfter(Date date);
+    List<Movie> findTop12ByReleaseDateAfter(Date date);
 
     List<Movie> findTop10ByReleaseDateBefore(Date date);
 
@@ -36,8 +36,8 @@ public interface MovieRepository extends CrudRepository<Movie, Integer> {
 
     List<Movie> findAllByTitleContainingIgnoreCaseAndReleaseDateBetween(String search, Date startDate, Date endDate);
 
-    @Query(value="SELECT * FROM movie WHERE release_date <= ?1 ORDER BY release_date DESC LIMIT 10", nativeQuery=true)
-    List<Movie> findTop10OrderByReleaseDateLessThanDesc(Date date);
+    @Query(value="SELECT * FROM movie WHERE release_date <= ?1 ORDER BY release_date DESC LIMIT 12", nativeQuery=true)
+    List<Movie> findTop12OrderByReleaseDateLessThanDesc(Date date);
 
     @Query(value="SELECT * FROM movie WHERE release_date <= ?1 ORDER BY release_date DESC LIMIT 40", nativeQuery=true)
     List<Movie> findTop40OrderByReleaseDateLessThanDesc(Date date);

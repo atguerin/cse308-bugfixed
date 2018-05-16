@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
             throw new Exception("Error: Incorrect Password");
         }
     }
-    
+
     //password encoder added
     @Override
     public String changePassword(String oldPass, String newPass) throws Exception {
