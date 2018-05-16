@@ -95,7 +95,7 @@
                                     <div th:text="${tv.title}" class="search-result-text text-truncate p-1">
                                         Movie title
                                     </div>
-                                    <div th:text="${tv.rating}" class="search-result-text">
+                                    <div th:text="${tv.getDateString()}" class="search-result-text">
                                         no score
                                     </div>
                                 </div>

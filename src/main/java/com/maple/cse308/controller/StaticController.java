@@ -488,13 +488,6 @@ public class StaticController {
         return "user_info :: serverResponseModalContent";
     }
 
-    @PostMapping("/followingInfo")
-    public String followingInfo(Model model){
-        model.addAttribute("followers", userService.getFollowers());
-        model.addAttribute("following", userService.getFollowing());
-        return "follingLists";
-    }
-
     @GetMapping("/getGenres")
     public String getGenres(Model model){
         model.addAttribute("genreList", movieService.getGenres());
