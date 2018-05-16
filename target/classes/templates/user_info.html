@@ -258,23 +258,26 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
                 <!-- Followers -->
                 <div class="tab-pane fade" id="pills-followers" role="tabpanel" aria-labelledby="pills-followers-tab">
                     <div class="details-jumbotron pb-5">
-                        <div th:fragment="followers" th:each="follower,iterStat : ${followers}" class="media pt-3 border-bottom pb-3">
-                            <a th:href="@{/userInformation?(userName=${follower.username})}">
-                                <img th:if="${follower.photo != null}" th:src="@{${follower.photo}:img/default.gif}" alt="" class="ratings-list-poster"/>
-                                <img th:if="${follower.photo == null}" src="img/default.gif" alt="" class="ratings-list-poster"/>
-                            </a>
-                            <div class="media-body pb-3 mb-0 small lh-125 ">
-                                <div class="d-flex pr-2">
-                                    <a th:href="@{/userInformation?(userName=${follower.username})}" style="color: white;">
-                                        <strong th:text="${follower.username}" class="text-gray"></strong>
+                        <div id="listFrag">
+                            <div th:fragment="listFrag">
+                                <div th:fragment="followers" th:each="follower,iterStat : ${followers}" class="media pt-3 border-bottom pb-3">
+                                    <a th:href="@{/userInformation?(userName=${follower.username})}">
+                                        <img th:if="${follower.photo != null}" th:src="@{${follower.photo}:img/default.gif}" alt="" class="ratings-list-poster"/>
+                                        <img th:if="${follower.photo == null}" src="img/default.gif" alt="" class="ratings-list-poster"/>
                                     </a>
+                                    <div class="media-body pb-3 mb-0 small lh-125 ">
+                                        <div class="d-flex pr-2">
+                                            <a th:href="@{/userInformation?(userName=${follower.username})}" style="color: white;">
+                                                <strong th:text="${follower.username}" class="text-gray"></strong>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -397,8 +400,10 @@
                 $("#serverResponseModal").modal('show');
                 url1 = /*[[@{/userInformation/followUpdate(userName=${user.username})}]]*/ '';
                 url2 = /*[[@{/userInformation/buttonUpdate(userName=${user.username})}]]*/ '';
+                url3 = /*[[@{/userInformation/listUpdate(userName=${user.username})}]]*/ '';
                 $("#followFragment").load(url1)
                 $("#buttonFragment").load(url2)
+                $("#listFrag").load(url3)
             }
         });
     });
@@ -413,8 +418,10 @@
                 $("#serverResponseModal").modal('show');
                 url1 = /*[[@{/userInformation/followUpdate(userName=${user.username})}]]*/ '';
                 url2 = /*[[@{/userInformation/buttonUpdate(userName=${user.username})}]]*/ '';
+                url3 = /*[[@{/userInformation/listUpdate(userName=${user.username})}]]*/ '';
                 $("#followFragment").load(url1)
                 $("#buttonFragment").load(url2)
+                $("#listFrag").load(url3)
             }
         });
     });

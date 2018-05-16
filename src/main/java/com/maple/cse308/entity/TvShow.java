@@ -48,12 +48,6 @@ public class TvShow {
     @JoinColumn(name = "tvId")
     private Set<TvReviewUser> userReviews;
 
-    @ManyToMany(mappedBy = "watchListTV")
-    private Set<User> usersWatchTV;
-
-    @ManyToMany(mappedBy = "dontWatchListTV")
-    private Set<User> usersDontWatchTV;
-
     public Float getRating() {
         return rating;
     }
@@ -142,5 +136,21 @@ public class TvShow {
 
     public void setTvScreenshots(Set<TvScreenshot> tvScreenshots) {
         this.tvScreenshots = tvScreenshots;
+    }
+
+    public void setRating(Float rating) {
+        this.rating = rating;
+    }
+
+    public void setCriticReviews(Set<TvReviewCritic> criticReviews) {
+        this.criticReviews = criticReviews;
+    }
+
+    public Set<TvReviewUser> getUserReviews() {
+        return userReviews;
+    }
+
+    public void setUserReviews(Set<TvReviewUser> userReviews) {
+        this.userReviews = userReviews;
     }
 }

@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService {
         if (confirmCurrentRole("ROLE_USER")) {
             Set<MovieReviewUser> movieReviewUsers = movieReviewUserRepository.findAllByUserId(user.getUserId());
             for (MovieReviewUser movieReviewUser : movieReviewUsers) {
-                movieReviewUserRepository.delete(movieReviewUser);
+                movieReviewUserRepository.deleteByReviewId(movieReviewUser.getReviewId());
             }
         Set<TvReviewUser> tvReviewUsers = tvReviewUserRepository.findAllByUserId(user.getUserId());
         for (TvReviewUser tvReviewUser : tvReviewUsers) {
@@ -168,7 +168,7 @@ public class UserServiceImpl implements UserService {
             Critic critic = criticRepository.findByUser(user);
             Set<MovieReviewCritic> movieReviewCritics = movieReviewCriticRepository.findAllByCriticId(critic.getCriticId());
             for (MovieReviewCritic movieReviewCritic : movieReviewCritics) {
-                movieReviewCriticRepository.delete(movieReviewCritic);
+                movieReviewCriticRepository.deleteByReviewId(movieReviewCritic.getReviewId());
             }
        Set<TvReviewCritic> tvReviewCritics = tvReviewCriticRepository.findAllByCriticId(critic.getCriticId());
         for (TvReviewCritic tvReviewCritic : tvReviewCritics) {

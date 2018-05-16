@@ -517,8 +517,6 @@ public class StaticController {
         User user = userRepository.findByUsername(userName);
         List<User> followerList = userService.getUserFollowers(user.getUserId());
         model.addAttribute("followers", followerList);
-        model.addAttribute("title", "Success");
-        model.addAttribute("body", "Successfully following user.");
         return "user_info :: followFragment";
     }
 
@@ -538,8 +536,20 @@ public class StaticController {
             System.out.println("User is logged in.");
         }
         model.addAttribute("inList", inList);
+        model.addAttribute("user", user);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully following user.");
         return "user_info :: buttonFragment";
     }
 
+    @GetMapping("userInformation/listUpdate")
+    public String listUpdate(@RequestParam("userName") String userName, Model model){
+        User user = userRepository.findByUsername(userName);
+        List<User> followersList = userService.getUserFollowers(user.getUserId());
+        model.addAttribute("followers", followersList);
+        model.addAttribute("title", "Success");
+        model.addAttribute("body", "Successfully following user.");
+        return "user_info :: listFrag";
+    }
 
 }

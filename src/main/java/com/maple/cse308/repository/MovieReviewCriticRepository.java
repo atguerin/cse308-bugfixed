@@ -20,5 +20,4 @@ public interface MovieReviewCriticRepository extends CrudRepository<MovieReviewC
     @Transactional
     @Query(value="DELETE FROM movie_review_critic WHERE review_id = ?1", nativeQuery = true)
     void deleteByReviewId(Integer reviewId);
-
 }
