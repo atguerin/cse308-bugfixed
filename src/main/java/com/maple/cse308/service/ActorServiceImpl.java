@@ -77,19 +77,22 @@ public class ActorServiceImpl implements ActorService {
         return resultList;
     }
 
+    @Override
     public Actor getActor(int actorId) {
         return actorRepository.findActorByActorId(actorId);
     }
 
-
+    @Override
     public List<ActorScreenshot> getActorScreenshots(int actorId) {
         return actorScreenshotRepository.findAllByActorId(actorId);
     }
 
+    @Override
     public List<MovieActor> getActorMovies(int actorId) {
         return movieActorRepository.findAllByActorId(actorId);
     }
 
+    @Override
     public List<TvActor> getActorTVs(int actorId) {
         return tvActorRepository.findAllByActorId(actorId);
     }

@@ -230,6 +230,7 @@ public class UserServiceImpl implements UserService {
         return new UserDetailsImpl(user);
     }
 
+    @Override
     public void registerUser(User user) throws Exception {
 
         if (userRepository.existsByUsername(user.getUsername())) {
@@ -243,6 +244,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
     public void criticApplication(String website, String groups, String publications) {
 
         User user = getCurrentUser();
@@ -310,7 +312,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
+   /* @Override
     public void addToBlocklist(String username) throws Exception {
 
         User user = getCurrentUser();
@@ -336,13 +338,14 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
         }
 
-    }
+    }*/
 
     @Override
     public Set<Movie> getWantToSeeList() {
         return getCurrentUser().getWatchList();
     }
 
+    @Override
     public Set<TvShow> getWantToSeeListTv() {
         return getCurrentUser().getWatchListTV();
     }
@@ -364,16 +367,26 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
+    @Override
     public void addToWantToSeeListTv(TvShow tv) throws Exception {
         User user = getCurrentUser();
-        user.getWatchListTV().add(tv);
-        userRepository.save(user);
-        updateUser();
+        boolean flag = false;
+        for (TvShow tvShow : user.getDontWatchListTV()) {
+            if (tvShow.getTvId().intValue() == tv.getTvId().intValue()) {
+                flag = true;
+            }
+        }
+        if (flag == false) {
+            user.getWatchListTV().add(tv);
+            userRepository.save(user);
+            updateUser();
+        } else {
+            throw new Exception("Error: Cannot add a movie that is on your ignore list");
+        }
     }
 
     @Override
-    public void removeFromWantToSeeList(Movie movie) throws Exception {
+    public void removeFromWantToSeeList(Movie movie) {
         User user = getCurrentUser();
         for (Movie mv : user.getWatchList()) {
             if (mv.getMovieId().intValue() == movie.getMovieId().intValue()) {
@@ -385,7 +398,8 @@ public class UserServiceImpl implements UserService {
         updateUser();
     }
 
-    public void removeFromWantToSeeListTv(TvShow tv) throws Exception {
+    @Override
+    public void removeFromWantToSeeListTv(TvShow tv) {
         User user = getCurrentUser();
         for (TvShow tt : user.getWatchListTV()) {
             if (tt.getTvId().intValue() == tv.getTvId().intValue()) {
@@ -402,6 +416,7 @@ public class UserServiceImpl implements UserService {
         return getCurrentUser().getDontWatchList();
     }
 
+    @Override
     public Set<TvShow> getDontWantToSeeListTv() {
         return getCurrentUser().getDontWatchListTV();
     }
@@ -423,15 +438,31 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
     public void addToDontWantToSeeListTv(TvShow tv) throws Exception {
         User user = getCurrentUser();
+        boolean flag = false;
+        for (TvShow tvShow : user.getWatchListTV()) {
+            if (tvShow.getTvId().intValue() == tv.getTvId().intValue()) {
+                flag = true;
+            }
+        }
+        if (flag == false) {
+            user.getDontWatchListTV().add(tv);
+            userRepository.save(user);
+            updateUser();
+        } else {
+            throw new Exception("Error: Cannot add a tv show that is on your watch list");
+        }
+
+
         user.getDontWatchListTV().add(tv);
         userRepository.save(user);
         updateUser();
     }
 
     @Override
-    public void removeFromDontWantToSeeList(Movie movie) throws Exception {
+    public void removeFromDontWantToSeeList(Movie movie) {
         User user = getCurrentUser();
         for (Movie mv : user.getDontWatchList()) {
             if (mv.getMovieId().intValue() == movie.getMovieId().intValue()) {
@@ -441,19 +472,10 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.save(user);
         updateUser();
-
-        /*
-        if(user.getDontWatchList().contains(movie)) {
-            user.getDontWatchList().remove(movie);
-            userRepository.save(user);
-            updateUser();
-        }else{
-            throw new Exception("Error: Movie is not on your ignore list");
-        }
-        */
     }
 
-    public void removeFromDontWantToSeeListTv(TvShow tv) throws Exception {
+    @Override
+    public void removeFromDontWantToSeeListTv(TvShow tv) {
         User user = getCurrentUser();
         for (TvShow tt : user.getDontWatchListTV()) {
             if (tt.getTvId().intValue() == tv.getTvId().intValue()) {
@@ -506,41 +528,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-     /*
-    public void addToBlocklist(String username) throws Exception {
 
-        User user = getCurrentUser();
-        User blockedUser = userRepository.findByUsername(username);
-        BlockIdentity blockId = new BlockIdentity(user.getUserId(), blockedUser.getUserId());
-        if (blockRepository.existsByBlockIdentity(blockId)) {
-            throw new Exception("Error: The user is already on your blocked list");
-        } else {
-            Block block = new Block();
-            block.setBlockIdentity(blockId);
-            blockRepository.save(block);
-        }
-
-    }
-
-    public void removeFromBlocklist(String username) throws Exception {
-
-        User user = getCurrentUser();
-        User blockedUser = userRepository.findByUsername(username);
-        BlockIdentity blockId = new BlockIdentity(user.getUserId(), blockedUser.getUserId());
-        if (!blockRepository.existsByBlockIdentity(blockId)) {
-            throw new Exception("Error: The user is not on your blocked list");
-        } else {
-            Block block = blockRepository.findByBlockIdentity(blockId);
-            blockRepository.delete(block);
-        }
-
-    }
-
+    /*
     public List<Block> getBlockList(Integer userId){
         return blockRepository.findByBlockingIdBlockerId(userId);
     }
     */
 
+    @Override
     public void resetPasswordToken(String email, HttpServletRequest request) throws Exception {
         User user = userRepository.findByEmail(email);
         if (user == null) {
@@ -556,6 +551,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
     public void resetPassword(String token, String newPass) throws Exception {
         User user = userRepository.findByResetToken(token);
         if (user == null) {
@@ -569,6 +565,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
     public void addFollow(Integer userId){
         Integer currentUserId = getCurrentUser().getUserId();
         FollowIdentity followId = new FollowIdentity(currentUserId, userId);
@@ -577,6 +574,7 @@ public class UserServiceImpl implements UserService {
         followRepository.save(follow);
     }
 
+    @Override
     public void removeFollow(Integer userId){
         Integer currentUserId = getCurrentUser().getUserId();
         FollowIdentity followId = new FollowIdentity(currentUserId, userId);
@@ -584,6 +582,7 @@ public class UserServiceImpl implements UserService {
         followRepository.delete(follow);
     }
 
+    @Override
     public List<User> getFollowing(){
         Integer userId = getCurrentUser().getUserId();
         List<FollowIdentity> followIds = followRepository.findAllByFollowIdentityUserId(userId);
@@ -594,6 +593,8 @@ public class UserServiceImpl implements UserService {
         return followingList;
 
     }
+
+    @Override
     public List<User> getFollowers(){
         Integer userId = getCurrentUser().getUserId();
         List<FollowIdentity> followIds = followRepository.findAllByFollowIdentityFollowingId(userId);

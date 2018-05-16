@@ -102,7 +102,7 @@ public class TvController {
 
 
     @PostMapping("/postTvReview")
-    public String postReviewTv(@ModelAttribute TvReviewUser reviewUser, Model model) throws Exception {
+    public String postReviewTv(@ModelAttribute TvReviewUser reviewUser, Model model) {
         reviewUser.setUserId(userService.getCurrentUser().getUserId());
         tvService.addUserTvReview(reviewUser);
         model.addAttribute("title", "Success");
@@ -111,7 +111,7 @@ public class TvController {
     }
 
     @PostMapping("/editTvReview")
-    public String editReviewTv(@ModelAttribute TvReviewUser reviewUser, Model model) throws Exception {
+    public String editReviewTv(@ModelAttribute TvReviewUser reviewUser, Model model) {
         int userId = userService.getCurrentUser().getUserId();
         TvReviewUser review = tvService.getUserTvReviewsByUserAndTv(userId, reviewUser.getTvId()).get(0);
         review.setRating(reviewUser.getRating());
@@ -140,43 +140,63 @@ public class TvController {
 
 
     @PostMapping("/tv/addToWantToSeeList")
-    public String addToWantToSeeListTv(@RequestParam(value = "tvId") int tvId, Model model) throws Exception {
+    public String addToWantToSeeListTv(@RequestParam(value = "tvId") int tvId, Model model) {
         TvShow tv = tvService.getTvShowDetails(tvId);
-        userService.addToWantToSeeListTv(tv);
+        try {
+            userService.addToWantToSeeListTv(tv);
+        } catch (Exception e) {
+            model.addAttribute("title", "Warning");
+            model.addAttribute("body", "You cannot add a TV show that is currently on your ignore list");
+            return "tv_details :: serverResponseModalContent";
+
+        }
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully added to your Want To See List!");
         return "tv_details :: serverResponseModalContent";
     }
 
     @PostMapping("/tv/addToDontWantToSeeList")
-    public String addToDontWantToSeeListTv(@RequestParam(value = "tvId") int tvId, Model model) throws Exception {
+    public String addToDontWantToSeeListTv(@RequestParam(value = "tvId") int tvId, Model model) {
         TvShow tv = tvService.getTvShowDetails(tvId);
-        userService.addToDontWantToSeeListTv(tv);
+        try {
+            userService.addToDontWantToSeeListTv(tv);
+        } catch (Exception e) {
+            model.addAttribute("title", "Warning");
+            model.addAttribute("body", "You cannot add a TV show that is currently on your watch list");
+            return "tv_details :: serverResponseModalContent";
+        }
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully added to your Not Interested List!");
         return "tv_details :: serverResponseModalContent";
     }
 
     @PostMapping("/tv/deleteFromWantToSeeList")
-    public String deleteFromWantToSeeListTv(@RequestParam(value = "id") int tvId, Model model) throws Exception {
+    public String deleteFromWantToSeeListTv(@RequestParam(value = "id") int tvId, Model model) {
         TvShow tv = tvService.getTvShowDetails(tvId);
-        userService.removeFromWantToSeeListTv(tv);
+        try {
+            userService.removeFromWantToSeeListTv(tv);
+        } catch (Exception e) {
+
+        }
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully deleted from your Want To See List!");
         return "profile :: serverResponseModalContent";
     }
 
     @PostMapping("/tv/deleteFromNotInterestedList")
-    public String deleteFromNotInterestListTv(@RequestParam(value = "id") int tvId, Model model) throws Exception {
+    public String deleteFromNotInterestListTv(@RequestParam(value = "id") int tvId, Model model) {
         TvShow tv = tvService.getTvShowDetails(tvId);
-        userService.removeFromDontWantToSeeListTv(tv);
+        try {
+            userService.removeFromDontWantToSeeListTv(tv);
+        } catch (Exception e) {
+        }
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully deleted from your Not Interest List!");
         return "profile :: serverResponseModalContent";
     }
 
     @PostMapping("/tv/deleteTvUserReview")
-    public String deletetvUserReviewTv(@RequestParam(value = "id") int reviewId, Model model) throws Exception {
+    public String deletetvUserReviewTv(@RequestParam(value = "id") int reviewId, Model model) {
         tvService.deleteUserTvReview(reviewId);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully deleted your review!");
@@ -218,7 +238,7 @@ public class TvController {
     }
 
     @PostMapping("/tv/reportUserReview")
-    public String reportMovieUserReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) throws Exception {
+    public String reportMovieUserReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) {
         reportService.addUserTvReport(reviewId, reason);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully reported the user review!");
@@ -226,7 +246,7 @@ public class TvController {
     }
 
     @PostMapping("/tv/reportCriticReview")
-    public String reportMovieCriticReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) throws Exception {
+    public String reportMovieCriticReview(@RequestParam(value = "id") int reviewId, @RequestParam(value = "reason") String reason, Model model) {
         reportService.addCriticTvReport(reviewId, reason);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully reported the critic review!");

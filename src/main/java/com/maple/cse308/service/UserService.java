@@ -6,7 +6,9 @@ import com.maple.cse308.entity.User;
 import com.maple.cse308.enums.Visibility;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Set;
 
 public interface UserService extends UserDetailsService {
@@ -38,6 +40,8 @@ public interface UserService extends UserDetailsService {
 
     void registerUser(User user) throws Exception;
 
+    void criticApplication(String website, String groups, String publications);
+
     void addEmployee(User user) throws Exception;
 
     void removeEmployee(User user) throws Exception;
@@ -46,21 +50,33 @@ public interface UserService extends UserDetailsService {
 
     void suspendUser(User user, Calendar calendar) throws Exception;
 
-    void addToBlocklist(String username) throws Exception;
+  /*  void addToBlocklist(String username) throws Exception;
 
-    void removeFromBlocklist(String username) throws Exception;
+    void removeFromBlocklist(String username) throws Exception;*/
 
     Set<Movie> getWantToSeeList();
 
+    Set<TvShow> getWantToSeeListTv();
+
     void addToWantToSeeList(Movie movie) throws Exception;
+
+    void addToWantToSeeListTv(TvShow tv) throws Exception;
 
     void removeFromWantToSeeList(Movie movie) throws Exception;
 
+    void removeFromWantToSeeListTv(TvShow tv) throws Exception;
+
     Set<Movie> getDontWantToSeeList();
+
+    Set<TvShow> getDontWantToSeeListTv();
 
     void addToDontWantToSeeList(Movie movie) throws Exception;
 
+    void addToDontWantToSeeListTv(TvShow tv) throws Exception;
+
     void removeFromDontWantToSeeList(Movie movie) throws Exception;
+
+    void removeFromDontWantToSeeListTv(TvShow tv) throws Exception;
 
     void addMovie(Movie movie) throws Exception;
 
@@ -69,4 +85,16 @@ public interface UserService extends UserDetailsService {
     void addTvShow(TvShow tvShow) throws Exception;
 
     void editTvShow(TvShow tvShow) throws Exception;
+
+    void resetPasswordToken(String email, HttpServletRequest request) throws Exception;
+
+    void resetPassword(String token, String newPass) throws Exception;
+
+    void addFollow(Integer userId);
+
+    void removeFollow(Integer userId);
+
+    List<User> getFollowing();
+
+    List<User> getFollowers();
 }

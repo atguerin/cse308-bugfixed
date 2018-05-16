@@ -158,6 +158,9 @@ public class MovieController {
         try {
             userService.addToWantToSeeList(movie);
         } catch (Exception e) {
+            model.addAttribute("title", "Warning");
+            model.addAttribute("body", "Warning: You cannot add a movie that is currently on your ignore list");
+            return "movie_details :: serverResponseModalContent";
 
         }
         model.addAttribute("title", "Success");
@@ -171,6 +174,9 @@ public class MovieController {
         try {
             userService.addToDontWantToSeeList(movie);
         } catch (Exception e) {
+            model.addAttribute("title", "Warning");
+            model.addAttribute("body", "Warning: You cannot add a movie that is currently on your watch list");
+            return "movie_details :: serverResponseModalContent";
         }
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully added to your Not Interested List!");

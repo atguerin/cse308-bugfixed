@@ -48,6 +48,11 @@
                 <p>Edit your biographical information.</p>
             </div>
             <div class="account-settings-block">
+                <strong class="mr-2">Email</strong>
+                <a href="#" data-toggle="modal" data-target="#emailSetting">Edit</a>
+                <p>Change the email for your Rotten Tomatoes account.</p>
+            </div>
+            <div class="account-settings-block">
                 <strong class="mr-2">Password</strong>
                 <a href="#" data-toggle="modal" data-target="#passwordSetting">Edit</a>
                 <p>Change the password for your Rotten Tomatoes account.</p>
@@ -157,6 +162,45 @@
             </div>
         </div>
     </div>
+
+    <!-- Email Modal -->
+    <div class="modal fade" id="emailSetting" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div th:fragment="emailSetting" id="emailSettingContent" class="modal-content dark-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">Email Setting</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form th:action="@{/changeEmail}" method="post" id="emailSettingForm">
+                    <div class="modal-body">
+                        <span class="response" th:text="${response}"></span>
+                        <div class="form-group">
+                            <label for="newEmail">New Email</label>
+                            <input type="email" name="newEmail" class="form-control" id="newEmail"
+                                   placeholder="New Email"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="myPassword">Password</label>
+                            <input type="password" name="myPassword" class="form-control" id="myPassword"
+                                   placeholder="Password"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="emailSettingButton" type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
 
     <!-- Password Modal -->
     <div class="modal fade" id="passwordSetting" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel"
@@ -271,7 +315,7 @@
                 <form th:action="@{/applyCritic}" method="post" id="applyCriticForm">
                     <div class="modal-body">
                         <span class="response" th:text="${response}"></span>
-<<<<<<< HEAD
+
                         <div class="form-group">
                             <label for="website">Website</label>
                             <input type="text" name="website" class="form-control" id="website"
@@ -287,9 +331,9 @@
                             <input type="text" name="publications" class="form-control" id="publications"
                                    placeholder="publications"/>
                         </div>
-=======
+
                         <label>Do you want to button your application?</label>
->>>>>>> origin/ki
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -367,7 +411,7 @@
             });
         });
 
-<<<<<<< HEAD
+
         $(document).on("click", "#photoButton", function () {
             $('.response').text('');
             $.ajax({
@@ -379,9 +423,6 @@
                 }
             });
         });
-
-=======
->>>>>>> origin/ki
         $(document).on("click", "#bioButton", function () {
             $('.response').text('');
             $.ajax({

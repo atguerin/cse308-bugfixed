@@ -43,6 +43,12 @@ public interface MovieService {
 
     List<Movie> getAllTimeHighestRated();
 
+    List<MovieScreenshot> getMovieScreenShots(int movieId);
+
+    List<MovieTrailer> getMovieTrailers(int movieId);
+
+    List<MovieActor> getMovieActors(int movieId);
+
     float getAverageUserRating(int movieId);
 
     List<Movie> movieAdvancedSearch(String search, String[] genre, String start, String end) throws ParseException;

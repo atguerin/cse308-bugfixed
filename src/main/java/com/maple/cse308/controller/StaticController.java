@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.text.ParseException;
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.util.List;
 
 @Controller
@@ -105,7 +105,7 @@ public class StaticController {
         try {
             model.addAttribute("movieList", movieService.movieAdvancedSearch(search, genre, start, end));
         }catch(ParseException p){
-            p.printStackTrace();
+
         }
 
         model.addAttribute("celebList", actorService.actorSearch(search));
@@ -209,7 +209,7 @@ public class StaticController {
     }
 
     @PostMapping("/reportUser")
-    public String reportUser(@RequestParam(value = "id") int id, @RequestParam(value = "reason") String reason, Model model) throws Exception {
+    public String reportUser(@RequestParam(value = "id") int id, @RequestParam(value = "reason") String reason, Model model) {
         reportService.addUserReport(id, reason);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully reported the user!");
@@ -217,7 +217,7 @@ public class StaticController {
     }
 
     @PostMapping("/reportCritic")
-    public String reportCritic(@RequestParam(value = "id") int id, @RequestParam(value = "reason") String reason, Model model) throws Exception {
+    public String reportCritic(@RequestParam(value = "id") int id, @RequestParam(value = "reason") String reason, Model model) {
         reportService.addCriticReport(id, reason);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully reported the critic!");
@@ -226,7 +226,7 @@ public class StaticController {
 
     // All the backend stuff have to be handled, currently it just deletes the reports form reported lists
     @PostMapping("/deleteCritic")
-    public String deleteCritic(@RequestParam(value = "id") int id, Model model) throws Exception {
+    public String deleteCritic(@RequestParam(value = "id") int id, Model model) {
         reportService.deleteCriticReport(id);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully deleted the critic!");
@@ -234,7 +234,7 @@ public class StaticController {
     }
 
     @PostMapping("/deleteUser")
-    public String deleteUser(@RequestParam(value = "id") int id, Model model) throws Exception {
+    public String deleteUser(@RequestParam(value = "id") int id, Model model) {
         User user = userRepository.findByUserId(id);
         reportService.deleteUserReport(id);
         userService.deleteUser(user.getUsername());
@@ -244,7 +244,7 @@ public class StaticController {
     }
 
     @PostMapping("/deleteMovieCriticReview")
-    public String deleteMovieCriticReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+    public String deleteMovieCriticReview(@RequestParam(value = "id") int id, Model model) {
         reportService.deleteCriticMovieReport(id);
         movieService.deleteUserMovieReview(id);
         model.addAttribute("title", "Success");
@@ -253,7 +253,7 @@ public class StaticController {
     }
 
     @PostMapping("/deleteMovieUserReview")
-    public String deleteMovieUserReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+    public String deleteMovieUserReview(@RequestParam(value = "id") int id, Model model) {
         reportService.deleteUserMovieReport(id);
         movieService.deleteUserMovieReview(id);
         model.addAttribute("title", "Success");
@@ -262,7 +262,7 @@ public class StaticController {
     }
 
     @PostMapping("/deleteTvCriticReview")
-    public String deleteTvCriticReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+    public String deleteTvCriticReview(@RequestParam(value = "id") int id, Model model) {
         reportService.deleteCriticTvReport(id);
         tvService.deleteCriticTvReview(id);
         model.addAttribute("title", "Success");
@@ -271,7 +271,7 @@ public class StaticController {
     }
 
     @PostMapping("/deleteTvUserReview")
-    public String deleteTvUserReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+    public String deleteTvUserReview(@RequestParam(value = "id") int id, Model model) {
         reportService.deleteUserTvReport(id);
         tvService.deleteUserTvReview(id);
         model.addAttribute("title", "Success");
@@ -321,7 +321,7 @@ public class StaticController {
     //dismiss reports
 
     @PostMapping("/dismissCritic")
-    public String dismissCritic(@RequestParam(value = "id") int id, Model model) throws Exception {
+    public String dismissCritic(@RequestParam(value = "id") int id, Model model) {
         reportService.deleteCriticReport(id);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully dismissed the critic!");
@@ -329,7 +329,7 @@ public class StaticController {
     }
 
     @PostMapping("/dismissUser")
-    public String dismissUser(@RequestParam(value = "id") int id, Model model) throws Exception {
+    public String dismissUser(@RequestParam(value = "id") int id, Model model) {
         reportService.deleteUserReport(id);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully dismissed the user!");
@@ -337,7 +337,7 @@ public class StaticController {
     }
 
     @PostMapping("/dismissMovieCriticReview")
-    public String dismissMovieCriticReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+    public String dismissMovieCriticReview(@RequestParam(value = "id") int id, Model model) {
         reportService.deleteCriticMovieReport(id);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully dismissed the review!");
@@ -345,7 +345,7 @@ public class StaticController {
     }
 
     @PostMapping("/dismissMovieUserReview")
-    public String dismissMovieUserReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+    public String dismissMovieUserReview(@RequestParam(value = "id") int id, Model model) {
         reportService.deleteUserMovieReport(id);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully dismissed the review!");
@@ -353,7 +353,7 @@ public class StaticController {
     }
 
     @PostMapping("/dismissTvCriticReview")
-    public String dismissTvCriticReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+    public String dismissTvCriticReview(@RequestParam(value = "id") int id, Model model) {
         reportService.deleteCriticTvReport(id);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully dismissed the review!");
@@ -361,7 +361,7 @@ public class StaticController {
     }
 
     @PostMapping("/dismissTvUserReview")
-    public String dismissTvUserReview(@RequestParam(value = "id") int id, Model model) throws Exception {
+    public String dismissTvUserReview(@RequestParam(value = "id") int id, Model model) {
         reportService.deleteUserTvReport(id);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully dismissed the review!");

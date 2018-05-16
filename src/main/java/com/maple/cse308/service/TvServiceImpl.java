@@ -70,7 +70,6 @@ public class TvServiceImpl implements TvService {
     @Override
     public List<TvReviewCritic> getCriticTvReviewsByTvShow(int tvId) {
         HashSet<TvReviewCritic> set = tvReviewCriticRepository.findAllByTvId(tvId);
-
         List<TvReviewCritic> list = new LinkedList();
         list.addAll(set);
         return list;
@@ -138,24 +137,30 @@ public class TvServiceImpl implements TvService {
         return resultList;
     }
 
+    @Override
     public List<TvShow> getOpenThisWeek(){
         return tvShowRepository.findTop12ByOrderByPremierDateDesc();
     }
 
+    @Override
     public List<TvShow> getPopularTv(){
         return tvShowRepository.findTop12ByOrderByRatingDesc();
     }
 
+    @Override
     public List<TvScreenshot> getTvScreenshots(int id){
         return tvScreenshotRepository.findAllByTvId(id);
     }
 
+    @Override
     public List<TvActor> getTvActors(int id){
         return tvActorRepository.findAllByTvId(id);
     }
 
+    @Override
     public List<Creator> getTvCreator(int id){return creatorRepository.findAllByCreatorId(id);}
 
+    @Override
     public List<TvReviewUser> getUserTvReviewsByUserAndTv(int userId, int tvId) {
         HashSet<TvReviewUser> set = tvReviewUserRepository.findByUserIdAndTvId(userId, tvId);
         List<TvReviewUser> userMovieReview = new LinkedList();
