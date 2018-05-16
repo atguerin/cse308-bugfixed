@@ -273,7 +273,7 @@
                             </p>
                         </div>
                     </div>
-                    <small class="d-block text-right mt-3">
+                    <small th:unless="${criticReviews.isEmpty()}" class="d-block text-right mt-3">
                         <a th:href="@{/movie_all_critics(id=${movie.movieId})}">All Critic Reviews</a>
                     </small>
 

@@ -229,7 +229,7 @@
                             </p>
                         </div>
                     </div>
-                    <small class="d-block text-right mt-3">
+                    <small th:unless="${criticReviews.isEmpty()}" class="d-block text-right mt-3">
                         <a th:href="@{/tv_all_critics(id=${tv.tvId})}">All Critic Reviews</a>
                     </small>
 
