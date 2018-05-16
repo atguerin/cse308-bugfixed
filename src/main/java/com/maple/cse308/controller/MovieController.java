@@ -133,6 +133,15 @@ public class MovieController {
         review.setRating(reviewUser.getRating());
         review.setReview(reviewUser.getReview());
         movieService.editUserMovieReview(review);
+        List<MovieReviewUser> mruList = movieService.getUserMovieReviewsByMovie(reviewUser.getMovieId());
+        Float userRating = 0F;
+        for(MovieReviewUser mru : mruList){
+            if(mru.getRating() != null) {
+                userRating += mru.getRating();
+            }
+        }
+        userRating = mruList.size() > 0 ? userRating/mruList.size() : 0F;
+        model.addAttribute("userRating", userRating);
         model.addAttribute("title", "Success");
         model.addAttribute("body", "Successfully edited your review!");
         return "movie_details :: serverResponseModalContent";

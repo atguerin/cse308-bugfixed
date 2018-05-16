@@ -40,40 +40,40 @@
                         <img class="profile-thumbnail-img" th:src="@{(${user.photo}?: '/img/default.gif')}" alt="Profile img"/>
                     </div>
                     <strong class="mt-2">User Name</strong>
-                    <div th:text="'- '+ ${user.username}">
+                    <div class="ml-3" th:text="${user.username}">
                         username
                     </div>
                     <strong class="mt-2">FIRST NAME</strong>
-                    <div th:text="'- '+ ${user.firstName}">
+                    <div class="ml-3" th:text="${user.firstName}">
                         first name
                     </div>
                     <strong class="mt-2">LAST NAME</strong>
-                    <div th:text="'- '+ ${user.lastName}">
+                    <div class="ml-3" th:text="${user.lastName}">
                         last name
                     </div>
                     <strong class="mt-2">HOMETOWN</strong>
-                    <div th:text="${user.hometown}?'- '+${user.hometown}:'- Not available'">
+                    <div class="ml-3" th:text="${user.hometown}?'  '+${user.hometown}:'  Not available'">
                         hometown
                     </div>
                     <strong class="mt-2">COUNTRY</strong>
-                    <div th:text="${user.country}?'- '+${user.country}:'- Not available'">
+                    <div class="ml-3" th:text="${user.country}?'  '+${user.country}:'  Not available'">
                         country
                     </div>
                     <strong class="mt-2">BIOGRAPHY</strong>
-                    <div>
-                        <p th:text="${user.bio}?'- '+${user.bio}:'- Not available'" style="word-wrap: break-word;">
+                    <div class="ml-3">
+                        <p th:text="${user.bio}?'  '+${user.bio}:'  Not available'" style="word-wrap: break-word;">
                             bio
                         </p>
                     </div>
-                    <strong class="mt-2">FOLLOWERS</strong>
-                    <div>
-                        <p th:text="'- '+ ${followers.size()}?:'0'" style="word-wrap: break-word;">
+                    <strong>FOLLOWERS</strong>
+                    <div class="ml-3">
+                        <p th:text="${followers.size()}?:'0'" style="word-wrap: break-word;">
                             0
                         </p>
                     </div>
                     <strong class="mt-2">FOLLOWING</strong>
-                    <div>
-                        <p th:text="'- '+ ${following.size()}?:'0'" style="word-wrap: break-word;">
+                    <div class="ml-3">
+                        <p th:text="${following.size()}?:'0'" style="word-wrap: break-word;">
                             0
                         </p>
                     </div>

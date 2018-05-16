@@ -118,11 +118,7 @@
                                 <a th:text="${movie.movie.title}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">Title</a>
                             </td>
                             <td>
-<<<<<<< HEAD
-                                <a th:text="${movie.movie.getRevenue()}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">revenue</a>
-=======
                                 <a th:text="|$${movie.movie.getRevenue()}|" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">revenue</a>
->>>>>>> origin/ki
                             </td>
                             <td>
                                 <a th:text="${movie.movie.getReleaseYear()}" th:href="@{/movie_details(id=${movie.movieId})}" style="color: white;">2017</a>

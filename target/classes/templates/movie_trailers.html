@@ -23,10 +23,7 @@
 <!-- Navbar -->
 <div sec:authorize="isAnonymous()"><div th:replace="fragments/navbar">Navbar</div></div>
 <div sec:authorize="hasRole('ROLE_USER')"><div th:replace="fragments/user_navbar">Navbar</div></div>
-<<<<<<< HEAD
 <div sec:authorize="hasRole('ROLE_CRITIC')"><div th:replace="fragments/user_navbar">Navbar</div></div>
-=======
->>>>>>> origin/ki
 <div sec:authorize="hasRole('ROLE_ADMIN')"><div th:replace="fragments/admin_navbar">Navbar</div></div>
 
 
@@ -85,7 +82,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content video-modal">
                         <div class="embed-responsive embed-responsive-16by9">
-                            <video class="embed-responsive-item" th:src="@{${trailer.video}}" controls="controls"></video>
+                            <iframe class="embed-responsive-item" th:src="@{${trailer.video}}" controls="controls"></iframe>
                         </div>
                     </div>
                 </div>
