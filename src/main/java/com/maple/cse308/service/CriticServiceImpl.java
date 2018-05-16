@@ -1,6 +1,7 @@
 package com.maple.cse308.service;
 
 import com.maple.cse308.entity.Critic;
+import com.maple.cse308.entity.User;
 import com.maple.cse308.repository.CriticRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,10 @@ public class CriticServiceImpl implements CriticService {
         }
 
         return resultList;
+    }
+
+    public Critic getCriticByUser(User user){
+        return criticRepository.findByUser(user);
     }
 
 }
